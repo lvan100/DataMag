@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Application">
+      <UniqueIdentifier>{c15e4b14-39fc-49a1-af1a-703960716c78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataMag">
+      <UniqueIdentifier>{47a45f35-f060-44b6-ba15-e56804266251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataMag\Book">
+      <UniqueIdentifier>{c28d5e6f-bc10-458c-a18b-fabba33ee288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataMag\Label">
+      <UniqueIdentifier>{0d0f555f-a69d-41d4-afee-fb742616fa53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataMag\Project">
+      <UniqueIdentifier>{6636454a-bca3-40a4-9c3a-2ed2daf7707b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataMag\Setting">
+      <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\DataMag.ico">
+      <Filter>Application</Filter>
+    </None>
+    <None Include="res\DataMag.rc2">
+      <Filter>Application</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DataMag.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="BookListDlg.h">
+      <Filter>DataMag\Book</Filter>
+    </ClInclude>
+    <ClInclude Include="BookListCtrl.h">
+      <Filter>DataMag\Book</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelListCtrl.h">
+      <Filter>DataMag\Label</Filter>
+    </ClInclude>
+    <ClInclude Include="DataMagDlg.h">
+      <Filter>DataMag\Label</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectListDlg.h">
+      <Filter>DataMag\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectListCtrl.h">
+      <Filter>DataMag\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelNameDlg.h">
+      <Filter>DataMag\Label</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelInfoCtrl.h">
+      <Filter>DataMag\Label</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingDlg.h">
+      <Filter>DataMag\Setting</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="DataMag.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="BookListCtrl.cpp">
+      <Filter>DataMag\Book</Filter>
+    </ClCompile>
+    <ClCompile Include="BookListDlg.cpp">
+      <Filter>DataMag\Book</Filter>
+    </ClCompile>
+    <ClCompile Include="DataMagDlg.cpp">
+      <Filter>DataMag\Label</Filter>
+    </ClCompile>
+    <ClCompile Include="LabelListCtrl.cpp">
+      <Filter>DataMag\Label</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectListCtrl.cpp">
+      <Filter>DataMag\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectListDlg.cpp">
+      <Filter>DataMag\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="LabelNameDlg.cpp">
+      <Filter>DataMag\Label</Filter>
+    </ClCompile>
+    <ClCompile Include="LabelInfoCtrl.cpp">
+      <Filter>DataMag\Label</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingDlg.cpp">
+      <Filter>DataMag\Setting</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DataMag.rc">
+      <Filter>Application</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
