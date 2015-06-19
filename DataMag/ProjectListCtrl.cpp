@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SettingDlg.h"
+#include "ProjectListDlg.h"
 #include "ProjectListCtrl.h"
 
 IMPLEMENT_DYNAMIC(CProjectListCtrl, CMFCShellListCtrl)
@@ -60,5 +61,8 @@ void CProjectListCtrl::OnSetColumns()
 
 void CProjectListCtrl::OnDblClk(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
+	auto dlg = (CProjectListDlg*)GetParent();
+	dlg->SendMessage(WM_COMMAND, IDOK);
+
 	*pResult = 0;
 }

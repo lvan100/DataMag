@@ -7,7 +7,6 @@ IMPLEMENT_DYNAMIC(CLabelInfoCtrl, CMFCShellListCtrl)
 
 CLabelInfoCtrl::CLabelInfoCtrl()
 {
-
 }
 
 CLabelInfoCtrl::~CLabelInfoCtrl()
@@ -107,24 +106,34 @@ BOOL GetLinkFilePath(CString& strPath, CString strLink)
 
 void CLabelInfoCtrl::OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	int nItem = GetNextItem(-1, LVNI_FOCUSED);
-	if (nItem != -1)
+	SetWindowTextA(theDataMagDlg->m_item_text.GetSafeHwnd(), "");
+
+	POSITION pos = GetFirstSelectedItemPosition();
+	int nItem = GetNextSelectedItem(pos);
+	if (nItem >= 0)
 	{
 		CString strPath;
 		CString strLink = GetItemPath(nItem);
 		if (GetLinkFilePath(strPath, strLink))
 		{
-			char szText[1024];
-			memset(szText, 0, 1024);
-
 			if (PathIsDirectory(strPath))
 			{
 				CString strFile = strPath + _T("\\ÃèÊö.txt");
 				CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
-				file.Read(szText, 1024);
-			}
+				
+				UINT nSize = file.GetLength() + 1;
+				char* szText = strText.GetBuffer();
 
-			SetWindowTextA(theDataMagDlg->m_item_text.GetSafeHwnd(), szText);
+				if ((UINT)strText.GetLength() < nSize)
+				{
+					szText = strText.GetBufferSetLength(nSize);
+				}
+				
+				memset(szText, 0, nSize);
+				file.Read(szText, nSize);
+
+				SetWindowTextA(theDataMagDlg->m_item_text.GetSafeHwnd(), szText);
+			}
 		}
 	}
 

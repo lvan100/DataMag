@@ -20,17 +20,18 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 public:
 	CRichEditCtrl m_item_text;
 	CLabelListCtrl m_label_list;
 	CLabelInfoCtrl m_label_info;
+	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedLabelAdd();
 	afx_msg void OnBnClickedLabelDelete();
 	afx_msg void OnBnClickedLabelRename();
 	afx_msg void OnBnClickedLabelRelateBook();
 	afx_msg void OnBnClickedLabelRelateProject();
-	afx_msg void OnBnClickedSetting();
 };
 
 extern CDataMagDlg* theDataMagDlg;

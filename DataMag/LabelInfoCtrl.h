@@ -15,6 +15,9 @@ public:
 	}
 
 protected:
+	CStringA strText;
+
+protected:
 	virtual void OnSetColumns();
 	virtual void PreSubclassWindow();
 

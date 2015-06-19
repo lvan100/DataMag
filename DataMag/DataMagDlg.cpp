@@ -69,12 +69,17 @@ void CDataMagDlg::OnBnClickedLabelAdd()
 void DeleteDirectory(CString strDir)
 {
 	CFileFind fileFind;
-	BOOL IsFinded = fileFind.FindFile(strDir);
+
+	BOOL IsFinded = fileFind.FindFile(strDir + _T("\\*.*"));
+	IsFinded = fileFind.FindNextFile();	// .
+	IsFinded = fileFind.FindNextFile();	// ..
+
 	while (IsFinded)
 	{
 		IsFinded = fileFind.FindNextFile();
-		DeleteFile(fileFind.GetFilePath());   
+		DeleteFile(fileFind.GetFilePath());
 	}
+
 	fileFind.Close();
 
 	RemoveDirectory(strDir);
@@ -221,4 +226,40 @@ void CDataMagDlg::OnBnClickedSetting()
 	strFolder += _T("\\");
 	strFolder += LABEL_DIR;
 	m_label_list.DisplayFolder(strFolder);
+}
+
+BOOL CDataMagDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		CWnd* pFocusWnd = GetFocus();
+
+		switch((UINT)pMsg->wParam)
+		{
+		case VK_DELETE:
+			{
+				if (pFocusWnd == &m_label_info)
+				{
+					POSITION pos = m_label_info.GetFirstSelectedItemPosition();
+					int nItem = m_label_info.GetNextSelectedItem(pos);
+					if (nItem >= 0)
+					{
+						DeleteFile(m_label_info.GetItemPath(nItem));
+					}
+
+					m_label_info.Refresh();
+				}
+				
+				if (pFocusWnd == &m_label_list)
+				{
+					OnBnClickedLabelDelete();
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

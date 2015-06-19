@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "SettingDlg.h"
+#include "BookListDlg.h"
 #include "BookListCtrl.h"
 
 IMPLEMENT_DYNAMIC(CBookListCtrl, CMFCShellListCtrl)
@@ -60,5 +61,8 @@ void CBookListCtrl::OnSetColumns()
 
 void CBookListCtrl::OnDblClk(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
+	auto dlg = (CBookListDlg*)GetParent();
+	dlg->SendMessage(WM_COMMAND, IDOK);
+
 	*pResult = 0;
 }

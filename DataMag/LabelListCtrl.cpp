@@ -61,8 +61,9 @@ void CLabelListCtrl::OnSetColumns()
 
 void CLabelListCtrl::OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	int nItem = GetNextItem(-1, LVNI_FOCUSED);
-	if (nItem != -1 && m_pInfoCtrl != NULL)
+	POSITION pos = GetFirstSelectedItemPosition();
+	int nItem = GetNextSelectedItem(pos);
+	if (nItem >= 0 && m_pInfoCtrl != NULL)
 	{
 		m_pInfoCtrl->DisplayFolder(GetItemPath(nItem));
 	}
