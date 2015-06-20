@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ProjectListCtrl.h"
+#include "afxwin.h"
 
 class CProjectListDlg : public CDialog
 {
@@ -24,4 +25,8 @@ public:
 
 protected:
 	afx_msg void OnBnClickedOk();
+public:
+	afx_msg void OnBnClickedProjectSearchButton();
+	CEdit m_project_search_edit;
+	virtual BOOL OnInitDialog();
 };

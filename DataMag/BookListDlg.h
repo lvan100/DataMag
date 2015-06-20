@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BookListCtrl.h"
+#include "afxwin.h"
 
 class CBookListDlg : public CDialog
 {
@@ -24,4 +25,8 @@ public:
 
 protected:
 	afx_msg void OnBnClickedOk();
+public:
+	afx_msg void OnBnClickedBookSearchButton();
+	CEdit m_book_search_edit;
+	virtual BOOL OnInitDialog();
 };

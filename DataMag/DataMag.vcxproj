@@ -94,8 +94,15 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="res\add.ico" />
+    <None Include="res\book.ico" />
+    <None Include="res\code.ico" />
     <None Include="res\DataMag.ico" />
     <None Include="res\DataMag.rc2" />
+    <None Include="res\delete.ico" />
+    <None Include="res\rename.ico" />
+    <None Include="res\search.ico" />
+    <None Include="res\setting.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BookListCtrl.h" />

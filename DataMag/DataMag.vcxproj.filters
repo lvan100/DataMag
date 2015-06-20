@@ -19,13 +19,37 @@
     <Filter Include="DataMag\Setting">
       <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Application\Resource">
+      <UniqueIdentifier>{ab2b0bbc-135b-4f7b-aa5b-228bb5c71421}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\DataMag.ico">
-      <Filter>Application</Filter>
+    <None Include="res\setting.ico">
+      <Filter>Application\Resource</Filter>
     </None>
     <None Include="res\DataMag.rc2">
-      <Filter>Application</Filter>
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\rename.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\delete.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\add.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\DataMag.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\book.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\code.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\search.ico">
+      <Filter>Application\Resource</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -36,9 +60,6 @@
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="BookListDlg.h">
@@ -67,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="SettingDlg.h">
       <Filter>DataMag\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DataMag.rc">
-      <Filter>Application</Filter>
+      <Filter>Application\Resource</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

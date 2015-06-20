@@ -3,6 +3,7 @@
 #include "LabelListCtrl.h"
 #include "LabelInfoCtrl.h"
 #include "afxcmn.h"
+#include "afxwin.h"
 
 class CDataMagDlg : public CDialogEx
 {
@@ -32,6 +33,10 @@ public:
 	afx_msg void OnBnClickedLabelRename();
 	afx_msg void OnBnClickedLabelRelateBook();
 	afx_msg void OnBnClickedLabelRelateProject();
+	afx_msg void OnBnClickedLabelSearchButton();
+	afx_msg void OnBnClickedInfoSearchButton();
+	CEdit m_label_search_edit;
+	CEdit m_info_search_edit;
 };
 
 extern CDataMagDlg* theDataMagDlg;

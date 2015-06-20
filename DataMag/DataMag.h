@@ -16,3 +16,4 @@ public:
 };
 
 extern CDataMagApp theApp;
+extern CShellManager* afxShellManager;

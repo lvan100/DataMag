@@ -26,6 +26,8 @@ void CDataMagDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LABEL_LIST, m_label_list);
 	DDX_Control(pDX, IDC_LABEL_INFO_LIST, m_label_info);
 	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
+	DDX_Control(pDX, IDC_LABEL_SEARCH_EDIT, m_label_search_edit);
+	DDX_Control(pDX, IDC_INFO_SEARCH_EDIT, m_info_search_edit);
 }
 
 BEGIN_MESSAGE_MAP(CDataMagDlg, CDialogEx)
@@ -35,6 +37,8 @@ BEGIN_MESSAGE_MAP(CDataMagDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_BOOK, &CDataMagDlg::OnBnClickedLabelRelateBook)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_PROJECT, &CDataMagDlg::OnBnClickedLabelRelateProject)
 	ON_BN_CLICKED(IDC_SETTING, &CDataMagDlg::OnBnClickedSetting)
+	ON_BN_CLICKED(IDC_LABEL_SEARCH_BUTTON, &CDataMagDlg::OnBnClickedLabelSearchButton)
+	ON_BN_CLICKED(IDC_INFO_SEARCH_BUTTON, &CDataMagDlg::OnBnClickedInfoSearchButton)
 END_MESSAGE_MAP()
 
 BOOL CDataMagDlg::OnInitDialog()
@@ -44,6 +48,30 @@ BOOL CDataMagDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 	
+	CButton* pButton = (CButton*)GetDlgItem(IDC_SETTING);
+	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SETTING));
+
+	pButton = (CButton*)GetDlgItem(IDC_LABEL_ADD);
+	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_LABEL_ADD));
+
+	pButton = (CButton*)GetDlgItem(IDC_LABEL_DELETE);
+	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_LABEL_DELETE));
+
+	pButton = (CButton*)GetDlgItem(IDC_LABEL_RENAME);
+	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_LABEL_RENAME));
+
+	pButton = (CButton*)GetDlgItem(IDC_LABEL_RELATE_PROJECT);
+	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_CODE));
+
+	pButton = (CButton*)GetDlgItem(IDC_LABEL_RELATE_BOOK);
+	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_BOOK));
+
+	pButton = (CButton*)GetDlgItem(IDC_LABEL_SEARCH_BUTTON);
+	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
+
+	pButton = (CButton*)GetDlgItem(IDC_INFO_SEARCH_BUTTON);
+	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
+
 	m_label_list.SetInfoCtrl(&m_label_info);
 
 	return TRUE;
@@ -262,4 +290,18 @@ BOOL CDataMagDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CDataMagDlg::OnBnClickedLabelSearchButton()
+{
+	CString strFilter;
+	m_label_search_edit.GetWindowText(strFilter);
+	m_label_list.SetFilterString(strFilter);
+}
+
+void CDataMagDlg::OnBnClickedInfoSearchButton()
+{
+	CString strFilter;
+	m_info_search_edit.GetWindowText(strFilter);
+	m_label_info.SetFilterString(strFilter);
 }

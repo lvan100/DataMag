@@ -9,6 +9,8 @@ CDataMagApp::CDataMagApp()
 
 CDataMagApp theApp;
 
+CShellManager* afxShellManager;
+
 BOOL CDataMagApp::InitInstance()
 {
 	INITCOMMONCONTROLSEX InitCtrls;
@@ -31,6 +33,7 @@ BOOL CDataMagApp::InitInstance()
 
 	CShellManager* pShellManager;
 	pShellManager = new CShellManager;
+	afxShellManager = pShellManager;
 
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);

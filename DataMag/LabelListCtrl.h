@@ -24,12 +24,19 @@ public:
 		m_pInfoCtrl = pCtrl;
 	}
 
+	void SetFilterString(CString str){
+		strFilter = str;
+		DisplayFolder(GetCurrentFolder());
+	}
+
 protected:	
 	virtual void OnSetColumns();
 	virtual void InitLabelList();
 	virtual void PreSubclassWindow();
 
 	CMFCShellListCtrl* m_pInfoCtrl;
+
+	CString strFilter;
 
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -38,6 +45,9 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDblClk(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult);
+
+protected:
+	virtual HRESULT EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent);
 };
 
 
