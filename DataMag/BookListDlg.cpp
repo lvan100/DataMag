@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DataMag.h"
+#include "SettingDlg.h"
 #include "BookListDlg.h"
 
 IMPLEMENT_DYNAMIC(CBookListDlg, CDialog)
@@ -7,6 +8,7 @@ IMPLEMENT_DYNAMIC(CBookListDlg, CDialog)
 CBookListDlg::CBookListDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CBookListDlg::IDD, pParent)
 {
+	m_book_list.SetListEvent(this);
 }
 
 CBookListDlg::~CBookListDlg()
@@ -25,27 +27,13 @@ BEGIN_MESSAGE_MAP(CBookListDlg, CDialog)
 	ON_BN_CLICKED(IDC_BOOK_SEARCH_BUTTON, &CBookListDlg::OnBnClickedBookSearchButton)
 END_MESSAGE_MAP()
 
-void CBookListDlg::OnBnClickedOk()
+void CBookListDlg::InitShellList()
 {
-	POSITION pos = m_book_list.GetFirstSelectedItemPosition();
-	int nItem = m_book_list.GetNextSelectedItem(pos);
-	while (nItem != -1) {
-		CString strFolder;
-		m_book_list.GetItemPath(strFolder, nItem);
-		arrBook.Add(strFolder);
-		nItem = m_book_list.GetNextSelectedItem(pos);
-	}
-	
-	CDialog::OnOK();
+	CString strFolder = theSetting.strMagFolder;
+	strFolder += _T("\\");
+	strFolder += BOOK_DIR;
+	m_book_list.DisplayFolder(strFolder);
 }
-
-void CBookListDlg::OnBnClickedBookSearchButton()
-{
-	CString strFilter;
-	m_book_search_edit.GetWindowText(strFilter);
-	m_book_list.SetFilterString(strFilter);
-}
-
 
 BOOL CBookListDlg::OnInitDialog()
 {
@@ -55,4 +43,29 @@ BOOL CBookListDlg::OnInitDialog()
 	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
 
 	return TRUE;
+}
+
+void CBookListDlg::OnBnClickedBookSearchButton()
+{
+	CString strFilter;
+	m_book_search_edit.GetWindowText(strFilter);
+	m_book_list.SetFilterString(strFilter);
+}
+
+void CBookListDlg::OnBnClickedOk()
+{
+	POSITION pos = m_book_list.GetFirstSelectedItemPosition();
+	int nItem = m_book_list.GetNextSelectedItem(pos);
+	while (nItem != -1) {
+		CString strFolder =	m_book_list.GetItemPath(nItem);
+		arrBook.Add(strFolder);
+		nItem = m_book_list.GetNextSelectedItem(pos);
+	}
+	
+	CDialog::OnOK();
+}
+
+void CBookListDlg::OnDoubleClick()
+{
+	OnBnClickedOk();
 }

@@ -1,45 +1,48 @@
 #include "stdafx.h"
 #include "DataMag.h"
-#include "DataMagDlg.h"
-#include "LabelInfoCtrl.h"
+#include "ShellListCtrl.h"
 
-IMPLEMENT_DYNAMIC(CLabelInfoCtrl, CMFCShellListCtrl)
+IMPLEMENT_DYNAMIC(CShellListCtrl, CMFCShellListCtrl)
 
-CLabelInfoCtrl::CLabelInfoCtrl()
-{
+CShellListCtrl::CShellListCtrl()
+	: m_event(NULL){
 }
 
-CLabelInfoCtrl::~CLabelInfoCtrl()
-{
+CShellListCtrl::~CShellListCtrl(){
 }
 
-BEGIN_MESSAGE_MAP(CLabelInfoCtrl, CMFCShellListCtrl)
+BEGIN_MESSAGE_MAP(CShellListCtrl, CMFCShellListCtrl)
 	ON_WM_CREATE()
-	ON_NOTIFY_REFLECT(LVN_ITEMCHANGED, &CLabelInfoCtrl::OnLvnItemchanged)
+	ON_NOTIFY_REFLECT(NM_DBLCLK, &CShellListCtrl::OnDoubleClick)
+	ON_NOTIFY_REFLECT(LVN_ITEMCHANGED, &CShellListCtrl::OnLvnItemchanged)
 END_MESSAGE_MAP()
 
-int CLabelInfoCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int CShellListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CMFCListCtrl::OnCreate(lpCreateStruct) == -1)
 		return -1;
-	
+
 	OnSetColumns();
 
-	DeleteAllItems();
+	if (m_event != NULL) {
+		m_event->InitShellList();
+	}
 
 	return 0;
 }
 
-void CLabelInfoCtrl::PreSubclassWindow()
+void CShellListCtrl::PreSubclassWindow()
 {
 	CMFCListCtrl::PreSubclassWindow();
 
 	OnSetColumns();
 
-	DeleteAllItems();
+	if (m_event != NULL) {
+		m_event->InitShellList();
+	}
 }
 
-void CLabelInfoCtrl::OnSetColumns()
+void CShellListCtrl::OnSetColumns()
 {
 	CMFCShellListCtrl::OnSetColumns();
 
@@ -52,95 +55,25 @@ void CLabelInfoCtrl::OnSetColumns()
 	SetColumnWidth(0, LVSCW_AUTOSIZE_USEHEADER);
 }
 
-BOOL GetLinkFilePath(CString& strPath, CString strLink)
+void CShellListCtrl::OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	HRESULT hResult = S_FALSE;
-
-	IShellLink* pShellLink = NULL;
-	AutoRelease<IShellLink*> tmp1(pShellLink);
-
-	IPersistFile* pPersistFile = NULL;
-	AutoRelease<IPersistFile*> tmp2(pPersistFile);
-
-	hResult = CoCreateInstance(CLSID_ShellLink
-		, NULL
-		, CLSCTX_INPROC_SERVER
-		, IID_IShellLink
-		, (void**)&pShellLink);  
-	if(FAILED(hResult))
-	{
-		return FALSE;
-	}
-
-	hResult = pShellLink->QueryInterface(IID_IPersistFile
-		, (void**)&pPersistFile);
-	if(FAILED(hResult))
-	{
-		return FALSE;
-	}
-
-	hResult = pPersistFile->Load(strLink, STGM_READ);
-	if(FAILED(hResult))
-	{
-		return FALSE;
-	}
-
-	hResult = pShellLink->Resolve(NULL, SLR_ANY_MATCH);
-	if(FAILED(hResult))
-	{
-		return FALSE;
-	}
-
-	WCHAR szPath[MAX_PATH];
-
-	hResult = pShellLink->GetPath(szPath, MAX_PATH, NULL, SLGP_SHORTPATH); 
-	if(FAILED(hResult))
-	{
-		return FALSE;
-	}
-
-	strPath.SetString(szPath);
-
-	return TRUE; 
-}
-
-void CLabelInfoCtrl::OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult)
-{
-	SetWindowTextA(theDataMagDlg->m_item_text.GetSafeHwnd(), "");
-
-	POSITION pos = GetFirstSelectedItemPosition();
-	int nItem = GetNextSelectedItem(pos);
-	if (nItem >= 0)
-	{
-		CString strPath;
-		CString strLink = GetItemPath(nItem);
-		if (GetLinkFilePath(strPath, strLink))
-		{
-			if (PathIsDirectory(strPath))
-			{
-				CString strFile = strPath + _T("\\√Ë ˆ.txt");
-				CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
-				
-				UINT nSize = file.GetLength() + 1;
-				char* szText = strText.GetBuffer();
-
-				if ((UINT)strText.GetLength() < nSize)
-				{
-					szText = strText.GetBufferSetLength(nSize);
-				}
-				
-				memset(szText, 0, nSize);
-				file.Read(szText, nSize);
-
-				SetWindowTextA(theDataMagDlg->m_item_text.GetSafeHwnd(), szText);
-			}
-		}
+	if (m_event != NULL) {
+		m_event->OnSelectChanged();
 	}
 
 	*pResult = 0;
 }
 
-HRESULT CLabelInfoCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent)
+void CShellListCtrl::OnDoubleClick(NMHDR* /*pNMHDR*/, LRESULT* pResult)
+{
+	if (m_event != NULL) {
+		m_event->OnDoubleClick();
+	}
+
+	*pResult = 0;
+}
+
+HRESULT CShellListCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent)
 {
 	ASSERT_VALID(this);
 	ASSERT_VALID(afxShellManager);
@@ -199,12 +132,14 @@ HRESULT CLabelInfoCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pi
 			SHFILEINFO sfi;
 			if (SHGetFileInfo((LPCTSTR)pItem->pidlFQ, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
 			{
-				if (_tcsstr(sfi.szDisplayName, strFilter) != NULL)
+				CString strPath = sfi.szDisplayName;
+				strPath.MakeLower();
+
+				if ((m_filter.GetLength() == 0) || (strPath.Find(m_filter) > 0))
 				{
 					int iItem = InsertItem(&lvItem);
 					if (iItem >= 0)
 					{
-						// Set columns:
 						const int nColumns = m_wndHeader.GetItemCount();
 						for (int iColumn = 0; iColumn < nColumns; iColumn++)
 						{

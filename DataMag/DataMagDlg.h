@@ -1,10 +1,10 @@
 #pragma once
 
-#include "LabelListCtrl.h"
-#include "LabelInfoCtrl.h"
-#include "afxcmn.h"
-#include "afxwin.h"
+#include "ShellListCtrl.h"
 
+/**
+ * 主对话框
+ */
 class CDataMagDlg : public CDialogEx
 {
 public:
@@ -13,30 +13,76 @@ public:
 	enum { IDD = IDD_DATAMAG_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
+	/**
+	 * 标签列表事件对象
+	 */
+	class LabelListEvent: public CShellListEventAdapter
+	{
+	public:
+		/**
+		 * 初始化列表控件
+		 */
+		virtual void InitShellList();
+
+		/**
+		 * 列表项发生变化
+		 */
+		virtual void OnSelectChanged();
+
+	}m_label_event;
+
+	/**
+	 * 标签信息事件对象
+	 */
+	class LabelInfoEvent: public CShellListEventAdapter
+	{
+	public:
+		/**
+		 * 初始化列表控件
+		 */
+		virtual void InitShellList();
+
+		/**
+		 * 列表项发生变化
+		 */
+		virtual void OnSelectChanged();
+
+	protected:
+		/**
+		 * 文件内容
+		 */
+		CStringA strText;
+
+	}m_label_info_event;
+
+public:
+	CEdit m_info_search_edit;
+	CEdit m_label_search_edit;
+	CRichEditCtrl m_item_text;
+	CShellListCtrl m_label_list;
+	CShellListCtrl m_label_info;
 
 protected:
 	HICON m_hIcon;
 
 protected:
-	DECLARE_MESSAGE_MAP()
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual void DoDataExchange(CDataExchange* pDX);
 
-public:
-	CRichEditCtrl m_item_text;
-	CLabelListCtrl m_label_list;
-	CLabelInfoCtrl m_label_info;
+protected:
+	DECLARE_MESSAGE_MAP()
 	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedLabelAdd();
 	afx_msg void OnBnClickedLabelDelete();
 	afx_msg void OnBnClickedLabelRename();
 	afx_msg void OnBnClickedLabelRelateBook();
-	afx_msg void OnBnClickedLabelRelateProject();
-	afx_msg void OnBnClickedLabelSearchButton();
 	afx_msg void OnBnClickedInfoSearchButton();
-	CEdit m_label_search_edit;
-	CEdit m_info_search_edit;
+	afx_msg void OnBnClickedLabelSearchButton();
+	afx_msg void OnBnClickedLabelRelateProject();
 };
 
+/**
+ * 全局的主对话框对象
+ */
 extern CDataMagDlg* theDataMagDlg;

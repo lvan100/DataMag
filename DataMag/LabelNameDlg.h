@@ -1,5 +1,8 @@
 #pragma once
 
+/**
+ * 标签命名对话框
+ */
 class CLabelNameDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CLabelNameDlg)
@@ -10,17 +13,24 @@ public:
 
 	enum { IDD = IDD_LABELNAMEDLG };
 
+public:
+	/**
+	 * 操作类型
+	 */
 	enum {
-		New,
-		Rename,
+		New,		/* 新建	*/
+		Rename,		/* 重命名 */
 	}Op;
 
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
-	DECLARE_MESSAGE_MAP()
-
-public:
+	/**
+	 * 标签名称
+	 */
 	CString m_label_name;
+
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);
+
+protected:
+	DECLARE_MESSAGE_MAP()
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };

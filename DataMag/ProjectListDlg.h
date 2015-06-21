@@ -1,9 +1,11 @@
 #pragma once
 
-#include "ProjectListCtrl.h"
-#include "afxwin.h"
+#include "ShellListCtrl.h"
 
-class CProjectListDlg : public CDialog
+/**
+ * 项目选择对话框
+ */
+class CProjectListDlg : public CDialog, CShellListEventAdapter
 {
 	DECLARE_DYNAMIC(CProjectListDlg)
 
@@ -12,21 +14,34 @@ public:
 	virtual ~CProjectListDlg();
 
 	enum { IDD = IDD_PROJECTLISTDLG };
+	
+public:
+	/**
+	 * 初始化列表控件
+	 */
+	virtual void InitShellList();
 
+	/**
+	 * 列表项双击事件
+	 */
+	virtual void OnDoubleClick();
+
+public:
+	/**
+	 * 被选择的项目列表
+	 */
 	CStringArray arrProject;
 
 protected:
+	virtual BOOL OnInitDialog();
 	virtual void DoDataExchange(CDataExchange* pDX);
 
-	DECLARE_MESSAGE_MAP()
-
-public:
-	CProjectListCtrl m_project_list;
+protected:
+	CEdit m_project_search_edit;
+	CShellListCtrl m_project_list;
 
 protected:
+	DECLARE_MESSAGE_MAP()
 	afx_msg void OnBnClickedOk();
-public:
 	afx_msg void OnBnClickedProjectSearchButton();
-	CEdit m_project_search_edit;
-	virtual BOOL OnInitDialog();
 };

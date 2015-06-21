@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DataMag.h"
+#include "SettingDlg.h"
 #include "ProjectListDlg.h"
 
 IMPLEMENT_DYNAMIC(CProjectListDlg, CDialog)
@@ -7,7 +8,7 @@ IMPLEMENT_DYNAMIC(CProjectListDlg, CDialog)
 CProjectListDlg::CProjectListDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CProjectListDlg::IDD, pParent)
 {
-
+	m_project_list.SetListEvent(this);
 }
 
 CProjectListDlg::~CProjectListDlg()
@@ -26,28 +27,13 @@ BEGIN_MESSAGE_MAP(CProjectListDlg, CDialog)
 	ON_BN_CLICKED(IDC_PROJECT_SEARCH_BUTTON, &CProjectListDlg::OnBnClickedProjectSearchButton)
 END_MESSAGE_MAP()
 
-void CProjectListDlg::OnBnClickedOk()
+void CProjectListDlg::InitShellList()
 {
-	POSITION pos = m_project_list.GetFirstSelectedItemPosition();
-	int nItem = m_project_list.GetNextSelectedItem(pos);
-	while (nItem != -1)
-	{
-		CString strFolder;
-		m_project_list.GetItemPath(strFolder, nItem);
-		arrProject.Add(strFolder);
-		nItem = m_project_list.GetNextSelectedItem(pos);
-	}
-
-	CDialog::OnOK();
+	CString strFolder = theSetting.strMagFolder;
+	strFolder += _T("\\");
+	strFolder += PROJECT_DIR;
+	m_project_list.DisplayFolder(strFolder);
 }
-
-void CProjectListDlg::OnBnClickedProjectSearchButton()
-{
-	CString strFilter;
-	m_project_search_edit.GetWindowText(strFilter);
-	m_project_list.SetFilterString(strFilter);
-}
-
 
 BOOL CProjectListDlg::OnInitDialog()
 {
@@ -57,4 +43,30 @@ BOOL CProjectListDlg::OnInitDialog()
 	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
 
 	return TRUE;
+}
+
+void CProjectListDlg::OnBnClickedProjectSearchButton()
+{
+	CString strFilter;
+	m_project_search_edit.GetWindowText(strFilter);
+	m_project_list.SetFilterString(strFilter);
+}
+
+void CProjectListDlg::OnBnClickedOk()
+{
+	POSITION pos = m_project_list.GetFirstSelectedItemPosition();
+	int nItem = m_project_list.GetNextSelectedItem(pos);
+	while (nItem != -1)
+	{
+		CString strFolder =	m_project_list.GetItemPath(nItem);
+		arrProject.Add(strFolder);
+		nItem = m_project_list.GetNextSelectedItem(pos);
+	}
+
+	CDialog::OnOK();
+}
+
+void CProjectListDlg::OnDoubleClick()
+{
+	OnBnClickedOk();
 }

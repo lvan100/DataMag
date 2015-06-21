@@ -9,7 +9,6 @@ CLabelNameDlg::CLabelNameDlg(CWnd* pParent /*=NULL*/)
 	, Op(CLabelNameDlg::New)
 	, m_label_name(_T(""))
 {
-
 }
 
 CLabelNameDlg::~CLabelNameDlg()

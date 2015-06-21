@@ -22,6 +22,9 @@
     <Filter Include="Application\Resource">
       <UniqueIdentifier>{ab2b0bbc-135b-4f7b-aa5b-228bb5c71421}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataMag\ShellList">
+      <UniqueIdentifier>{84f56f35-e203-4623-bd96-3c69b5f4c8b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -65,25 +68,13 @@
     <ClInclude Include="BookListDlg.h">
       <Filter>DataMag\Book</Filter>
     </ClInclude>
-    <ClInclude Include="BookListCtrl.h">
-      <Filter>DataMag\Book</Filter>
-    </ClInclude>
-    <ClInclude Include="LabelListCtrl.h">
-      <Filter>DataMag\Label</Filter>
-    </ClInclude>
     <ClInclude Include="DataMagDlg.h">
       <Filter>DataMag\Label</Filter>
     </ClInclude>
     <ClInclude Include="ProjectListDlg.h">
       <Filter>DataMag\Project</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectListCtrl.h">
-      <Filter>DataMag\Project</Filter>
-    </ClInclude>
     <ClInclude Include="LabelNameDlg.h">
-      <Filter>DataMag\Label</Filter>
-    </ClInclude>
-    <ClInclude Include="LabelInfoCtrl.h">
       <Filter>DataMag\Label</Filter>
     </ClInclude>
     <ClInclude Include="SettingDlg.h">
@@ -91,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="ShellListCtrl.h">
+      <Filter>DataMag\ShellList</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,20 +94,11 @@
     <ClCompile Include="DataMag.cpp">
       <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="BookListCtrl.cpp">
-      <Filter>DataMag\Book</Filter>
-    </ClCompile>
     <ClCompile Include="BookListDlg.cpp">
       <Filter>DataMag\Book</Filter>
     </ClCompile>
     <ClCompile Include="DataMagDlg.cpp">
       <Filter>DataMag\Label</Filter>
-    </ClCompile>
-    <ClCompile Include="LabelListCtrl.cpp">
-      <Filter>DataMag\Label</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectListCtrl.cpp">
-      <Filter>DataMag\Project</Filter>
     </ClCompile>
     <ClCompile Include="ProjectListDlg.cpp">
       <Filter>DataMag\Project</Filter>
@@ -121,11 +106,11 @@
     <ClCompile Include="LabelNameDlg.cpp">
       <Filter>DataMag\Label</Filter>
     </ClCompile>
-    <ClCompile Include="LabelInfoCtrl.cpp">
-      <Filter>DataMag\Label</Filter>
-    </ClCompile>
     <ClCompile Include="SettingDlg.cpp">
       <Filter>DataMag\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellListCtrl.cpp">
+      <Filter>DataMag\ShellList</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

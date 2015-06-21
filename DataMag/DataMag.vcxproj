@@ -105,31 +105,25 @@
     <None Include="res\setting.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BookListCtrl.h" />
     <ClInclude Include="BookListDlg.h" />
     <ClInclude Include="DataMag.h" />
     <ClInclude Include="DataMagDlg.h" />
-    <ClInclude Include="LabelInfoCtrl.h" />
-    <ClInclude Include="LabelListCtrl.h" />
     <ClInclude Include="LabelNameDlg.h" />
-    <ClInclude Include="ProjectListCtrl.h" />
     <ClInclude Include="ProjectListDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SettingDlg.h" />
+    <ClInclude Include="ShellListCtrl.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BookListCtrl.cpp" />
     <ClCompile Include="BookListDlg.cpp" />
     <ClCompile Include="DataMag.cpp" />
     <ClCompile Include="DataMagDlg.cpp" />
-    <ClCompile Include="LabelInfoCtrl.cpp" />
-    <ClCompile Include="LabelListCtrl.cpp" />
     <ClCompile Include="LabelNameDlg.cpp" />
-    <ClCompile Include="ProjectListCtrl.cpp" />
     <ClCompile Include="ProjectListDlg.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
+    <ClCompile Include="ShellListCtrl.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "SettingDlg.h"
-#include "afxdialogex.h"
 
+/**
+ * 全局配置对象
+ */
 CSetting theSetting;
 
 void CSetting::Load(CString strFile)
@@ -11,13 +13,15 @@ void CSetting::Load(CString strFile)
 
 	strIniFile = strFile;
 	
-	GetPrivateProfileString(_T("GlobalSetting"), _T("RootDir"), _T(""), szString, 512, strFile);
+	GetPrivateProfileString(_T("GlobalSetting"), _T("RootDir")
+		, _T(""), szString, 512, strFile);
 	strMagFolder.SetString(szString);
 }
 
 void CSetting::Save()
 {
-	WritePrivateProfileString(_T("GlobalSetting"), _T("RootDir"), strMagFolder, strIniFile);
+	WritePrivateProfileString(_T("GlobalSetting"), _T("RootDir")
+		, strMagFolder, strIniFile);
 }
 
 IMPLEMENT_DYNAMIC(CSettingDlg, CDialog)
@@ -25,7 +29,6 @@ IMPLEMENT_DYNAMIC(CSettingDlg, CDialog)
 CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CSettingDlg::IDD, pParent)
 {
-
 }
 
 CSettingDlg::~CSettingDlg()
@@ -51,7 +54,6 @@ BOOL CSettingDlg::OnInitDialog()
 	
 	return TRUE;
 }
-
 
 void CSettingDlg::OnBnClickedOk()
 {

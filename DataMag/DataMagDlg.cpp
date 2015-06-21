@@ -6,6 +6,9 @@
 #include "LabelNameDlg.h"
 #include "ProjectListDlg.h"
 
+/**
+ * 全局的主对话框对象
+ */
 CDataMagDlg* theDataMagDlg = NULL;
 
 CDataMagDlg::CDataMagDlg(CWnd* pParent /*=NULL*/)
@@ -17,29 +20,142 @@ CDataMagDlg::CDataMagDlg(CWnd* pParent /*=NULL*/)
 	}
 	theDataMagDlg = this;
 
+	m_label_list.SetListEvent(&m_label_event);
+	m_label_info.SetListEvent(&m_label_info_event);
+
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 void CDataMagDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
 	DDX_Control(pDX, IDC_LABEL_LIST, m_label_list);
 	DDX_Control(pDX, IDC_LABEL_INFO_LIST, m_label_info);
-	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
-	DDX_Control(pDX, IDC_LABEL_SEARCH_EDIT, m_label_search_edit);
 	DDX_Control(pDX, IDC_INFO_SEARCH_EDIT, m_info_search_edit);
+	DDX_Control(pDX, IDC_LABEL_SEARCH_EDIT, m_label_search_edit);
 }
 
 BEGIN_MESSAGE_MAP(CDataMagDlg, CDialogEx)
+	ON_BN_CLICKED(IDC_SETTING, &CDataMagDlg::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_LABEL_ADD, &CDataMagDlg::OnBnClickedLabelAdd)
 	ON_BN_CLICKED(IDC_LABEL_DELETE, &CDataMagDlg::OnBnClickedLabelDelete)
 	ON_BN_CLICKED(IDC_LABEL_RENAME, &CDataMagDlg::OnBnClickedLabelRename)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_BOOK, &CDataMagDlg::OnBnClickedLabelRelateBook)
-	ON_BN_CLICKED(IDC_LABEL_RELATE_PROJECT, &CDataMagDlg::OnBnClickedLabelRelateProject)
-	ON_BN_CLICKED(IDC_SETTING, &CDataMagDlg::OnBnClickedSetting)
-	ON_BN_CLICKED(IDC_LABEL_SEARCH_BUTTON, &CDataMagDlg::OnBnClickedLabelSearchButton)
 	ON_BN_CLICKED(IDC_INFO_SEARCH_BUTTON, &CDataMagDlg::OnBnClickedInfoSearchButton)
+	ON_BN_CLICKED(IDC_LABEL_SEARCH_BUTTON, &CDataMagDlg::OnBnClickedLabelSearchButton)
+	ON_BN_CLICKED(IDC_LABEL_RELATE_PROJECT, &CDataMagDlg::OnBnClickedLabelRelateProject)
 END_MESSAGE_MAP()
+
+void CDataMagDlg::LabelListEvent::InitShellList()
+{
+	CString strFolder = theSetting.strMagFolder;
+	strFolder += _T("\\");
+	strFolder += LABEL_DIR;
+	theDataMagDlg->m_label_list.DisplayFolder(strFolder);
+}
+
+void CDataMagDlg::LabelListEvent::OnSelectChanged()
+{
+	POSITION pos = theDataMagDlg->m_label_list.GetFirstSelectedItemPosition();
+	int nItem = theDataMagDlg->m_label_list.GetNextSelectedItem(pos);
+	if (nItem >= 0)
+	{
+		CString strPath = theDataMagDlg->m_label_list.GetItemPath(nItem);
+		theDataMagDlg->m_label_info.DisplayFolder(strPath);
+	}
+}
+
+BOOL GetLinkFilePath(CString& strPath, CString strLink)
+{
+	HRESULT hResult = S_FALSE;
+
+	IShellLink* pShellLink = NULL;
+	AutoRelease<IShellLink*> tmp1(pShellLink);
+
+	IPersistFile* pPersistFile = NULL;
+	AutoRelease<IPersistFile*> tmp2(pPersistFile);
+
+	hResult = CoCreateInstance(CLSID_ShellLink
+		, NULL
+		, CLSCTX_INPROC_SERVER
+		, IID_IShellLink
+		, (void**)&pShellLink);  
+	if(FAILED(hResult))
+	{
+		return FALSE;
+	}
+
+	hResult = pShellLink->QueryInterface(IID_IPersistFile
+		, (void**)&pPersistFile);
+	if(FAILED(hResult))
+	{
+		return FALSE;
+	}
+
+	hResult = pPersistFile->Load(strLink, STGM_READ);
+	if(FAILED(hResult))
+	{
+		return FALSE;
+	}
+
+	hResult = pShellLink->Resolve(NULL, SLR_ANY_MATCH);
+	if(FAILED(hResult))
+	{
+		return FALSE;
+	}
+
+	WCHAR szPath[MAX_PATH];
+
+	hResult = pShellLink->GetPath(szPath, MAX_PATH, NULL, SLGP_SHORTPATH); 
+	if(FAILED(hResult))
+	{
+		return FALSE;
+	}
+
+	strPath.SetString(szPath);
+
+	return TRUE; 
+}
+
+void CDataMagDlg::LabelInfoEvent::InitShellList()
+{
+	theDataMagDlg->m_label_info.DeleteAllItems();
+}
+
+void CDataMagDlg::LabelInfoEvent::OnSelectChanged()
+{
+	SetWindowTextA(theDataMagDlg->m_item_text.GetSafeHwnd(), "");
+
+	POSITION pos = theDataMagDlg->m_label_info.GetFirstSelectedItemPosition();
+	int nItem = theDataMagDlg->m_label_info.GetNextSelectedItem(pos);
+	if (nItem >= 0)
+	{
+		CString strPath;
+		CString strLink = theDataMagDlg->m_label_info.GetItemPath(nItem);
+		if (GetLinkFilePath(strPath, strLink))
+		{
+			if (PathIsDirectory(strPath))
+			{
+				CString strFile = strPath + _T("\\描述.txt");
+				CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
+
+				UINT nSize = file.GetLength() + 1;
+				char* szText = strText.GetBuffer();
+
+				if ((UINT)strText.GetLength() < nSize)
+				{
+					szText = strText.GetBufferSetLength(nSize);
+				}
+
+				memset(szText, 0, nSize);
+				file.Read(szText, nSize);
+
+				SetWindowTextA(theDataMagDlg->m_item_text.GetSafeHwnd(), szText);
+			}
+		}
+	}
+}
 
 BOOL CDataMagDlg::OnInitDialog()
 {
@@ -71,8 +187,6 @@ BOOL CDataMagDlg::OnInitDialog()
 
 	pButton = (CButton*)GetDlgItem(IDC_INFO_SEARCH_BUTTON);
 	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
-
-	m_label_list.SetInfoCtrl(&m_label_info);
 
 	return TRUE;
 }

@@ -2,21 +2,46 @@
 
 #include "resource.h"
 
+/**
+ * 配置文件
+ */
 class CSetting
 {
 public:
+	/**
+	 * 被管理的目录
+	 */
 	CString strMagFolder;
 
 public:
+	/**
+	 * 加载配置文件
+	 *
+	 * @param strFile
+	 *        配置文件的（绝对）路径
+	 */
 	void Load(CString strFile);
+
+	/**
+	 * 保存配置文件
+	 */
 	void Save();
 
 protected:
+	/**
+	 * 配置文件路径
+	 */
 	CString strIniFile;
 };
 
+/**
+ * 定义全局的配置对象
+ */
 extern CSetting theSetting;
 
+/**
+ * 配置对话框
+ */
 class CSettingDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CSettingDlg)
@@ -27,15 +52,14 @@ public:
 
 	enum { IDD = IDD_SETTINGDLG };
 
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
-
-	DECLARE_MESSAGE_MAP()
 public:
 	CMFCEditBrowseCtrl m_folder_select;
 
 protected:
 	virtual BOOL OnInitDialog();
-public:
+	virtual void DoDataExchange(CDataExchange* pDX);
+
+protected:
+	DECLARE_MESSAGE_MAP()
 	afx_msg void OnBnClickedOk();
 };
