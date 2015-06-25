@@ -42,9 +42,9 @@ BEGIN_MESSAGE_MAP(CDataMagDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_LABEL_DELETE, &CDataMagDlg::OnBnClickedLabelDelete)
 	ON_BN_CLICKED(IDC_LABEL_RENAME, &CDataMagDlg::OnBnClickedLabelRename)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_BOOK, &CDataMagDlg::OnBnClickedLabelRelateBook)
-	ON_BN_CLICKED(IDC_INFO_SEARCH_BUTTON, &CDataMagDlg::OnBnClickedInfoSearchButton)
-	ON_BN_CLICKED(IDC_LABEL_SEARCH_BUTTON, &CDataMagDlg::OnBnClickedLabelSearchButton)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_PROJECT, &CDataMagDlg::OnBnClickedLabelRelateProject)
+	ON_EN_CHANGE(IDC_LABEL_SEARCH_EDIT, &CDataMagDlg::OnChangeLabelSearchEdit)
+	ON_EN_CHANGE(IDC_INFO_SEARCH_EDIT, &CDataMagDlg::OnChangeInfoSearchEdit)
 END_MESSAGE_MAP()
 
 void CDataMagDlg::LabelListEvent::InitShellList()
@@ -157,6 +157,11 @@ void CDataMagDlg::LabelInfoEvent::OnSelectChanged()
 	}
 }
 
+void CDataMagDlg::LabelInfoEvent::OnDoubleClick()
+{
+	theDataMagDlg->m_label_info.DoDefaultDClick();
+}
+
 BOOL CDataMagDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -181,12 +186,6 @@ BOOL CDataMagDlg::OnInitDialog()
 
 	pButton = (CButton*)GetDlgItem(IDC_LABEL_RELATE_BOOK);
 	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_BOOK));
-
-	pButton = (CButton*)GetDlgItem(IDC_LABEL_SEARCH_BUTTON);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
-
-	pButton = (CButton*)GetDlgItem(IDC_INFO_SEARCH_BUTTON);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
 
 	return TRUE;
 }
@@ -329,6 +328,12 @@ void CDataMagDlg::OnBnClickedLabelRelateProject()
 
 		m_label_info.Refresh();
 	}
+	else
+	{
+		CProjectListDlg dlg;
+		dlg.Op = CProjectListDlg::Display;
+		dlg.DoModal();
+	}
 }
 
 void CDataMagDlg::OnBnClickedLabelRelateBook()
@@ -354,6 +359,12 @@ void CDataMagDlg::OnBnClickedLabelRelateBook()
 
 		m_label_info.Refresh();
 	}
+	else
+	{
+		CBookListDlg dlg;
+		dlg.Op = CBookListDlg::Display;
+		dlg.DoModal();
+	}
 }
 
 void CDataMagDlg::OnBnClickedSetting()
@@ -378,6 +389,11 @@ BOOL CDataMagDlg::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
+		case VK_RETURN:
+			{
+				return TRUE;
+			}
+			break;
 		case VK_DELETE:
 			{
 				if (pFocusWnd == &m_label_info)
@@ -406,14 +422,14 @@ BOOL CDataMagDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CDataMagDlg::OnBnClickedLabelSearchButton()
+void CDataMagDlg::OnChangeLabelSearchEdit()
 {
 	CString strFilter;
 	m_label_search_edit.GetWindowText(strFilter);
 	m_label_list.SetFilterString(strFilter);
 }
 
-void CDataMagDlg::OnBnClickedInfoSearchButton()
+void CDataMagDlg::OnChangeInfoSearchEdit()
 {
 	CString strFilter;
 	m_info_search_edit.GetWindowText(strFilter);

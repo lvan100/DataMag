@@ -59,6 +59,11 @@ public:
 		m_event = event;
 	}
 
+	/**
+	 * 执行默认的双击操作
+	 */
+	void DoDefaultDClick();
+
 protected:
 	/**
 	 * 客户端实现的事件对象
@@ -106,11 +111,32 @@ public:
 		DisplayFolder(GetCurrentFolder());
 	}
 
+	/**
+	 * 设置是否允许双击打开文件夹
+	 *
+	 * @param enable
+	 *        是否允许打开文件夹
+	 */
+	void EnableDClickOpenFolder(BOOL enable)
+	{
+		m_bDClickOpenFolder = enable;
+	}
+
 protected:
 	/**
 	 * 过滤字符串
 	 */
 	CString m_filter;
+
+	/**
+	 * 双击打开文件夹
+	 */
+	BOOL m_bDClickOpenFolder;
+
+	/**
+	 * 当前目录
+	 */
+	CString m_strCurrentFolder;
 
 protected:
 	/**
@@ -131,6 +157,27 @@ protected:
 	afx_msg void OnDoubleClick(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult);
 
+public:
+	/*
+	 * 浏览指定目录
+	 *
+	 * @param lpszPath
+	 *        指定目录
+	 * @result 成功返回TRUE,否则返回FALSE
+	 */
+	virtual HRESULT DisplayFolder(LPCTSTR lpszPath)
+	{
+		if (PathFileExists(lpszPath))
+		{
+			m_strCurrentFolder = lpszPath;
+			return CMFCShellListCtrl::DisplayFolder(lpszPath);
+		}
+		return FALSE;
+	}
+
 protected:
-	virtual HRESULT EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent);
+	virtual HRESULT EnumObjects(LPSHELLFOLDER pParentFolder
+		, LPITEMIDLIST pidlParent);
+	
+	virtual void DoDefault(int iItem);
 };

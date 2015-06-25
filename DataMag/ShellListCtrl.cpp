@@ -5,7 +5,8 @@
 IMPLEMENT_DYNAMIC(CShellListCtrl, CMFCShellListCtrl)
 
 CShellListCtrl::CShellListCtrl()
-	: m_event(NULL){
+	: m_bDClickOpenFolder(FALSE)
+	, m_event(NULL){
 }
 
 CShellListCtrl::~CShellListCtrl(){
@@ -73,6 +74,15 @@ void CShellListCtrl::OnDoubleClick(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 	*pResult = 0;
 }
 
+void CShellListCtrl::DoDefaultDClick()
+{
+	int nItem = GetNextItem(-1, LVNI_FOCUSED);
+	if (nItem != -1)
+	{
+		DoDefault(nItem);
+	}
+}
+
 HRESULT CShellListCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent)
 {
 	ASSERT_VALID(this);
@@ -135,7 +145,7 @@ HRESULT CShellListCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pi
 				CString strPath = sfi.szDisplayName;
 				strPath.MakeLower();
 
-				if ((m_filter.GetLength() == 0) || (strPath.Find(m_filter) > 0))
+				if ((m_filter.GetLength() == 0) || (strPath.Find(m_filter) >= 0))
 				{
 					int iItem = InsertItem(&lvItem);
 					if (iItem >= 0)
@@ -156,4 +166,99 @@ HRESULT CShellListCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pi
 	}
 
 	return hRes;
+}
+
+void CShellListCtrl::DoDefault(int iItem)
+{
+	LVITEM lvItem;
+
+	ZeroMemory(&lvItem, sizeof(lvItem));
+	lvItem.mask = LVIF_PARAM;
+	lvItem.iItem = iItem;
+
+	if (!GetItem(&lvItem))
+	{
+		return;
+	}
+
+	LPAFX_SHELLITEMINFO pInfo = (LPAFX_SHELLITEMINFO) lvItem.lParam;
+	if (pInfo == NULL || pInfo->pParentFolder == NULL || pInfo->pidlRel == NULL)
+	{
+		ASSERT(FALSE);
+		return;
+	}
+
+	IShellFolder *psfFolder = pInfo->pParentFolder;
+	if (psfFolder == NULL)
+	{
+		HRESULT hr = SHGetDesktopFolder(&psfFolder);
+		if (FAILED(hr))
+		{
+			ASSERT(FALSE);
+			return;
+		}
+	}
+	else
+	{
+		psfFolder->AddRef();
+	}
+
+	if (psfFolder == NULL)
+	{
+		return;
+	}
+
+	// If specified element is a folder, try to display it:
+	ULONG ulAttrs = SFGAO_FOLDER;
+	psfFolder->GetAttributesOf(1, (const struct _ITEMIDLIST **) &pInfo->pidlRel, &ulAttrs);
+
+	if (m_bDClickOpenFolder && (ulAttrs & SFGAO_FOLDER))
+	{
+		CMFCShellListCtrl::DisplayFolder(pInfo);
+	}
+	else
+	{
+		// Invoke a default menu command:
+		IContextMenu *pcm;
+		HRESULT hr = psfFolder->GetUIObjectOf(GetSafeHwnd(), 1, (LPCITEMIDLIST*)&pInfo->pidlRel, IID_IContextMenu, NULL, (LPVOID*)&pcm);
+
+		if (SUCCEEDED(hr))
+		{
+			HMENU hPopup = CreatePopupMenu();
+
+			if (hPopup != NULL)
+			{
+				hr = pcm->QueryContextMenu(hPopup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
+
+				if (SUCCEEDED(hr))
+				{
+					UINT idCmd = ::GetMenuDefaultItem(hPopup, FALSE, 0);
+					if (idCmd != 0 && idCmd != (UINT)-1)
+					{
+						CMINVOKECOMMANDINFO cmi;
+						cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
+						cmi.fMask = 0;
+						cmi.hwnd = GetParent()->GetSafeHwnd();
+						cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
+						cmi.lpParameters = NULL;
+						cmi.lpDirectory = NULL;
+						cmi.nShow = SW_SHOWNORMAL;
+						cmi.dwHotKey = 0;
+						cmi.hIcon = NULL;
+
+						hr = pcm->InvokeCommand(&cmi);
+
+						if (SUCCEEDED(hr) && GetParent() != NULL)
+						{
+							GetParent()->SendMessage(AFX_WM_ON_AFTER_SHELL_COMMAND, (WPARAM) idCmd);
+						}
+					}
+				}
+			}
+
+			pcm->Release();
+		}
+	}
+
+	psfFolder->Release();
 }

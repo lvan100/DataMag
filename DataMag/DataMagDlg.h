@@ -47,6 +47,11 @@ protected:
 		 */
 		virtual void OnSelectChanged();
 
+		/**
+		 * 列表项双击事件
+		 */
+		virtual void OnDoubleClick();
+
 	protected:
 		/**
 		 * 文件内容
@@ -76,9 +81,9 @@ protected:
 	afx_msg void OnBnClickedLabelAdd();
 	afx_msg void OnBnClickedLabelDelete();
 	afx_msg void OnBnClickedLabelRename();
+	afx_msg void OnChangeInfoSearchEdit();
+	afx_msg void OnChangeLabelSearchEdit();
 	afx_msg void OnBnClickedLabelRelateBook();
-	afx_msg void OnBnClickedInfoSearchButton();
-	afx_msg void OnBnClickedLabelSearchButton();
 	afx_msg void OnBnClickedLabelRelateProject();
 };
 

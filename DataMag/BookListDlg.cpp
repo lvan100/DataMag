@@ -7,6 +7,7 @@ IMPLEMENT_DYNAMIC(CBookListDlg, CDialog)
 
 CBookListDlg::CBookListDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CBookListDlg::IDD, pParent)
+	, Op(Releate)
 {
 	m_book_list.SetListEvent(this);
 }
@@ -24,7 +25,7 @@ void CBookListDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CBookListDlg, CDialog)
 	ON_BN_CLICKED(IDOK, &CBookListDlg::OnBnClickedOk)
-	ON_BN_CLICKED(IDC_BOOK_SEARCH_BUTTON, &CBookListDlg::OnBnClickedBookSearchButton)
+	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookListDlg::OnChangeBookSearchEdit)
 END_MESSAGE_MAP()
 
 void CBookListDlg::InitShellList()
@@ -39,17 +40,19 @@ BOOL CBookListDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	auto pButton = (CButton*)GetDlgItem(IDC_BOOK_SEARCH_BUTTON);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
-
 	return TRUE;
 }
 
-void CBookListDlg::OnBnClickedBookSearchButton()
+void CBookListDlg::OnDoubleClick()
 {
-	CString strFilter;
-	m_book_search_edit.GetWindowText(strFilter);
-	m_book_list.SetFilterString(strFilter);
+	if (Op == Releate)
+	{
+		OnBnClickedOk();
+	}
+	else
+	{
+		m_book_list.DoDefaultDClick();
+	}
 }
 
 void CBookListDlg::OnBnClickedOk()
@@ -65,7 +68,9 @@ void CBookListDlg::OnBnClickedOk()
 	CDialog::OnOK();
 }
 
-void CBookListDlg::OnDoubleClick()
+void CBookListDlg::OnChangeBookSearchEdit()
 {
-	OnBnClickedOk();
+	CString strFilter;
+	m_book_search_edit.GetWindowText(strFilter);
+	m_book_list.SetFilterString(strFilter);
 }

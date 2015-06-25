@@ -7,6 +7,7 @@ IMPLEMENT_DYNAMIC(CProjectListDlg, CDialog)
 
 CProjectListDlg::CProjectListDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CProjectListDlg::IDD, pParent)
+	, Op(Releate)
 {
 	m_project_list.SetListEvent(this);
 }
@@ -24,7 +25,7 @@ void CProjectListDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CProjectListDlg, CDialog)
 	ON_BN_CLICKED(IDOK, &CProjectListDlg::OnBnClickedOk)
-	ON_BN_CLICKED(IDC_PROJECT_SEARCH_BUTTON, &CProjectListDlg::OnBnClickedProjectSearchButton)
+	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectListDlg::OnChangeProjectSearchEdit)
 END_MESSAGE_MAP()
 
 void CProjectListDlg::InitShellList()
@@ -39,17 +40,19 @@ BOOL CProjectListDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	auto pButton = (CButton*)GetDlgItem(IDC_PROJECT_SEARCH_BUTTON);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SEARCH));
-
 	return TRUE;
 }
 
-void CProjectListDlg::OnBnClickedProjectSearchButton()
+void CProjectListDlg::OnDoubleClick()
 {
-	CString strFilter;
-	m_project_search_edit.GetWindowText(strFilter);
-	m_project_list.SetFilterString(strFilter);
+	if (Op == Releate)
+	{
+		OnBnClickedOk();
+	}
+	else
+	{
+		m_project_list.DoDefaultDClick();
+	}
 }
 
 void CProjectListDlg::OnBnClickedOk()
@@ -66,7 +69,9 @@ void CProjectListDlg::OnBnClickedOk()
 	CDialog::OnOK();
 }
 
-void CProjectListDlg::OnDoubleClick()
+void CProjectListDlg::OnChangeProjectSearchEdit()
 {
-	OnBnClickedOk();
+	CString strFilter;
+	m_project_search_edit.GetWindowText(strFilter);
+	m_project_list.SetFilterString(strFilter);
 }

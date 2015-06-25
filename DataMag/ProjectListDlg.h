@@ -15,6 +15,11 @@ public:
 
 	enum { IDD = IDD_PROJECTLISTDLG };
 	
+	enum{
+		Display,
+		Releate,
+	}Op;
+
 public:
 	/**
 	 * 初始化列表控件
@@ -43,5 +48,5 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnBnClickedOk();
-	afx_msg void OnBnClickedProjectSearchButton();
+	afx_msg void OnChangeProjectSearchEdit();
 };
