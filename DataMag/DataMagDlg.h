@@ -70,6 +70,19 @@ public:
 protected:
 	HICON m_hIcon;
 
+	// 扩展状态
+	BOOL m_bExpand;
+
+	// 窗体大小
+	CSize sizeSmall;
+	CSize sizeLarge;
+
+protected:
+	/**
+	 * 重新调整窗体的位置
+	 */
+	void AdjustWndRect();
+
 protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -85,6 +98,8 @@ protected:
 	afx_msg void OnChangeLabelSearchEdit();
 	afx_msg void OnBnClickedLabelRelateBook();
 	afx_msg void OnBnClickedLabelRelateProject();
+public:
+	afx_msg void OnBnClickedExpandButton();
 };
 
 /**

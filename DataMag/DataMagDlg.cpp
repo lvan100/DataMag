@@ -13,6 +13,7 @@ CDataMagDlg* theDataMagDlg = NULL;
 
 CDataMagDlg::CDataMagDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDataMagDlg::IDD, pParent)
+	, m_bExpand(FALSE)
 {
 	if (theDataMagDlg != NULL)
 	{
@@ -45,6 +46,7 @@ BEGIN_MESSAGE_MAP(CDataMagDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_PROJECT, &CDataMagDlg::OnBnClickedLabelRelateProject)
 	ON_EN_CHANGE(IDC_LABEL_SEARCH_EDIT, &CDataMagDlg::OnChangeLabelSearchEdit)
 	ON_EN_CHANGE(IDC_INFO_SEARCH_EDIT, &CDataMagDlg::OnChangeInfoSearchEdit)
+	ON_BN_CLICKED(IDC_EXPAND_BUTTON, &CDataMagDlg::OnBnClickedExpandButton)
 END_MESSAGE_MAP()
 
 void CDataMagDlg::LabelListEvent::InitShellList()
@@ -186,6 +188,20 @@ BOOL CDataMagDlg::OnInitDialog()
 
 	pButton = (CButton*)GetDlgItem(IDC_LABEL_RELATE_BOOK);
 	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_BOOK));
+
+	CRect rcRichEdit;
+	GetDlgItem(IDC_ITEM_INFO)->GetWindowRect(rcRichEdit);
+
+	CRect rcWnd;
+	GetWindowRect(rcWnd);
+
+	sizeLarge= rcWnd.Size();
+	
+	sizeSmall = sizeLarge;
+	sizeSmall.cx -= rcRichEdit.Width();
+	sizeSmall.cx -= 7; /* 对话框内边框大小*/
+
+	AdjustWndRect();
 
 	return TRUE;
 }
@@ -434,4 +450,36 @@ void CDataMagDlg::OnChangeInfoSearchEdit()
 	CString strFilter;
 	m_info_search_edit.GetWindowText(strFilter);
 	m_label_info.SetFilterString(strFilter);
+}
+
+void CDataMagDlg::AdjustWndRect()
+{
+	CRect rcWnd;
+	GetWindowRect(rcWnd);
+
+	if (m_bExpand)
+	{
+		rcWnd.right = rcWnd.left + sizeLarge.cx;
+		rcWnd.bottom = rcWnd.top + sizeLarge.cy;
+
+		GetDlgItem(IDC_ITEM_INFO)->ShowWindow(SW_SHOW);
+	}
+	else
+	{
+		rcWnd.right = rcWnd.left + sizeSmall.cx;
+		rcWnd.bottom = rcWnd.top + sizeSmall.cy;
+
+		GetDlgItem(IDC_ITEM_INFO)->ShowWindow(SW_HIDE);
+	}
+
+	MoveWindow(rcWnd);
+
+	CenterWindow();
+}
+
+void CDataMagDlg::OnBnClickedExpandButton()
+{
+	m_bExpand = !m_bExpand;
+
+	AdjustWndRect();
 }
