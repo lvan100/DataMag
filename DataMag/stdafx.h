@@ -51,10 +51,6 @@
 #endif
 #endif
 
-#define BOOK_DIR _T("Õº È")
-#define LABEL_DIR _T("±Í«©")
-#define PROJECT_DIR _T("‘¥¬Î")
-
 template<typename T>
 struct AutoRelease{
 

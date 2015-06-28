@@ -9,6 +9,10 @@ CProjectTab::CProjectTab(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CProjectTab::IDD, pParent)
 {
 	m_project_list.SetListEvent(this);
+
+	DirChangeLinster listener;
+	listener = bind(&CProjectTab::OnCodeMagDirChange, this, std::placeholders::_1);
+	theSetting.AddCodeMagDirChangeListener(listener);
 }
 
 CProjectTab::~CProjectTab()
@@ -18,6 +22,7 @@ CProjectTab::~CProjectTab()
 void CProjectTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
 	DDX_Control(pDX, IDC_PROJECT_LIST, m_project_list);
 	DDX_Control(pDX, IDC_PROJECT_SEARCH_EDIT, m_project_search_edit);
 }
@@ -28,9 +33,7 @@ END_MESSAGE_MAP()
 
 void CProjectTab::InitShellList()
 {
-	CString strFolder = theSetting.strMagFolder;
-	strFolder += _T("\\");
-	strFolder += PROJECT_DIR;
+	CString strFolder = theSetting.GetCodeMagDir();
 	m_project_list.DisplayFolder(strFolder);
 }
 
@@ -41,7 +44,30 @@ void CProjectTab::OnDoubleClick()
 
 void CProjectTab::OnSelectChanged()
 {
+	POSITION pos = m_project_list.GetFirstSelectedItemPosition();
+	int nItem = m_project_list.GetNextSelectedItem(pos);
+	if (nItem >= 0)
+	{
+		CString strPath = m_project_list.GetItemPath(nItem);
+		if (PathIsDirectory(strPath))
+		{
+			CString strFile = strPath + _T("\\√Ë ˆ.txt");
+			CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
 
+			UINT nSize = UINT(file.GetLength()) + 1;
+			char* szText = strText.GetBuffer();
+
+			if ((UINT)strText.GetLength() < nSize)
+			{
+				szText = strText.GetBufferSetLength(nSize);
+			}
+
+			memset(szText, 0, nSize);
+			file.Read(szText, nSize);
+
+			SetWindowTextA(m_item_text.GetSafeHwnd(), szText);
+		}
+	}
 }
 
 void CProjectTab::OnChangeProjectSearchEdit()

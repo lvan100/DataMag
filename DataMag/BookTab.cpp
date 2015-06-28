@@ -9,6 +9,10 @@ CBookTab::CBookTab(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CBookTab::IDD, pParent)
 {
 	m_book_list.SetListEvent(this);
+
+	DirChangeLinster listener;
+	listener = bind(&CBookTab::OnBookMagDirChange, this, std::placeholders::_1);
+	theSetting.AddBookMagDirChangeListener(listener);
 }
 
 CBookTab::~CBookTab()
@@ -18,6 +22,7 @@ CBookTab::~CBookTab()
 void CBookTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
 	DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
 	DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_book_search_edit);
 }
@@ -28,9 +33,7 @@ END_MESSAGE_MAP()
 
 void CBookTab::InitShellList()
 {
-	CString strFolder = theSetting.strMagFolder;
-	strFolder += _T("\\");
-	strFolder += BOOK_DIR;
+	CString strFolder = theSetting.GetBookMagDir();
 	m_book_list.DisplayFolder(strFolder);
 }
 
@@ -41,7 +44,30 @@ void CBookTab::OnDoubleClick()
 
 void CBookTab::OnSelectChanged()
 {
+	POSITION pos = m_book_list.GetFirstSelectedItemPosition();
+	int nItem = m_book_list.GetNextSelectedItem(pos);
+	if (nItem >= 0)
+	{
+		CString strPath = m_book_list.GetItemPath(nItem);
+		if (PathIsDirectory(strPath))
+		{
+			CString strFile = strPath + _T("\\√Ë ˆ.txt");
+			CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
 
+			UINT nSize = UINT(file.GetLength()) + 1;
+			char* szText = strText.GetBuffer();
+
+			if ((UINT)strText.GetLength() < nSize)
+			{
+				szText = strText.GetBufferSetLength(nSize);
+			}
+
+			memset(szText, 0, nSize);
+			file.Read(szText, nSize);
+
+			SetWindowTextA(m_item_text.GetSafeHwnd(), szText);
+		}
+	}
 }
 
 void CBookTab::OnChangeBookSearchEdit()

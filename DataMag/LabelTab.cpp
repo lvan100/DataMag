@@ -42,10 +42,7 @@ void CLabelTab::LabelListEvent::InitShellList()
 {
 	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_event)));
 
-	CString strFolder = theSetting.strMagFolder;
-	strFolder += _T("\\");
-	strFolder += LABEL_DIR;
-
+	CString strFolder = theSetting.GetCodeMagDir();
 	pThis->m_label_list.DisplayFolder(strFolder);
 }
 
@@ -153,10 +150,7 @@ void CLabelTab::OnBnClickedLabelAdd()
 	CLabelNameDlg dlg;
 	if (dlg.DoModal() == IDOK)
 	{
-		CString strFolder = theSetting.strMagFolder;
-		strFolder += _T("\\");
-		strFolder += LABEL_DIR;
-		strFolder += _T("\\");
+		CString strFolder = theSetting.GetCodeMagDir();
 		strFolder += dlg.m_label_name;
 
 		CreateDirectory(strFolder, nullptr);
@@ -216,12 +210,7 @@ void CLabelTab::OnBnClickedLabelRename()
 
 		if (dlg.DoModal() == IDOK)
 		{
-			CString strNewFolder = theSetting.strMagFolder;
-			strNewFolder += _T("\\");
-			strNewFolder += LABEL_DIR;
-			strNewFolder += _T("\\");
-			strNewFolder += dlg.m_label_name;
-
+			CString strNewFolder = theSetting.GetCodeMagDir();
 			CFile::Rename(strOldFolder, strNewFolder);
 		}
 	}

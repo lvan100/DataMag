@@ -89,7 +89,7 @@ BOOL CMainFrame::OnInitDialog()
 	CButton* pButton = (CButton*)GetDlgItem(IDC_SETTING);
 	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SETTING));
 
-	m_main_tab.SelectTab(0);
+	m_main_tab.SelectTab(1);
 
 	return TRUE;
 }
@@ -116,8 +116,5 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 void CMainFrame::OnClickedSetting()
 {
 	CSettingDlg dlg;
-	if (dlg.DoModal() == IDOK)
-	{
-		theSetting.Save();
-	}
+	dlg.DoModal();
 }

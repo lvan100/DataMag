@@ -13,9 +13,6 @@
     <Filter Include="Kernel\MainFrame">
       <UniqueIdentifier>{f804470b-b371-44bc-9544-00084421d65b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\TabTemplate">
-      <UniqueIdentifier>{543b19e7-e1c7-4bc9-b817-2e61f0f80d3d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Kernel\BookSelectDlg">
       <UniqueIdentifier>{c28d5e6f-bc10-458c-a18b-fabba33ee288}</UniqueIdentifier>
     </Filter>
@@ -24,9 +21,6 @@
     </Filter>
     <Filter Include="Kernel\LabelTab">
       <UniqueIdentifier>{a98c5081-6aa9-4d80-8818-4e3e6e67ea0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Kernel\ShellList">
-      <UniqueIdentifier>{84f56f35-e203-4623-bd96-3c69b5f4c8b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Kernel\ProjectTab">
       <UniqueIdentifier>{9ed6aa81-8c46-4cdf-9816-7c8cffba40fe}</UniqueIdentifier>
@@ -39,6 +33,15 @@
     </Filter>
     <Filter Include="Kernel\SettingDlg">
       <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget">
+      <UniqueIdentifier>{b986d6fd-d3e0-4da5-9437-59a7ca910887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\TabTemplate">
+      <UniqueIdentifier>{543b19e7-e1c7-4bc9-b817-2e61f0f80d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\ShellList">
+      <UniqueIdentifier>{84f56f35-e203-4623-bd96-3c69b5f4c8b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,13 +90,13 @@
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="ShellListCtrl.h">
-      <Filter>Kernel\ShellList</Filter>
+      <Filter>Widget\ShellList</Filter>
     </ClInclude>
     <ClInclude Include="MainFrame.h">
       <Filter>Kernel\MainFrame</Filter>
     </ClInclude>
     <ClInclude Include="TabTemplate.h">
-      <Filter>Kernel\TabTemplate</Filter>
+      <Filter>Widget\TabTemplate</Filter>
     </ClInclude>
     <ClInclude Include="ProjectTab.h">
       <Filter>Kernel\ProjectTab</Filter>
@@ -125,13 +128,13 @@
       <Filter>Kernel\SettingDlg</Filter>
     </ClCompile>
     <ClCompile Include="ShellListCtrl.cpp">
-      <Filter>Kernel\ShellList</Filter>
+      <Filter>Widget\ShellList</Filter>
     </ClCompile>
     <ClCompile Include="MainFrame.cpp">
       <Filter>Kernel\MainFrame</Filter>
     </ClCompile>
     <ClCompile Include="TabTemplate.cpp">
-      <Filter>Kernel\TabTemplate</Filter>
+      <Filter>Widget\TabTemplate</Filter>
     </ClCompile>
     <ClCompile Include="ProjectTab.cpp">
       <Filter>Kernel\ProjectTab</Filter>

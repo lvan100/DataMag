@@ -1,15 +1,94 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "MainFrame.h"
-#include "SettingDlg.h"
+
+/**
+ * 全局的应用设置对象
+ */
+CSetting theSetting;
+
+CString CSetting::GetCodeMagDir()
+{
+	TCHAR szDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, szDir);
+
+	PathAppend(szDir, _T("\\源码\\"));
+
+	if (!PathFileExists(szDir))
+	{
+		CreateDirectory(szDir, NULL);
+	}
+
+	return theApp.GetProfileString(_T("Settings"), _T("CodeDir"), szDir);
+}
+
+void CSetting::SetCodeMagDir(CString dir)
+{
+	if (GetCodeMagDir().CompareNoCase(dir) != 0)
+	{
+		theApp.WriteProfileString(_T("Settings"), _T("CodeDir"), dir);
+
+		for (auto iter = codeMagDirChangeListener.begin()
+				; iter != codeMagDirChangeListener.end()
+				; iter++)
+		{
+			(*iter)(dir);
+		}
+	}
+}
+
+CString CSetting::GetBookMagDir()
+{
+	TCHAR szDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, szDir);
+
+	PathAppend(szDir, _T("\\图书\\"));
+	
+	if (!PathFileExists(szDir))
+	{
+		CreateDirectory(szDir, NULL);
+	}
+
+	return theApp.GetProfileString(_T("Settings"), _T("BookDir"), szDir);
+}
+
+void CSetting::SetBookMagDir(CString dir)
+{
+	if (GetBookMagDir().CompareNoCase(dir) != 0)
+	{
+		theApp.WriteProfileString(_T("Settings"), _T("BookDir"), dir);
+
+		for (auto iter = bookMagDirChangeListener.begin()
+			; iter != bookMagDirChangeListener.end()
+			; iter++)
+		{
+			(*iter)(dir);
+		}
+	}
+}
+
+/************************************************************************/
+/*							  CDataMagApp                               */
+/************************************************************************/
 
 CDataMagApp::CDataMagApp()
 {
+	TCHAR szDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, szDir);
+	PathAppend(szDir, _T("\\DataMag.ini"));
+
+	m_pszProfileName = _tcsdup(szDir);
 }
 
+/**
+ * 全局的应用程序对象
+ */
 CDataMagApp theApp;
 
-CShellManager* afxShellManager;
+/*
+ * 全局的Shell管理器
+ */
+CShellManager theShellManager;
 
 BOOL CDataMagApp::InitInstance()
 {
@@ -20,34 +99,19 @@ BOOL CDataMagApp::InitInstance()
 
 	CWinApp::InitInstance();
 
+	AfxEnableControlContainer();
+
 	AutoCoInitialize autoCom;
 
 	if (!AfxSocketInit())
 	{
 		return FALSE;
 	}
-	
-	AfxEnableControlContainer();
 
 	AfxInitRichEdit2();
 
-	CShellManager* pShellManager;
-	pShellManager = new CShellManager;
-	afxShellManager = pShellManager;
-
-	TCHAR szDir[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, szDir);
-	PathAppend(szDir, _T("\\DataMag.ini"));
-
-	theSetting.Load(szDir);
-
 	CMainFrame dlg;
 	dlg.DoModal();
-
-	if (pShellManager != nullptr)
-	{
-		delete pShellManager;
-	}
 
 	return FALSE;
 }

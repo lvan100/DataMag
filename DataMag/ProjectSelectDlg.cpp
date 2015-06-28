@@ -29,9 +29,7 @@ END_MESSAGE_MAP()
 
 void CProjectSelectDlg::InitShellList()
 {
-	CString strFolder = theSetting.strMagFolder;
-	strFolder += _T("\\");
-	strFolder += PROJECT_DIR;
+	CString strFolder = theSetting.GetCodeMagDir();
 	m_project_list.DisplayFolder(strFolder);
 }
 

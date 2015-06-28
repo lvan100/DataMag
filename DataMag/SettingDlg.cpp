@@ -2,28 +2,6 @@
 #include "DataMag.h"
 #include "SettingDlg.h"
 
-/**
- * 全局配置对象
- */
-CSetting theSetting;
-
-void CSetting::Load(CString strFile)
-{
-	TCHAR szString[512];
-
-	strIniFile = strFile;
-	
-	GetPrivateProfileString(_T("GlobalSetting"), _T("RootDir")
-		, _T(""), szString, 512, strFile);
-	strMagFolder.SetString(szString);
-}
-
-void CSetting::Save()
-{
-	WritePrivateProfileString(_T("GlobalSetting"), _T("RootDir")
-		, strMagFolder, strIniFile);
-}
-
 IMPLEMENT_DYNAMIC(CSettingDlg, CDialog)
 
 CSettingDlg::CSettingDlg(CWnd* pParent /*=nullptr*/)
@@ -38,7 +16,8 @@ CSettingDlg::~CSettingDlg()
 void CSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_MFCEDITBROWSE1, m_folder_select);
+	DDX_Control(pDX, IDC_BOOK_BROWSER, m_book_browser);
+	DDX_Control(pDX, IDC_PROJECT_BROWSER, m_project_browser);
 }
 
 BEGIN_MESSAGE_MAP(CSettingDlg, CDialog)
@@ -49,15 +28,24 @@ BOOL CSettingDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	m_folder_select.EnableFolderBrowseButton();
-	m_folder_select.SetWindowText(theSetting.strMagFolder);
+	m_book_browser.EnableFolderBrowseButton();
+	m_book_browser.SetWindowText(theSetting.GetBookMagDir());
+
+	m_project_browser.EnableFolderBrowseButton();
+	m_project_browser.SetWindowText(theSetting.GetCodeMagDir());
 	
 	return TRUE;
 }
 
 void CSettingDlg::OnBnClickedOk()
 {
-	m_folder_select.GetWindowText(theSetting.strMagFolder);
+	CString strBookDir;
+	m_book_browser.GetWindowText(strBookDir);
+	theSetting.SetBookMagDir(strBookDir);
+
+	CString strProjectDir;
+	m_project_browser.GetWindowText(strProjectDir);
+	theSetting.SetCodeMagDir(strProjectDir);
 	
 	CDialog::OnOK();
 }

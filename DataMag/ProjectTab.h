@@ -15,6 +15,13 @@ public:
 
 	enum { IDD = IDD_PROJECTTAB };
 
+	/**
+	 * 响应项目管理目录改变事件
+	 */
+	void OnCodeMagDirChange(CString dir){
+		m_project_list.DisplayFolder(dir);
+	}
+
 public:
 	/**
 	 * 初始化列表控件
@@ -32,10 +39,17 @@ public:
 	virtual void OnSelectChanged();
 
 protected:
+	/**
+	 * 描述文件的内容
+	 */
+	CStringA strText;
+
+protected:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	CRichEditCtrl m_item_text;
 	CEdit m_project_search_edit;
 	CShellListCtrl m_project_list;
 

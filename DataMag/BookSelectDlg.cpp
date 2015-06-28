@@ -29,9 +29,7 @@ END_MESSAGE_MAP()
 
 void CBookSelectDlg::InitShellList()
 {
-	CString strFolder = theSetting.strMagFolder;
-	strFolder += _T("\\");
-	strFolder += BOOK_DIR;
+	CString strFolder = theSetting.GetBookMagDir();
 	m_book_list.DisplayFolder(strFolder);
 }
 

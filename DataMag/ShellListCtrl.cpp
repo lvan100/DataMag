@@ -95,7 +95,7 @@ void CShellListCtrl::DoDefaultDClick()
 HRESULT CShellListCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent)
 {
 	ASSERT_VALID(this);
-	ASSERT_VALID(afxShellManager);
+	ASSERT_VALID(&theShellManager);
 
 	LPENUMIDLIST pEnum = nullptr;
 	HRESULT hRes = pParentFolder->EnumObjects(nullptr, m_nTypes, &pEnum);
@@ -122,7 +122,7 @@ HRESULT CShellListCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pi
 			pItem = (LPAFX_SHELLITEMINFO)GlobalAlloc(GPTR, sizeof(AFX_SHELLITEMINFO));
 
 			pItem->pidlRel = pidlTemp;
-			pItem->pidlFQ = afxShellManager->ConcatenateItem(pidlParent, pidlTemp);
+			pItem->pidlFQ = theShellManager.ConcatenateItem(pidlParent, pidlTemp);
 
 			pItem->pParentFolder = pParentFolder;
 			lvItem.lParam = (LPARAM)pItem;

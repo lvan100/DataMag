@@ -15,6 +15,13 @@ public:
 
 	enum { IDD = IDD_BOOKTAB };
 
+	/**
+	 * 响应图书管理目录改变事件
+	 */
+	void OnBookMagDirChange(CString dir){
+		m_book_list.DisplayFolder(dir);
+	}
+
 public:
 	/**
 	 * 初始化列表控件
@@ -32,11 +39,18 @@ public:
 	virtual void OnSelectChanged();
 
 protected:
+	/**
+	 * 描述文件的内容
+	 */
+	CStringA strText;
+
+protected:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
 	CEdit m_book_search_edit;
+	CRichEditCtrl m_item_text;
 	CShellListCtrl m_book_list;
 
 	DECLARE_MESSAGE_MAP()
