@@ -4,7 +4,7 @@
 
 IMPLEMENT_DYNAMIC(CLabelNameDlg, CDialog)
 
-CLabelNameDlg::CLabelNameDlg(CWnd* pParent /*=NULL*/)
+CLabelNameDlg::CLabelNameDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(CLabelNameDlg::IDD, pParent)
 	, Op(CLabelNameDlg::New)
 	, m_label_name(_T(""))

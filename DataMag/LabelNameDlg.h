@@ -8,7 +8,7 @@ class CLabelNameDlg : public CDialog
 	DECLARE_DYNAMIC(CLabelNameDlg)
 
 public:
-	CLabelNameDlg(CWnd* pParent = NULL);
+	CLabelNameDlg(CWnd* pParent = nullptr);
 	virtual ~CLabelNameDlg();
 
 	enum { IDD = IDD_LABELNAMEDLG };
@@ -30,7 +30,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
-protected:
 	DECLARE_MESSAGE_MAP()
+protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };

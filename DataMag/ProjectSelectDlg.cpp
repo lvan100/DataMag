@@ -1,34 +1,33 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "SettingDlg.h"
-#include "ProjectListDlg.h"
+#include "ProjectSelectDlg.h"
 
-IMPLEMENT_DYNAMIC(CProjectListDlg, CDialog)
+IMPLEMENT_DYNAMIC(CProjectSelectDlg, CDialog)
 
-CProjectListDlg::CProjectListDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CProjectListDlg::IDD, pParent)
-	, Op(Releate)
+CProjectSelectDlg::CProjectSelectDlg(CWnd* pParent /*=nullptr*/)
+	: CDialog(CProjectSelectDlg::IDD, pParent)
 {
 	m_project_list.SetListEvent(this);
 }
 
-CProjectListDlg::~CProjectListDlg()
+CProjectSelectDlg::~CProjectSelectDlg()
 {
 }
 
-void CProjectListDlg::DoDataExchange(CDataExchange* pDX)
+void CProjectSelectDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PROJECT_LIST, m_project_list);
 	DDX_Control(pDX, IDC_PROJECT_SEARCH_EDIT, m_project_search_edit);
 }
 
-BEGIN_MESSAGE_MAP(CProjectListDlg, CDialog)
-	ON_BN_CLICKED(IDOK, &CProjectListDlg::OnBnClickedOk)
-	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectListDlg::OnChangeProjectSearchEdit)
+BEGIN_MESSAGE_MAP(CProjectSelectDlg, CDialog)
+	ON_BN_CLICKED(IDOK, &CProjectSelectDlg::OnBnClickedOk)
+	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectSelectDlg::OnChangeProjectSearchEdit)
 END_MESSAGE_MAP()
 
-void CProjectListDlg::InitShellList()
+void CProjectSelectDlg::InitShellList()
 {
 	CString strFolder = theSetting.strMagFolder;
 	strFolder += _T("\\");
@@ -36,26 +35,12 @@ void CProjectListDlg::InitShellList()
 	m_project_list.DisplayFolder(strFolder);
 }
 
-BOOL CProjectListDlg::OnInitDialog()
+void CProjectSelectDlg::OnDoubleClick()
 {
-	CDialog::OnInitDialog();
-
-	return TRUE;
+	OnBnClickedOk();
 }
 
-void CProjectListDlg::OnDoubleClick()
-{
-	if (Op == Releate)
-	{
-		OnBnClickedOk();
-	}
-	else
-	{
-		m_project_list.DoDefaultDClick();
-	}
-}
-
-void CProjectListDlg::OnBnClickedOk()
+void CProjectSelectDlg::OnBnClickedOk()
 {
 	POSITION pos = m_project_list.GetFirstSelectedItemPosition();
 	int nItem = m_project_list.GetNextSelectedItem(pos);
@@ -69,7 +54,7 @@ void CProjectListDlg::OnBnClickedOk()
 	CDialog::OnOK();
 }
 
-void CProjectListDlg::OnChangeProjectSearchEdit()
+void CProjectSelectDlg::OnChangeProjectSearchEdit()
 {
 	CString strFilter;
 	m_project_search_edit.GetWindowText(strFilter);

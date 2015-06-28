@@ -105,29 +105,37 @@
     <None Include="res\setting.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BookListDlg.h" />
+    <ClInclude Include="BookSelectDlg.h" />
+    <ClInclude Include="BookTab.h" />
     <ClInclude Include="DataMag.h" />
-    <ClInclude Include="DataMagDlg.h" />
     <ClInclude Include="LabelNameDlg.h" />
-    <ClInclude Include="ProjectListDlg.h" />
+    <ClInclude Include="LabelTab.h" />
+    <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="ProjectSelectDlg.h" />
+    <ClInclude Include="ProjectTab.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SettingDlg.h" />
     <ClInclude Include="ShellListCtrl.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TabTemplate.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BookListDlg.cpp" />
+    <ClCompile Include="BookSelectDlg.cpp" />
+    <ClCompile Include="BookTab.cpp" />
     <ClCompile Include="DataMag.cpp" />
-    <ClCompile Include="DataMagDlg.cpp" />
     <ClCompile Include="LabelNameDlg.cpp" />
-    <ClCompile Include="ProjectListDlg.cpp" />
+    <ClCompile Include="LabelTab.cpp" />
+    <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="ProjectSelectDlg.cpp" />
+    <ClCompile Include="ProjectTab.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="ShellListCtrl.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TabTemplate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DataMag.rc" />

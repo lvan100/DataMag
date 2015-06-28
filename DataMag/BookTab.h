@@ -3,22 +3,17 @@
 #include "ShellListCtrl.h"
 
 /**
- * 图书选择对话框
+ * 图书标签页
  */
-class CBookListDlg : public CDialog, CShellListEventAdapter
+class CBookTab : public CDialogEx, CShellListEventAdapter
 {
-	DECLARE_DYNAMIC(CBookListDlg)
+	DECLARE_DYNAMIC(CBookTab)
 
 public:
-	CBookListDlg(CWnd* pParent = NULL);
-	virtual ~CBookListDlg();
+	CBookTab(CWnd* pParent = NULL);
+	virtual ~CBookTab();
 
-	enum { IDD = IDD_BOOKLISTDLG };
-
-	enum{
-		Display,
-		Releate,
-	}Op;
+	enum { IDD = IDD_BOOKTAB };
 
 public:
 	/**
@@ -31,22 +26,20 @@ public:
 	 */
 	virtual void OnDoubleClick();
 
-public:
 	/**
-	 * 被选择的图书列表
+	 * 列表项发生变化
 	 */
-	CStringArray arrBook;
+	virtual void OnSelectChanged();
 
 protected:
-	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
 	CEdit m_book_search_edit;
 	CShellListCtrl m_book_list;
 
-protected:
 	DECLARE_MESSAGE_MAP()
-	afx_msg void OnBnClickedOk();
+protected:
 	afx_msg void OnChangeBookSearchEdit();
 };

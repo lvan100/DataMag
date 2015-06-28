@@ -6,7 +6,7 @@ IMPLEMENT_DYNAMIC(CShellListCtrl, CMFCShellListCtrl)
 
 CShellListCtrl::CShellListCtrl()
 	: m_bDClickOpenFolder(FALSE)
-	, m_event(NULL){
+	, m_event(nullptr){
 }
 
 CShellListCtrl::~CShellListCtrl(){
@@ -23,10 +23,9 @@ int CShellListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CMFCListCtrl::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	OnSetColumns();
-
-	if (m_event != NULL) {
-		m_event->InitShellList();
+	if (!InitList())
+	{
+		return -1;
 	}
 
 	return 0;
@@ -36,11 +35,21 @@ void CShellListCtrl::PreSubclassWindow()
 {
 	CMFCListCtrl::PreSubclassWindow();
 
+	if (!InitList())
+	{
+		ASSERT(FALSE);
+	}
+}
+
+BOOL CShellListCtrl::InitList()
+{
 	OnSetColumns();
 
-	if (m_event != NULL) {
+	if (m_event != nullptr) {
 		m_event->InitShellList();
 	}
+
+	return TRUE;
 }
 
 void CShellListCtrl::OnSetColumns()
@@ -58,7 +67,7 @@ void CShellListCtrl::OnSetColumns()
 
 void CShellListCtrl::OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	if (m_event != NULL) {
+	if (m_event != nullptr) {
 		m_event->OnSelectChanged();
 	}
 
@@ -67,7 +76,7 @@ void CShellListCtrl::OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult)
 
 void CShellListCtrl::OnDoubleClick(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	if (m_event != NULL) {
+	if (m_event != nullptr) {
 		m_event->OnDoubleClick();
 	}
 
@@ -88,10 +97,10 @@ HRESULT CShellListCtrl::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pi
 	ASSERT_VALID(this);
 	ASSERT_VALID(afxShellManager);
 
-	LPENUMIDLIST pEnum = NULL;
-	HRESULT hRes = pParentFolder->EnumObjects(NULL, m_nTypes, &pEnum);
+	LPENUMIDLIST pEnum = nullptr;
+	HRESULT hRes = pParentFolder->EnumObjects(nullptr, m_nTypes, &pEnum);
 
-	if (SUCCEEDED(hRes) && pEnum != NULL)
+	if (SUCCEEDED(hRes) && pEnum != nullptr)
 	{
 		LPITEMIDLIST pidlTemp;
 		DWORD dwFetched = 1;
@@ -182,14 +191,14 @@ void CShellListCtrl::DoDefault(int iItem)
 	}
 
 	LPAFX_SHELLITEMINFO pInfo = (LPAFX_SHELLITEMINFO) lvItem.lParam;
-	if (pInfo == NULL || pInfo->pParentFolder == NULL || pInfo->pidlRel == NULL)
+	if (pInfo == nullptr || pInfo->pParentFolder == nullptr || pInfo->pidlRel == nullptr)
 	{
 		ASSERT(FALSE);
 		return;
 	}
 
 	IShellFolder *psfFolder = pInfo->pParentFolder;
-	if (psfFolder == NULL)
+	if (psfFolder == nullptr)
 	{
 		HRESULT hr = SHGetDesktopFolder(&psfFolder);
 		if (FAILED(hr))
@@ -203,7 +212,7 @@ void CShellListCtrl::DoDefault(int iItem)
 		psfFolder->AddRef();
 	}
 
-	if (psfFolder == NULL)
+	if (psfFolder == nullptr)
 	{
 		return;
 	}
@@ -220,13 +229,13 @@ void CShellListCtrl::DoDefault(int iItem)
 	{
 		// Invoke a default menu command:
 		IContextMenu *pcm;
-		HRESULT hr = psfFolder->GetUIObjectOf(GetSafeHwnd(), 1, (LPCITEMIDLIST*)&pInfo->pidlRel, IID_IContextMenu, NULL, (LPVOID*)&pcm);
+		HRESULT hr = psfFolder->GetUIObjectOf(GetSafeHwnd(), 1, (LPCITEMIDLIST*)&pInfo->pidlRel, IID_IContextMenu, nullptr, (LPVOID*)&pcm);
 
 		if (SUCCEEDED(hr))
 		{
 			HMENU hPopup = CreatePopupMenu();
 
-			if (hPopup != NULL)
+			if (hPopup != nullptr)
 			{
 				hr = pcm->QueryContextMenu(hPopup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
 
@@ -240,15 +249,15 @@ void CShellListCtrl::DoDefault(int iItem)
 						cmi.fMask = 0;
 						cmi.hwnd = GetParent()->GetSafeHwnd();
 						cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
-						cmi.lpParameters = NULL;
-						cmi.lpDirectory = NULL;
+						cmi.lpParameters = nullptr;
+						cmi.lpDirectory = nullptr;
 						cmi.nShow = SW_SHOWNORMAL;
 						cmi.dwHotKey = 0;
-						cmi.hIcon = NULL;
+						cmi.hIcon = nullptr;
 
 						hr = pcm->InvokeCommand(&cmi);
 
-						if (SUCCEEDED(hr) && GetParent() != NULL)
+						if (SUCCEEDED(hr) && GetParent() != nullptr)
 						{
 							GetParent()->SendMessage(AFX_WM_ON_AFTER_SHELL_COMMAND, (WPARAM) idCmd);
 						}

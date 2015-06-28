@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "DataMag.h"
-#include "DataMagDlg.h"
+#include "MainFrame.h"
 #include "SettingDlg.h"
 
 CDataMagApp::CDataMagApp()
@@ -41,10 +41,10 @@ BOOL CDataMagApp::InitInstance()
 
 	theSetting.Load(szDir);
 
-	CDataMagDlg dlg;
+	CMainFrame dlg;
 	dlg.DoModal();
 
-	if (pShellManager != NULL)
+	if (pShellManager != nullptr)
 	{
 		delete pShellManager;
 	}

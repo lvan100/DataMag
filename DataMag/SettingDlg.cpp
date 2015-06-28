@@ -26,7 +26,7 @@ void CSetting::Save()
 
 IMPLEMENT_DYNAMIC(CSettingDlg, CDialog)
 
-CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
+CSettingDlg::CSettingDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(CSettingDlg::IDD, pParent)
 {
 }

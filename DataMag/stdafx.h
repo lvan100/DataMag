@@ -73,7 +73,7 @@ protected:
 struct AutoCoInitialize
 {
 	AutoCoInitialize(){
-		CoInitialize(NULL);
+		CoInitialize(nullptr);
 	}
 	~AutoCoInitialize(){
 		CoUninitialize();

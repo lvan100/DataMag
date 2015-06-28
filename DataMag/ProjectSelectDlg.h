@@ -5,20 +5,15 @@
 /**
  * 项目选择对话框
  */
-class CProjectListDlg : public CDialog, CShellListEventAdapter
+class CProjectSelectDlg : public CDialog, CShellListEventAdapter
 {
-	DECLARE_DYNAMIC(CProjectListDlg)
+	DECLARE_DYNAMIC(CProjectSelectDlg)
 
 public:
-	CProjectListDlg(CWnd* pParent = NULL);
-	virtual ~CProjectListDlg();
+	CProjectSelectDlg(CWnd* pParent = nullptr);
+	virtual ~CProjectSelectDlg();
 
-	enum { IDD = IDD_PROJECTLISTDLG };
-	
-	enum{
-		Display,
-		Releate,
-	}Op;
+	enum { IDD = IDD_PROJECTSELECTDLG };
 
 public:
 	/**
@@ -38,15 +33,14 @@ public:
 	CStringArray arrProject;
 
 protected:
-	virtual BOOL OnInitDialog();
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
 	CEdit m_project_search_edit;
 	CShellListCtrl m_project_list;
 
-protected:
 	DECLARE_MESSAGE_MAP()
+protected:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnChangeProjectSearchEdit();
 };

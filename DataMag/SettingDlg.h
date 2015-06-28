@@ -47,19 +47,19 @@ class CSettingDlg : public CDialog
 	DECLARE_DYNAMIC(CSettingDlg)
 
 public:
-	CSettingDlg(CWnd* pParent = NULL);
+	CSettingDlg(CWnd* pParent = nullptr);
 	virtual ~CSettingDlg();
 
 	enum { IDD = IDD_SETTINGDLG };
-
-public:
-	CMFCEditBrowseCtrl m_folder_select;
 
 protected:
 	virtual BOOL OnInitDialog();
 	virtual void DoDataExchange(CDataExchange* pDX);
 
-protected:
+public:
+	CMFCEditBrowseCtrl m_folder_select;
+
 	DECLARE_MESSAGE_MAP()
+protected:
 	afx_msg void OnBnClickedOk();
 };

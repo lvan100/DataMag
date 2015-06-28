@@ -179,5 +179,7 @@ protected:
 	virtual HRESULT EnumObjects(LPSHELLFOLDER pParentFolder
 		, LPITEMIDLIST pidlParent);
 	
+	virtual BOOL InitList();
+
 	virtual void DoDefault(int iItem);
 };

@@ -4,26 +4,41 @@
     <Filter Include="Application">
       <UniqueIdentifier>{c15e4b14-39fc-49a1-af1a-703960716c78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DataMag">
-      <UniqueIdentifier>{47a45f35-f060-44b6-ba15-e56804266251}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DataMag\Book">
-      <UniqueIdentifier>{c28d5e6f-bc10-458c-a18b-fabba33ee288}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DataMag\Label">
-      <UniqueIdentifier>{0d0f555f-a69d-41d4-afee-fb742616fa53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DataMag\Project">
-      <UniqueIdentifier>{6636454a-bca3-40a4-9c3a-2ed2daf7707b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DataMag\Setting">
-      <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Application\Resource">
       <UniqueIdentifier>{ab2b0bbc-135b-4f7b-aa5b-228bb5c71421}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DataMag\ShellList">
+    <Filter Include="Kernel">
+      <UniqueIdentifier>{7541c96c-da31-47c6-b995-270318e61250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\MainFrame">
+      <UniqueIdentifier>{f804470b-b371-44bc-9544-00084421d65b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\TabTemplate">
+      <UniqueIdentifier>{543b19e7-e1c7-4bc9-b817-2e61f0f80d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\BookSelectDlg">
+      <UniqueIdentifier>{c28d5e6f-bc10-458c-a18b-fabba33ee288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\ProjectSelectDlg">
+      <UniqueIdentifier>{6636454a-bca3-40a4-9c3a-2ed2daf7707b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\LabelTab">
+      <UniqueIdentifier>{a98c5081-6aa9-4d80-8818-4e3e6e67ea0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\ShellList">
       <UniqueIdentifier>{84f56f35-e203-4623-bd96-3c69b5f4c8b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\ProjectTab">
+      <UniqueIdentifier>{9ed6aa81-8c46-4cdf-9816-7c8cffba40fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\BookTab">
+      <UniqueIdentifier>{6d8c0e41-cdb3-4b7a-b212-4914452a5cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\LabelNameDlg">
+      <UniqueIdentifier>{5fa0214c-73ba-4405-b7c5-21a144e30a6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\SettingDlg">
+      <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,26 +80,38 @@
     <ClInclude Include="targetver.h">
       <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="BookListDlg.h">
-      <Filter>DataMag\Book</Filter>
-    </ClInclude>
-    <ClInclude Include="DataMagDlg.h">
-      <Filter>DataMag\Label</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectListDlg.h">
-      <Filter>DataMag\Project</Filter>
-    </ClInclude>
-    <ClInclude Include="LabelNameDlg.h">
-      <Filter>DataMag\Label</Filter>
-    </ClInclude>
     <ClInclude Include="SettingDlg.h">
-      <Filter>DataMag\Setting</Filter>
+      <Filter>Kernel\SettingDlg</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="ShellListCtrl.h">
-      <Filter>DataMag\ShellList</Filter>
+      <Filter>Kernel\ShellList</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrame.h">
+      <Filter>Kernel\MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="TabTemplate.h">
+      <Filter>Kernel\TabTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectTab.h">
+      <Filter>Kernel\ProjectTab</Filter>
+    </ClInclude>
+    <ClInclude Include="BookTab.h">
+      <Filter>Kernel\BookTab</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelTab.h">
+      <Filter>Kernel\LabelTab</Filter>
+    </ClInclude>
+    <ClInclude Include="BookSelectDlg.h">
+      <Filter>Kernel\BookSelectDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectSelectDlg.h">
+      <Filter>Kernel\ProjectSelectDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelNameDlg.h">
+      <Filter>Kernel\LabelNameDlg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -94,23 +121,35 @@
     <ClCompile Include="DataMag.cpp">
       <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="BookListDlg.cpp">
-      <Filter>DataMag\Book</Filter>
-    </ClCompile>
-    <ClCompile Include="DataMagDlg.cpp">
-      <Filter>DataMag\Label</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectListDlg.cpp">
-      <Filter>DataMag\Project</Filter>
-    </ClCompile>
-    <ClCompile Include="LabelNameDlg.cpp">
-      <Filter>DataMag\Label</Filter>
-    </ClCompile>
     <ClCompile Include="SettingDlg.cpp">
-      <Filter>DataMag\Setting</Filter>
+      <Filter>Kernel\SettingDlg</Filter>
     </ClCompile>
     <ClCompile Include="ShellListCtrl.cpp">
-      <Filter>DataMag\ShellList</Filter>
+      <Filter>Kernel\ShellList</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.cpp">
+      <Filter>Kernel\MainFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="TabTemplate.cpp">
+      <Filter>Kernel\TabTemplate</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectTab.cpp">
+      <Filter>Kernel\ProjectTab</Filter>
+    </ClCompile>
+    <ClCompile Include="BookTab.cpp">
+      <Filter>Kernel\BookTab</Filter>
+    </ClCompile>
+    <ClCompile Include="LabelTab.cpp">
+      <Filter>Kernel\LabelTab</Filter>
+    </ClCompile>
+    <ClCompile Include="BookSelectDlg.cpp">
+      <Filter>Kernel\BookSelectDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectSelectDlg.cpp">
+      <Filter>Kernel\ProjectSelectDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="LabelNameDlg.cpp">
+      <Filter>Kernel\LabelNameDlg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
