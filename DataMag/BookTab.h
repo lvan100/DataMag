@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PrettyEdit.h"
 #include "ShellListCtrl.h"
 
 /**
@@ -49,7 +50,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
-	CEdit m_book_search_edit;
+	CPrettyEdit m_search_edit;
 	CRichEditCtrl m_item_text;
 	CShellListCtrl m_book_list;
 

@@ -36,7 +36,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
-	CEdit m_book_search_edit;
+	CEdit m_search_edit;
 	CShellListCtrl m_book_list;
 
 	DECLARE_MESSAGE_MAP()

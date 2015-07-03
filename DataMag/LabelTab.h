@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PrettyEdit.h"
 #include "ShellListCtrl.h"
 
 /**
@@ -58,10 +59,10 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
-	CEdit m_info_search_edit;
-	CEdit m_label_search_edit;
 	CShellListCtrl m_label_list;
 	CShellListCtrl m_label_info;
+	CPrettyEdit m_info_search_edit;
+	CPrettyEdit m_label_search_edit;
 
 	DECLARE_MESSAGE_MAP()
 protected:

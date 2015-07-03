@@ -19,7 +19,7 @@ void CBookSelectDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
-	DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_book_search_edit);
+	DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_search_edit);
 }
 
 BEGIN_MESSAGE_MAP(CBookSelectDlg, CDialog)
@@ -54,6 +54,6 @@ void CBookSelectDlg::OnBnClickedOk()
 void CBookSelectDlg::OnChangeBookSearchEdit()
 {
 	CString strFilter;
-	m_book_search_edit.GetWindowText(strFilter);
+	m_search_edit.GetWindowText(strFilter);
 	m_book_list.SetFilterString(strFilter);
 }

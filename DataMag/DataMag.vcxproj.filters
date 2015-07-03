@@ -43,6 +43,9 @@
     <Filter Include="Widget\ShellList">
       <UniqueIdentifier>{84f56f35-e203-4623-bd96-3c69b5f4c8b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\PrettyEdit">
+      <UniqueIdentifier>{9035da42-b5e2-4502-859e-7abcf608e4b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -116,6 +119,9 @@
     <ClInclude Include="LabelNameDlg.h">
       <Filter>Kernel\LabelNameDlg</Filter>
     </ClInclude>
+    <ClInclude Include="PrettyEdit.h">
+      <Filter>Widget\PrettyEdit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -153,6 +159,9 @@
     </ClCompile>
     <ClCompile Include="LabelNameDlg.cpp">
       <Filter>Kernel\LabelNameDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="PrettyEdit.cpp">
+      <Filter>Widget\PrettyEdit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

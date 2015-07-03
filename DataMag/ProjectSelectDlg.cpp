@@ -19,7 +19,7 @@ void CProjectSelectDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PROJECT_LIST, m_project_list);
-	DDX_Control(pDX, IDC_PROJECT_SEARCH_EDIT, m_project_search_edit);
+	DDX_Control(pDX, IDC_PROJECT_SEARCH_EDIT, m_search_edit);
 }
 
 BEGIN_MESSAGE_MAP(CProjectSelectDlg, CDialog)
@@ -55,6 +55,6 @@ void CProjectSelectDlg::OnBnClickedOk()
 void CProjectSelectDlg::OnChangeProjectSearchEdit()
 {
 	CString strFilter;
-	m_project_search_edit.GetWindowText(strFilter);
+	m_search_edit.GetWindowText(strFilter);
 	m_project_list.SetFilterString(strFilter);
 }
