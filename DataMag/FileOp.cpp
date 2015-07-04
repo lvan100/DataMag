@@ -18,7 +18,13 @@ void DeleteDirectory(CString strDir)
 	while (IsFinded)
 	{
 		IsFinded = fileFind.FindNextFile();
-		DeleteFile(fileFind.GetFilePath());
+
+		CString strFilePath = fileFind.GetFilePath();
+		if (PathIsDirectory(strFilePath)) {
+			DeleteDirectory(strFilePath);
+		} else {
+			DeleteFile(strFilePath);
+		}
 	}
 
 	fileFind.Close();

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "FileOp.h"
 #include "DataMag.h"
 #include "SettingDlg.h"
 #include "ProjectTab.h"
@@ -34,6 +35,7 @@ void CProjectTab::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
 	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectTab::OnChangeProjectSearchEdit)
+	ON_WM_DROPFILES()
 END_MESSAGE_MAP()
 
 void CProjectTab::InitShellList()
@@ -86,11 +88,46 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN)
 	{
+		CWnd* pFocusWnd = GetFocus();
+
 		switch((UINT)pMsg->wParam)
 		{
 		case VK_RETURN:
 			{
 				return TRUE;
+			}
+			break;
+		case VK_DELETE:
+			{
+				if (pFocusWnd == &m_project_list)
+				{
+					POSITION pos = m_project_list.GetFirstSelectedItemPosition();
+					int nItem = m_project_list.GetNextSelectedItem(pos);
+					if (nItem >= 0)
+					{
+						CString strPath = m_project_list.GetItemPath(nItem);
+						if (PathIsDirectory(strPath)) {
+							DeleteDirectory(strPath);
+						} else {
+							DeleteFile(strPath);
+						}
+					}
+
+					m_project_list.Refresh();
+				}
+			}
+			break;
+		case VK_F5:
+			{
+				if (pFocusWnd == &m_project_list)
+				{
+					m_project_list.Refresh();
+				}
+			}
+			break;
+		case VK_F2:
+			{
+
 			}
 			break;
 		default:
@@ -101,9 +138,74 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-BOOL CProjectTab::OnInitDialog()
+void CProjectTab::OnDropFiles(HDROP hDropInfo)
 {
-	CDialogEx::OnInitDialog();
+	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
+	{
+		TCHAR szFilePath[MAX_PATH];
+		DragQueryFile(hDropInfo, i, szFilePath, MAX_PATH);
 
-	return TRUE;
+		TCHAR szFileName[MAX_PATH];
+		_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
+
+		PathStripPath(szFileName);
+		PathRemoveExtension(szFileName);
+
+		CString strBookDir = theSetting.GetCodeMagDir();
+		strBookDir += _T("\\");
+		strBookDir += szFileName;
+
+		if (PathIsDirectory(szFilePath))
+		{
+			strBookDir += _T("\\源码\\");
+			strBookDir += szFileName;
+		}
+		else
+		{
+			_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
+
+			PathStripPath(szFileName);
+
+			strBookDir += _T("\\源码\\");
+			strBookDir += szFileName;
+		}
+
+		_tcsncpy_s(szFileName, strBookDir, MAX_PATH);
+
+		memset(szFilePath + _tcslen(szFilePath), 0, sizeof(TCHAR) * 2);
+		memset(szFileName + _tcslen(szFileName), 0, sizeof(TCHAR) * 2);
+
+		SHFILEOPSTRUCT fileOp = {0};
+		fileOp.hwnd = GetSafeHwnd();
+		fileOp.wFunc = FO_COPY;
+		fileOp.pFrom = szFilePath;
+		fileOp.pTo = szFileName;
+		fileOp.fFlags = FOF_NOCONFIRMMKDIR;
+
+		SHFileOperation(&fileOp);
+
+		PathRemoveFileSpec(strBookDir.GetBuffer());
+		PathRemoveFileSpec(strBookDir.GetBuffer());
+		PathAppend(strBookDir.GetBuffer(), _T("描述.txt"));
+
+		CloseHandle(CreateFile(strBookDir, 0, 0, NULL, CREATE_ALWAYS, 0, NULL));
+
+		PathRemoveFileSpec(strBookDir.GetBuffer());
+		PathAppend(strBookDir.GetBuffer(), _T("\\资料"));
+
+		CreateDirectory(strBookDir, NULL);
+		
+		PathAppend(strBookDir.GetBuffer(), _T("\\资料"));
+
+		CreateDirectory(strBookDir, NULL);
+
+		PathRemoveFileSpec(strBookDir.GetBuffer());
+		PathAppend(strBookDir.GetBuffer(), _T("\\官网"));
+
+		CreateDirectory(strBookDir, NULL);
+	}
+
+	m_project_list.Refresh();
+
+	CDialogEx::OnDropFiles(hDropInfo);
 }

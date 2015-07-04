@@ -125,6 +125,11 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 				}
 			}
 			break;
+		case VK_F2:
+			{
+
+			}
+			break;
 		default:
 			break;
 		}

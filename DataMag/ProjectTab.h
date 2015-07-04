@@ -46,7 +46,6 @@ protected:
 	CStringA strText;
 
 protected:
-	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
@@ -58,4 +57,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnChangeProjectSearchEdit();
+	afx_msg void OnDropFiles(HDROP hDropInfo);
 };
