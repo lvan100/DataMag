@@ -57,4 +57,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnChangeBookSearchEdit();
+	afx_msg void OnDropFiles(HDROP hDropInfo);
 };

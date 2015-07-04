@@ -49,6 +49,9 @@
     <Filter Include="Widget\SearchEdit">
       <UniqueIdentifier>{cbb2d6f9-d552-4c91-9655-8be1dfdfde01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FileOp">
+      <UniqueIdentifier>{1279bef9-55a6-4545-a098-3f11b460cf29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -128,6 +131,9 @@
     <ClInclude Include="SearchEdit.h">
       <Filter>Widget\SearchEdit</Filter>
     </ClInclude>
+    <ClInclude Include="FileOp.h">
+      <Filter>FileOp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -171,6 +177,9 @@
     </ClCompile>
     <ClCompile Include="SearchEdit.cpp">
       <Filter>Widget\SearchEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="FileOp.cpp">
+      <Filter>FileOp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "FileOp.h"
 #include "DataMag.h"
 #include "BookTab.h"
 #include "SettingDlg.h"
@@ -34,6 +35,7 @@ void CBookTab::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CBookTab, CDialogEx)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookTab::OnChangeBookSearchEdit)
+	ON_WM_DROPFILES()
 END_MESSAGE_MAP()
 
 void CBookTab::InitShellList()
@@ -86,11 +88,41 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN)
 	{
+		CWnd* pFocusWnd = GetFocus();
+
 		switch((UINT)pMsg->wParam)
 		{
 		case VK_RETURN:
 			{
 				return TRUE;
+			}
+			break;
+		case VK_DELETE:
+			{
+				if (pFocusWnd == &m_book_list)
+				{
+					POSITION pos = m_book_list.GetFirstSelectedItemPosition();
+					int nItem = m_book_list.GetNextSelectedItem(pos);
+					if (nItem >= 0)
+					{
+						CString strPath = m_book_list.GetItemPath(nItem);
+						if (PathIsDirectory(strPath)) {
+							DeleteDirectory(strPath);
+						} else {
+							DeleteFile(strPath);
+						}
+					}
+
+					m_book_list.Refresh();
+				}
+			}
+			break;
+		case VK_F5:
+			{
+				if (pFocusWnd == &m_book_list)
+				{
+					m_book_list.Refresh();
+				}
 			}
 			break;
 		default:
@@ -99,4 +131,61 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CBookTab::OnDropFiles(HDROP hDropInfo)
+{
+	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
+	{
+		TCHAR szFilePath[MAX_PATH];
+		DragQueryFile(hDropInfo, i, szFilePath, MAX_PATH);
+
+		TCHAR szFileName[MAX_PATH];
+		_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
+
+		PathStripPath(szFileName);
+		PathRemoveExtension(szFileName);
+
+		CString strBookDir = theSetting.GetBookMagDir();
+		strBookDir += _T("\\");
+		strBookDir += szFileName;
+
+		if (PathIsDirectory(szFilePath))
+		{
+			strBookDir += _T("\\");
+			strBookDir += szFileName;
+		}
+		else
+		{
+			_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
+
+			PathStripPath(szFileName);
+
+			strBookDir += _T("\\");
+			strBookDir += szFileName;
+		}
+
+		_tcsncpy_s(szFileName, strBookDir, MAX_PATH);
+
+		memset(szFilePath + _tcslen(szFilePath), 0, sizeof(TCHAR) * 2);
+		memset(szFileName + _tcslen(szFileName), 0, sizeof(TCHAR) * 2);
+
+		SHFILEOPSTRUCT fileOp = {0};
+		fileOp.hwnd = GetSafeHwnd();
+		fileOp.wFunc = FO_COPY;
+		fileOp.pFrom = szFilePath;
+		fileOp.pTo = szFileName;
+		fileOp.fFlags = FOF_NOCONFIRMMKDIR;
+
+		SHFileOperation(&fileOp);
+
+		PathRemoveFileSpec(strBookDir.GetBuffer());
+		PathAppend(strBookDir.GetBuffer(), _T("ÃèÊö.txt"));
+		
+		CloseHandle(CreateFile(strBookDir, 0, 0, NULL, CREATE_ALWAYS, 0, NULL));
+	}
+
+	m_book_list.Refresh();
+
+	CDialogEx::OnDropFiles(hDropInfo);
 }
