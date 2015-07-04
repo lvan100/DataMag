@@ -115,6 +115,7 @@
     <ClInclude Include="ProjectSelectDlg.h" />
     <ClInclude Include="ProjectTab.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SearchEdit.h" />
     <ClInclude Include="SettingDlg.h" />
     <ClInclude Include="ShellListCtrl.h" />
     <ClInclude Include="stdafx.h" />
@@ -131,6 +132,7 @@
     <ClCompile Include="PrettyEdit.cpp" />
     <ClCompile Include="ProjectSelectDlg.cpp" />
     <ClCompile Include="ProjectTab.cpp" />
+    <ClCompile Include="SearchEdit.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="ShellListCtrl.cpp" />
     <ClCompile Include="stdafx.cpp">

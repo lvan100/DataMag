@@ -13,6 +13,11 @@ CBookTab::CBookTab(CWnd* pParent /*=NULL*/)
 	DirChangeLinster listener;
 	listener = bind(&CBookTab::OnBookMagDirChange, this, std::placeholders::_1);
 	theSetting.AddBookMagDirChangeListener(listener);
+
+	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_SEARCH)
+		, IMAGE_ICON, 0, 0, 0);
+	m_search_edit.SetSearchIcon(hSearchIcon);
 }
 
 CBookTab::~CBookTab()

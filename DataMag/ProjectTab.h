@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PrettyEdit.h"
+#include "SearchEdit.h"
 #include "ShellListCtrl.h"
 
 /**
@@ -46,11 +46,12 @@ protected:
 	CStringA strText;
 
 protected:
+	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
-	CPrettyEdit m_search_edit;
+	CSearchEdit m_search_edit;
 	CRichEditCtrl m_item_text;
 	CShellListCtrl m_project_list;
 

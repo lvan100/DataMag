@@ -46,6 +46,9 @@
     <Filter Include="Widget\PrettyEdit">
       <UniqueIdentifier>{9035da42-b5e2-4502-859e-7abcf608e4b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\SearchEdit">
+      <UniqueIdentifier>{cbb2d6f9-d552-4c91-9655-8be1dfdfde01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -122,6 +125,9 @@
     <ClInclude Include="PrettyEdit.h">
       <Filter>Widget\PrettyEdit</Filter>
     </ClInclude>
+    <ClInclude Include="SearchEdit.h">
+      <Filter>Widget\SearchEdit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -162,6 +168,9 @@
     </ClCompile>
     <ClCompile Include="PrettyEdit.cpp">
       <Filter>Widget\PrettyEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchEdit.cpp">
+      <Filter>Widget\SearchEdit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

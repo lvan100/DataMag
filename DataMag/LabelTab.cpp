@@ -13,6 +13,12 @@ CLabelTab::CLabelTab(CWnd* pParent /*=NULL*/)
 {	
 	m_label_list.SetListEvent(&m_label_event);
 	m_label_info.SetListEvent(&m_label_info_event);
+
+	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_SEARCH)
+		, IMAGE_ICON, 0, 0, 0);
+	m_info_search_edit.SetSearchIcon(hSearchIcon);
+	m_label_search_edit.SetSearchIcon(hSearchIcon);
 }
 
 CLabelTab::~CLabelTab()
