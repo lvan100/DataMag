@@ -12,7 +12,7 @@ CString CSetting::GetCodeMagDir()
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
 
-	PathAppend(szDir, _T("\\源码\\"));
+	PathAppend(szDir, _T("\\源码"));
 
 	if (!PathFileExists(szDir))
 	{
@@ -42,7 +42,7 @@ CString CSetting::GetBookMagDir()
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
 
-	PathAppend(szDir, _T("\\图书\\"));
+	PathAppend(szDir, _T("\\图书"));
 	
 	if (!PathFileExists(szDir))
 	{
