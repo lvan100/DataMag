@@ -149,9 +149,7 @@ protected:
 	 */
 	virtual void PreSubclassWindow();
 
-protected:
 	DECLARE_MESSAGE_MAP()
-
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDoubleClick(NMHDR* pNMHDR, LRESULT* pResult);

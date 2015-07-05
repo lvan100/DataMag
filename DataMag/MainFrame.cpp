@@ -89,7 +89,7 @@ BOOL CMainFrame::OnInitDialog()
 	CButton* pButton = (CButton*)GetDlgItem(IDC_SETTING);
 	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SETTING));
 
-	m_main_tab.SelectTab(1);
+	m_main_tab.SelectTab(2);
 
 	return TRUE;
 }

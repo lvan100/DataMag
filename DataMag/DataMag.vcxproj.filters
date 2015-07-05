@@ -40,9 +40,6 @@
     <Filter Include="Widget\TabTemplate">
       <UniqueIdentifier>{543b19e7-e1c7-4bc9-b817-2e61f0f80d3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widget\ShellList">
-      <UniqueIdentifier>{84f56f35-e203-4623-bd96-3c69b5f4c8b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widget\PrettyEdit">
       <UniqueIdentifier>{9035da42-b5e2-4502-859e-7abcf608e4b1}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,12 @@
     </Filter>
     <Filter Include="FileOp">
       <UniqueIdentifier>{1279bef9-55a6-4545-a098-3f11b460cf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\ShellListCtrl">
+      <UniqueIdentifier>{84f56f35-e203-4623-bd96-3c69b5f4c8b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\FileListBox">
+      <UniqueIdentifier>{a0195ea2-385f-4302-8a07-7b1fc8f3957d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -99,7 +102,7 @@
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="ShellListCtrl.h">
-      <Filter>Widget\ShellList</Filter>
+      <Filter>Widget\ShellListCtrl</Filter>
     </ClInclude>
     <ClInclude Include="MainFrame.h">
       <Filter>Kernel\MainFrame</Filter>
@@ -134,6 +137,9 @@
     <ClInclude Include="FileOp.h">
       <Filter>FileOp</Filter>
     </ClInclude>
+    <ClInclude Include="FileListBox.h">
+      <Filter>Widget\FileListBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -146,7 +152,7 @@
       <Filter>Kernel\SettingDlg</Filter>
     </ClCompile>
     <ClCompile Include="ShellListCtrl.cpp">
-      <Filter>Widget\ShellList</Filter>
+      <Filter>Widget\ShellListCtrl</Filter>
     </ClCompile>
     <ClCompile Include="MainFrame.cpp">
       <Filter>Kernel\MainFrame</Filter>
@@ -180,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="FileOp.cpp">
       <Filter>FileOp</Filter>
+    </ClCompile>
+    <ClCompile Include="FileListBox.cpp">
+      <Filter>Widget\FileListBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "SearchEdit.h"
-#include "ShellListCtrl.h"
+#include "FileListBox.h"
 
 /**
  * 图书标签页
  */
-class CBookTab : public CDialogEx, CShellListEventAdapter
+class CBookTab : public CDialogEx, CListBoxEventAdapter
 {
 	DECLARE_DYNAMIC(CBookTab)
 
@@ -27,7 +27,7 @@ public:
 	/**
 	 * 初始化列表控件
 	 */
-	virtual void InitShellList();
+	virtual void InitListBox();
 
 	/**
 	 * 列表项双击事件
@@ -46,16 +46,18 @@ protected:
 	CStringA strText;
 
 protected:
+	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
 	CSearchEdit m_search_edit;
 	CRichEditCtrl m_item_text;
-	CShellListCtrl m_book_list;
+	CFileListBox m_book_list;
 
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnChangeBookSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
+	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 };

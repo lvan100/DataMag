@@ -8,6 +8,7 @@ IMPLEMENT_DYNAMIC(CBookTab, CDialogEx)
 
 CBookTab::CBookTab(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CBookTab::IDD, pParent)
+	, m_book_list(&theShellManager)
 {
 	m_book_list.SetListEvent(this);
 
@@ -36,9 +37,10 @@ void CBookTab::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CBookTab, CDialogEx)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookTab::OnChangeBookSearchEdit)
 	ON_WM_DROPFILES()
+	ON_WM_SHOWWINDOW()
 END_MESSAGE_MAP()
 
-void CBookTab::InitShellList()
+void CBookTab::InitListBox()
 {
 	CString strFolder = theSetting.GetBookMagDir();
 	m_book_list.DisplayFolder(strFolder);
@@ -46,13 +48,12 @@ void CBookTab::InitShellList()
 
 void CBookTab::OnDoubleClick()
 {
-	m_book_list.DoDefaultDClick();
+	m_book_list.DoDefaultDClick(m_book_list.GetCurSel());
 }
 
 void CBookTab::OnSelectChanged()
 {
-	POSITION pos = m_book_list.GetFirstSelectedItemPosition();
-	int nItem = m_book_list.GetNextSelectedItem(pos);
+	int nItem = m_book_list.GetCurSel();
 	if (nItem >= 0)
 	{
 		CString strPath = m_book_list.GetItemPath(nItem);
@@ -75,6 +76,13 @@ void CBookTab::OnSelectChanged()
 			SetWindowTextA(m_item_text.GetSafeHwnd(), szText);
 		}
 	}
+}
+
+BOOL CBookTab::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	return TRUE;
 }
 
 void CBookTab::OnChangeBookSearchEdit()
@@ -101,8 +109,7 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 			{
 				if (pFocusWnd == &m_book_list)
 				{
-					POSITION pos = m_book_list.GetFirstSelectedItemPosition();
-					int nItem = m_book_list.GetNextSelectedItem(pos);
+					int nItem = m_book_list.GetCurSel();
 					if (nItem >= 0)
 					{
 						CString strPath = m_book_list.GetItemPath(nItem);
@@ -119,10 +126,12 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 			break;
 		case VK_F5:
 			{
-				if (pFocusWnd == &m_book_list)
-				{
-					m_book_list.Refresh();
-				}
+				m_book_list.Refresh();
+			}
+			break;
+		case VK_F3:
+			{
+				m_search_edit.SetFocus();
 			}
 			break;
 		case VK_F2:
@@ -149,26 +158,13 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 		_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
 
 		PathStripPath(szFileName);
-		PathRemoveExtension(szFileName);
 
 		CString strBookDir = theSetting.GetBookMagDir();
 		strBookDir += _T("\\");
 		strBookDir += szFileName;
 
-		if (PathIsDirectory(szFilePath))
-		{
-			strBookDir += _T("\\");
-			strBookDir += szFileName;
-		}
-		else
-		{
-			_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
-
-			PathStripPath(szFileName);
-
-			strBookDir += _T("\\");
-			strBookDir += szFileName;
-		}
+		strBookDir += _T("\\");
+		strBookDir += szFileName;
 
 		_tcsncpy_s(szFileName, strBookDir, MAX_PATH);
 
@@ -193,4 +189,11 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 	m_book_list.Refresh();
 
 	CDialogEx::OnDropFiles(hDropInfo);
+}
+
+void CBookTab::OnShowWindow(BOOL bShow, UINT nStatus)
+{
+	m_search_edit.SetFocus();
+
+	CDialogEx::OnShowWindow(bShow, nStatus);
 }
