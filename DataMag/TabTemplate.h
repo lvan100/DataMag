@@ -99,8 +99,8 @@ protected:
 	 * ±êÇ©Ò³¿í¸ß
 	 */
 	enum {
-		TAB_WIDTH = 128,
-		TAB_HEIGHT = 48,
+		TAB_WIDTH = 126,
+		TAB_HEIGHT = 42,
 	};
 
 	/**

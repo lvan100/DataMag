@@ -103,7 +103,9 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 		{
 		case VK_RETURN:
 			{
-				return TRUE;
+				if (pFocusWnd != &m_item_text) {
+					return TRUE;
+				}
 			}
 			break;
 		case VK_DELETE:
