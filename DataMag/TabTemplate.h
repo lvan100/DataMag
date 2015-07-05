@@ -100,7 +100,7 @@ protected:
 	 */
 	enum {
 		TAB_WIDTH = 128,
-		TAB_HEIGHT = 48
+		TAB_HEIGHT = 48,
 	};
 
 	/**

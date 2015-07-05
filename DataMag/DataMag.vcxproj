@@ -100,9 +100,11 @@
     <None Include="res\DataMag.ico" />
     <None Include="res\DataMag.rc2" />
     <None Include="res\delete.ico" />
+    <None Include="res\help.ico" />
     <None Include="res\rename.ico" />
     <None Include="res\search.ico" />
     <None Include="res\setting.ico" />
+    <None Include="res\tip.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BookSelectDlg.h" />
