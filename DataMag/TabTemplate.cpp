@@ -82,6 +82,7 @@ BOOL CTabTemplate::SelectTab(UINT nItem)
 		if (pItem != nullptr)
 		{
 			pItem->ShowWindow(SW_SHOW);
+			pItem->SetFocus();
 		}
 
 		SetCurSel(nItem);

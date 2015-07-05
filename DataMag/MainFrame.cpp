@@ -89,9 +89,9 @@ BOOL CMainFrame::OnInitDialog()
 	CButton* pButton = (CButton*)GetDlgItem(IDC_SETTING);
 	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SETTING));
 
-	m_main_tab.SelectTab(2);
+	m_main_tab.SelectTab(1);
 
-	return TRUE;
+	return FALSE;
 }
 
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)

@@ -25,7 +25,7 @@ public:
 
 public:
 	/**
-	 * 初始化列表控件
+	 * 初始化列表框控件
 	 */
 	virtual void InitListBox();
 
@@ -57,9 +57,9 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	CFileListBox m_book_list;
 	CSearchEdit m_search_edit;
 	CRichEditCtrl m_item_text;
-	CFileListBox m_book_list;
 
 	DECLARE_MESSAGE_MAP()
 protected:

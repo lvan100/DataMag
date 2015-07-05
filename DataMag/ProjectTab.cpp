@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FileOp.h"
 #include "DataMag.h"
+#include "NameDlg.h"
 #include "SettingDlg.h"
 #include "ProjectTab.h"
 
@@ -8,6 +9,7 @@ IMPLEMENT_DYNAMIC(CProjectTab, CDialogEx)
 
 CProjectTab::CProjectTab(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CProjectTab::IDD, pParent)
+	, m_project_list(&theShellManager)
 {
 	m_project_list.SetListEvent(this);
 
@@ -36,9 +38,10 @@ void CProjectTab::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
 	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectTab::OnChangeProjectSearchEdit)
 	ON_WM_DROPFILES()
+	ON_WM_SHOWWINDOW()
 END_MESSAGE_MAP()
 
-void CProjectTab::InitShellList()
+void CProjectTab::InitListBox()
 {
 	CString strFolder = theSetting.GetCodeMagDir();
 	m_project_list.DisplayFolder(strFolder);
@@ -46,13 +49,12 @@ void CProjectTab::InitShellList()
 
 void CProjectTab::OnDoubleClick()
 {
-	m_project_list.DoDefaultDClick();
+	m_project_list.DoDefaultDClick(m_project_list.GetCurSel());
 }
 
 void CProjectTab::OnSelectChanged()
 {
-	POSITION pos = m_project_list.GetFirstSelectedItemPosition();
-	int nItem = m_project_list.GetNextSelectedItem(pos);
+	int nItem = m_project_list.GetCurSel();
 	if (nItem >= 0)
 	{
 		CString strPath = m_project_list.GetItemPath(nItem);
@@ -75,6 +77,13 @@ void CProjectTab::OnSelectChanged()
 			SetWindowTextA(m_item_text.GetSafeHwnd(), szText);
 		}
 	}
+}
+
+BOOL CProjectTab::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	return TRUE;
 }
 
 void CProjectTab::OnChangeProjectSearchEdit()
@@ -101,8 +110,7 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 			{
 				if (pFocusWnd == &m_project_list)
 				{
-					POSITION pos = m_project_list.GetFirstSelectedItemPosition();
-					int nItem = m_project_list.GetNextSelectedItem(pos);
+					int nItem = m_project_list.GetCurSel();
 					if (nItem >= 0)
 					{
 						CString strPath = m_project_list.GetItemPath(nItem);
@@ -114,20 +122,33 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 					}
 
 					m_project_list.Refresh();
+
+					return TRUE;
 				}
 			}
 			break;
 		case VK_F5:
 			{
-				if (pFocusWnd == &m_project_list)
-				{
-					m_project_list.Refresh();
-				}
+				m_project_list.Refresh();
+
+				return TRUE;
+			}
+			break;
+		case VK_F3:
+			{
+				m_search_edit.SetFocus();
+
+				return TRUE;
 			}
 			break;
 		case VK_F2:
 			{
+				if (pFocusWnd == &m_project_list)
+				{
+					OnRenameProject();
+				}
 
+				return TRUE;
 			}
 			break;
 		default:
@@ -208,4 +229,43 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 	m_project_list.Refresh();
 
 	CDialogEx::OnDropFiles(hDropInfo);
+}
+
+void CProjectTab::OnShowWindow(BOOL bShow, UINT nStatus)
+{
+	m_search_edit.SetFocus();
+
+	CDialogEx::OnShowWindow(bShow, nStatus);
+}
+
+void CProjectTab::OnRenameProject()
+{
+	int nItem = m_project_list.GetCurSel();
+	if (nItem >= 0)
+	{
+		CNameDlg dlg;
+		dlg.Op = CNameDlg::Rename;
+		m_project_list.GetText(nItem, dlg.m_name);
+
+		if (dlg.DoModal() == IDOK)
+		{
+			TCHAR szOldPath[MAX_PATH];
+			_tcsncpy_s(szOldPath, m_project_list.GetItemPath(nItem), MAX_PATH);
+
+			TCHAR szOldName[MAX_PATH];
+			_tcsncpy_s(szOldName, szOldPath, MAX_PATH);
+
+			PathStripPath(szOldName);
+
+			TCHAR szNewPath[MAX_PATH];
+			_tcsncpy_s(szNewPath, szOldPath, MAX_PATH);
+
+			PathRemoveFileSpec(szNewPath);
+			PathAppend(szNewPath, dlg.m_name);
+
+			CFile::Rename(szOldPath, szNewPath);
+		}
+	}
+
+	m_project_list.Refresh();
 }

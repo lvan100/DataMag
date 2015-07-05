@@ -1,12 +1,12 @@
 #pragma once
 
 #include "SearchEdit.h"
-#include "ShellListCtrl.h"
+#include "FileListBox.h"
 
 /**
  * 项目标签页
  */
-class CProjectTab : public CDialogEx, CShellListEventAdapter
+class CProjectTab : public CDialogEx, CListBoxEventAdapter
 {
 	DECLARE_DYNAMIC(CProjectTab)
 
@@ -25,9 +25,9 @@ public:
 
 public:
 	/**
-	 * 初始化列表控件
+	 * 初始化列表框控件
 	 */
-	virtual void InitShellList();
+	virtual void InitListBox();
 
 	/**
 	 * 列表项双击事件
@@ -46,16 +46,24 @@ protected:
 	CStringA strText;
 
 protected:
+	/**
+	 * 重命名项目
+	 */
+	void OnRenameProject();
+
+protected:
+	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
 	CSearchEdit m_search_edit;
 	CRichEditCtrl m_item_text;
-	CShellListCtrl m_project_list;
+	CFileListBox m_project_list;
 
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnChangeProjectSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
+	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 };
