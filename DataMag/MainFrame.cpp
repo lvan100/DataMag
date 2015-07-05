@@ -28,6 +28,7 @@ void CMainFrame::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CDialogEx)
 	ON_BN_CLICKED(IDC_SETTING, &CMainFrame::OnClickedSetting)
+	ON_WM_ACTIVATEAPP()
 END_MESSAGE_MAP()
 
 UINT CMainFrame::MainTabAdapter::GetCount()
@@ -117,4 +118,13 @@ void CMainFrame::OnClickedSetting()
 {
 	CSettingDlg dlg;
 	dlg.DoModal();
+}
+
+void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
+{
+	CDialogEx::OnActivateApp(bActive, dwThreadID);
+
+	if (bActive) {
+		m_main_tab.SetFocus();
+	}
 }

@@ -233,7 +233,9 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 
 void CProjectTab::OnShowWindow(BOOL bShow, UINT nStatus)
 {
-	m_search_edit.SetFocus();
+	if (bShow) {
+		m_search_edit.SetFocus();
+	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
 }

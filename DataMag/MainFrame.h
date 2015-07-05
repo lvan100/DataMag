@@ -65,4 +65,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnClickedSetting();
+	afx_msg void OnActivateApp(BOOL bActive, DWORD dwThreadID);
 };

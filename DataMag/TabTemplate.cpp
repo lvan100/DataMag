@@ -16,6 +16,7 @@ BEGIN_MESSAGE_MAP(CTabTemplate, CTabCtrl)
 	ON_WM_SIZE()
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
+	ON_WM_SETFOCUS()
 	ON_NOTIFY_REFLECT(TCN_SELCHANGE, &CTabTemplate::OnTcnSelchange)
 END_MESSAGE_MAP()
 
@@ -82,7 +83,6 @@ BOOL CTabTemplate::SelectTab(UINT nItem)
 		if (pItem != nullptr)
 		{
 			pItem->ShowWindow(SW_SHOW);
-			pItem->SetFocus();
 		}
 
 		SetCurSel(nItem);
@@ -97,15 +97,21 @@ BOOL CTabTemplate::DeleteTab(UINT nItem)
 {
 	if (nItem >= 0 && nItem < m_content.size())
 	{
-		auto pItem = m_content.at(nItem);
+		auto iter = m_content.begin() + nItem;
+
+		auto pItem = (*iter);
+		(*iter) = nullptr;
+
 		if (pItem != nullptr)
 		{
 			pItem->DestroyWindow();
 		}
 
-		m_content.erase(m_content.begin() + nItem);
-
-		return DeleteItem(nItem);
+		if (DeleteItem(nItem))
+		{
+			m_content.erase(iter);
+			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -118,6 +124,8 @@ void CTabTemplate::DeleteAllTab()
 		; iter++)
 	{
 		auto pItem = (*iter);
+		(*iter) = nullptr;
+
 		if (pItem != nullptr)
 		{
 			pItem->DestroyWindow();
@@ -176,4 +184,14 @@ void CTabTemplate::OnTcnSelchange(NMHDR *pNMHDR, LRESULT *pResult)
 	SelectTab(GetCurSel());
 
 	*pResult = 0;
+}
+
+void CTabTemplate::OnSetFocus(CWnd* pOldWnd)
+{
+	CTabCtrl::OnSetFocus(pOldWnd);
+
+	auto pItem = m_content.at(GetCurSel());
+	if (pItem != nullptr) {
+		pItem->SetFocus();
+	}
 }
