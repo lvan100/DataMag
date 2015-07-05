@@ -13,6 +13,8 @@ CSearchEdit::~CSearchEdit()
 
 BEGIN_MESSAGE_MAP(CSearchEdit, CEdit)
 	ON_WM_ERASEBKGND()
+	ON_WM_SETFOCUS()
+	ON_WM_KILLFOCUS()
 END_MESSAGE_MAP()
 
 /**
@@ -50,6 +52,7 @@ void CSearchEdit::Init()
 
 	CSize size = GetIconSize(m_search_icon);
 	rc.right -= size.cx + rc.left * 2;
+	rc.left += 1;
 
 	SetRectNP(&rc);
 }
@@ -65,6 +68,10 @@ BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 	CBrush whiteBrush(RGB(255,255,255));
 	pDC->FillRect(rcClient, &whiteBrush);
 
+	if (GetFocus() == this) {
+		pDC->FrameRect(rcClient, &afxGlobalData.brHilite);
+	}
+
 	CSize size = GetIconSize(m_search_icon);
 
 	DrawIconEx(pDC->GetSafeHdc()
@@ -73,4 +80,18 @@ BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 		, 0, NULL, DI_NORMAL);
 
 	return TRUE;
+}
+
+void CSearchEdit::OnSetFocus(CWnd* pOldWnd)
+{
+	CPrettyEdit::OnSetFocus(pOldWnd);
+
+	Invalidate();
+}
+
+void CSearchEdit::OnKillFocus(CWnd* pNewWnd)
+{
+	CPrettyEdit::OnKillFocus(pNewWnd);
+
+	Invalidate();
 }

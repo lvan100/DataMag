@@ -87,9 +87,6 @@ BOOL CMainFrame::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 
-	CButton* pButton = (CButton*)GetDlgItem(IDC_SETTING);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_SETTING));
-
 	m_main_tab.SelectTab(1);
 
 	return FALSE;
