@@ -3,7 +3,7 @@
 #include "DataMag.h"
 #include "LabelTab.h"
 #include "SettingDlg.h"
-#include "LabelNameDlg.h"
+#include "NameDlg.h"
 #include "BookSelectDlg.h"
 #include "ProjectSelectDlg.h"
 
@@ -102,11 +102,11 @@ BOOL CLabelTab::OnInitDialog()
 
 void CLabelTab::OnBnClickedLabelAdd()
 {
-	CLabelNameDlg dlg;
+	CNameDlg dlg;
 	if (dlg.DoModal() == IDOK)
 	{
 		CString strFolder = theSetting.GetCodeMagDir();
-		strFolder += dlg.m_label_name;
+		strFolder += dlg.m_name;
 
 		CreateDirectory(strFolder, nullptr);
 	}
@@ -140,9 +140,9 @@ void CLabelTab::OnBnClickedLabelRename()
 		int nFind = strOldFolder.ReverseFind('\\') + 1;
 		CString strLabel = strOldFolder.Mid(nFind);
 
-		CLabelNameDlg dlg;
-		dlg.m_label_name = strLabel;
-		dlg.Op = CLabelNameDlg::Rename;
+		CNameDlg dlg;
+		dlg.m_name = strLabel;
+		dlg.Op = CNameDlg::Rename;
 
 		if (dlg.DoModal() == IDOK)
 		{

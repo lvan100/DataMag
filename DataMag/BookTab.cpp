@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FileOp.h"
 #include "DataMag.h"
+#include "NameDlg.h"
 #include "BookTab.h"
 #include "SettingDlg.h"
 
@@ -121,22 +122,33 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 					}
 
 					m_book_list.Refresh();
+
+					return TRUE;
 				}
 			}
 			break;
 		case VK_F5:
 			{
 				m_book_list.Refresh();
+
+				return TRUE;
 			}
 			break;
 		case VK_F3:
 			{
 				m_search_edit.SetFocus();
+
+				return TRUE;
 			}
 			break;
 		case VK_F2:
 			{
+				if (pFocusWnd == &m_book_list)
+				{
+					OnRenameBook();
+				}
 
+				return TRUE;
 			}
 			break;
 		default:
@@ -196,4 +208,43 @@ void CBookTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	m_search_edit.SetFocus();
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
+}
+
+void CBookTab::OnRenameBook()
+{
+	int nItem = m_book_list.GetCurSel();
+	if (nItem >= 0)
+	{
+		CNameDlg dlg;
+		dlg.Op = CNameDlg::Rename;
+		m_book_list.GetText(nItem, dlg.m_name);
+
+		if (dlg.DoModal() == IDOK)
+		{
+			TCHAR szOldPath[MAX_PATH];
+			_tcsncpy_s(szOldPath, m_book_list.GetItemPath(nItem), MAX_PATH);
+
+			TCHAR szOldName[MAX_PATH];
+			_tcsncpy_s(szOldName, szOldPath, MAX_PATH);
+
+			PathStripPath(szOldName);
+
+			TCHAR szNewPath[MAX_PATH];
+			_tcsncpy_s(szNewPath, szOldPath, MAX_PATH);
+
+			PathRemoveFileSpec(szNewPath);
+			PathAppend(szNewPath, dlg.m_name);
+
+			CFile::Rename(szOldPath, szNewPath);
+
+			_tcsncpy_s(szOldPath, szNewPath, MAX_PATH);
+
+			PathAppend(szNewPath, dlg.m_name);
+			PathAppend(szOldPath, szOldName);
+
+			CFile::Rename(szOldPath, szNewPath);
+		}
+	}
+
+	m_book_list.Refresh();
 }

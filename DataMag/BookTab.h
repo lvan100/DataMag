@@ -46,6 +46,12 @@ protected:
 	CStringA strText;
 
 protected:
+	/**
+	 * ÖØÃüÃûÍ¼Êé
+	 */
+	void OnRenameBook();
+
+protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);

@@ -1,17 +1,17 @@
 #pragma once
 
 /**
- * 标签命名对话框
+ * 命名对话框
  */
-class CLabelNameDlg : public CDialog
+class CNameDlg : public CDialog
 {
-	DECLARE_DYNAMIC(CLabelNameDlg)
+	DECLARE_DYNAMIC(CNameDlg)
 
 public:
-	CLabelNameDlg(CWnd* pParent = nullptr);
-	virtual ~CLabelNameDlg();
+	CNameDlg(CWnd* pParent = nullptr);
+	virtual ~CNameDlg();
 
-	enum { IDD = IDD_LABELNAMEDLG };
+	enum { IDD = IDD_NAMEDLG };
 
 public:
 	/**
@@ -25,7 +25,7 @@ public:
 	/**
 	 * 标签名称
 	 */
-	CString m_label_name;
+	CString m_name;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);

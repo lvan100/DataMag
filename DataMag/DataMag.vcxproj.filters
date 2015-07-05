@@ -28,9 +28,6 @@
     <Filter Include="Kernel\BookTab">
       <UniqueIdentifier>{6d8c0e41-cdb3-4b7a-b212-4914452a5cbc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\LabelNameDlg">
-      <UniqueIdentifier>{5fa0214c-73ba-4405-b7c5-21a144e30a6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Kernel\SettingDlg">
       <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="Widget\FileListBox">
       <UniqueIdentifier>{a0195ea2-385f-4302-8a07-7b1fc8f3957d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\NameDlg">
+      <UniqueIdentifier>{5fa0214c-73ba-4405-b7c5-21a144e30a6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -125,9 +125,6 @@
     <ClInclude Include="ProjectSelectDlg.h">
       <Filter>Kernel\ProjectSelectDlg</Filter>
     </ClInclude>
-    <ClInclude Include="LabelNameDlg.h">
-      <Filter>Kernel\LabelNameDlg</Filter>
-    </ClInclude>
     <ClInclude Include="PrettyEdit.h">
       <Filter>Widget\PrettyEdit</Filter>
     </ClInclude>
@@ -139,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="FileListBox.h">
       <Filter>Widget\FileListBox</Filter>
+    </ClInclude>
+    <ClInclude Include="NameDlg.h">
+      <Filter>Kernel\NameDlg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -175,9 +175,6 @@
     <ClCompile Include="ProjectSelectDlg.cpp">
       <Filter>Kernel\ProjectSelectDlg</Filter>
     </ClCompile>
-    <ClCompile Include="LabelNameDlg.cpp">
-      <Filter>Kernel\LabelNameDlg</Filter>
-    </ClCompile>
     <ClCompile Include="PrettyEdit.cpp">
       <Filter>Widget\PrettyEdit</Filter>
     </ClCompile>
@@ -189,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="FileListBox.cpp">
       <Filter>Widget\FileListBox</Filter>
+    </ClCompile>
+    <ClCompile Include="NameDlg.cpp">
+      <Filter>Kernel\NameDlg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

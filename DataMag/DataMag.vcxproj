@@ -110,9 +110,9 @@
     <ClInclude Include="DataMag.h" />
     <ClInclude Include="FileListBox.h" />
     <ClInclude Include="FileOp.h" />
-    <ClInclude Include="LabelNameDlg.h" />
     <ClInclude Include="LabelTab.h" />
     <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="NameDlg.h" />
     <ClInclude Include="PrettyEdit.h" />
     <ClInclude Include="ProjectSelectDlg.h" />
     <ClInclude Include="ProjectTab.h" />
@@ -130,7 +130,7 @@
     <ClCompile Include="DataMag.cpp" />
     <ClCompile Include="FileListBox.cpp" />
     <ClCompile Include="FileOp.cpp" />
-    <ClCompile Include="LabelNameDlg.cpp" />
+    <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="LabelTab.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="PrettyEdit.cpp" />
