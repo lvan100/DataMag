@@ -79,13 +79,6 @@ void CBookTab::OnSelectChanged()
 	}
 }
 
-BOOL CBookTab::OnInitDialog()
-{
-	CDialogEx::OnInitDialog();
-
-	return TRUE;
-}
-
 void CBookTab::OnChangeBookSearchEdit()
 {
 	CString strFilter;
@@ -101,6 +94,11 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
+		case VK_ESCAPE:
+			{
+				return TRUE;
+			}
+			break;
 		case VK_RETURN:
 			{
 				if (pFocusWnd != &m_item_text) {
@@ -247,8 +245,8 @@ void CBookTab::OnRenameBook()
 			PathAppend(szOldPath, szOldName);
 
 			CFile::Rename(szOldPath, szNewPath);
+
+			m_book_list.Refresh();
 		}
 	}
-
-	m_book_list.Refresh();
 }

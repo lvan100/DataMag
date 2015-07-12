@@ -18,6 +18,7 @@ void CNameDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_LABEL_NAME, m_name);
+	DDX_Control(pDX, IDC_LABEL_NAME, m_name_edit);
 }
 
 BEGIN_MESSAGE_MAP(CNameDlg, CDialog)

@@ -5,9 +5,6 @@ rd  /s /q "%~dp0./ipch"
 rd  /s /q "%~dp0./DataMag/Debug"
 rd  /s /q "%~dp0./DataMag/Release"
 
-rd  /s /q "%~dp0./sqlite3/Debug"
-rd  /s /q "%~dp0./sqlite3/Release"
-
 rd  /s /q "%~dp0./Debug"
 rd  /s /q "%~dp0./Release"
 

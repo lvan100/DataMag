@@ -2,10 +2,9 @@
 
 #include "SearchEdit.h"
 #include "FileListBox.h"
-#include "ShellListCtrl.h"
 
 /**
- * 标签标签页
+ * 标签管理页
  */
 class CLabelTab : public CDialogEx
 {
@@ -18,7 +17,7 @@ public:
 	enum { IDD = IDD_LABELTAB };
 
 	/**
-	 * 响应图书管理目录改变事件
+	 * 响应标签管理目录改变事件
 	 */
 	void OnLabelMagDirChange(CString dir){
 		m_label_list.DisplayFolder(dir);
@@ -44,7 +43,7 @@ protected:
 	}m_label_event;
 
 	/**
-	 * 标签信息事件对象
+	 * 关联列表事件对象
 	 */
 	class LabelInfoEvent: public CListBoxEventAdapter
 	{
@@ -62,7 +61,6 @@ protected:
 	}m_label_info_event;
 
 protected:
-	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
@@ -81,5 +79,6 @@ protected:
 	afx_msg void OnChangeLabelSearchEdit();
 	afx_msg void OnBnClickedLabelRelateBook();
 	afx_msg void OnBnClickedLabelRelateProject();
+	afx_msg void OnBnClickedRemoveRelationship();
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 };

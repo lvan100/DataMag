@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PrettyEdit.h"
+
 /**
  * 命名对话框
  */
@@ -23,6 +25,9 @@ public:
 	 * 标签名称
 	 */
 	CString m_name;
+
+protected:
+	CPrettyEdit m_name_edit;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);

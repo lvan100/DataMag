@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "FileOp.h"
 #include "DataMag.h"
+#include "NameDlg.h"
 #include "LabelTab.h"
 #include "SettingDlg.h"
-#include "NameDlg.h"
 #include "BookSelectDlg.h"
 #include "ProjectSelectDlg.h"
 
@@ -13,7 +13,7 @@ CLabelTab::CLabelTab(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLabelTab::IDD, pParent)
 	, m_label_list(&theShellManager)
 	, m_label_info(&theShellManager)
-{	
+{
 	m_label_list.SetListEvent(&m_label_event);
 	m_label_info.SetListEvent(&m_label_info_event);
 
@@ -84,45 +84,41 @@ void CLabelTab::LabelInfoEvent::OnDoubleClick()
 	pThis->m_label_info.DoDefaultDClick(pThis->m_label_info.GetCurSel());
 }
 
-BOOL CLabelTab::OnInitDialog()
-{
-	CDialogEx::OnInitDialog();
-
-	return TRUE;
-}
-
 void CLabelTab::OnBnClickedLabelAdd()
 {
 	CNameDlg dlg;
 	dlg.m_title = _T("新建标签");
 	if (dlg.DoModal() == IDOK)
 	{
-		CString strFolder = theSetting.GetCodeMagDir();
-		strFolder += dlg.m_name;
+		CString strFolder = theSetting.GetLabelMagDir();
+		strFolder += _T("\\") + dlg.m_name;
 
-		CreateDirectory(strFolder, nullptr);
+		if (CreateDirectory(strFolder, nullptr)) {
+			m_label_list.Refresh();
+		} else {
+			CString strContent = _T("创建标签\"\"失败！");
+			strContent.Insert(5, strFolder);
+			MessageBox(strContent, _T("错误"), MB_ICONERROR);
+		}
 	}
-
-	m_label_list.Refresh();
 }
 
 void CLabelTab::OnBnClickedLabelDelete()
 {
 	int nItem = m_label_list.GetCurSel();
-	if (nItem >= 0)
-	{	
+	if (nItem >= 0) {	
 		CString strFolder = m_label_list.GetItemPath(nItem);
 		DeleteDirectory(strFolder);
+		m_label_list.Refresh();
+	} else {
+		MessageBox(_T("未选中任何标签!"), _T("提示"), MB_ICONINFORMATION);
 	}
-
-	m_label_list.Refresh();
 }
 
 void CLabelTab::OnBnClickedLabelRename()
 {
 	int nItem = m_label_list.GetCurSel();
-	if (nItem >= 0)
-	{
+	if (nItem >= 0) {
 		CString strOldFolder = m_label_list.GetItemPath(nItem);
 
 		int nFind = strOldFolder.ReverseFind('\\') + 1;
@@ -134,19 +130,23 @@ void CLabelTab::OnBnClickedLabelRename()
 
 		if (dlg.DoModal() == IDOK)
 		{
-			CString strNewFolder = theSetting.GetCodeMagDir();
+			CString strNewFolder = theSetting.GetLabelMagDir();
+			strNewFolder += _T("\\") + dlg.m_name;
 			CFile::Rename(strOldFolder, strNewFolder);
-		}
-	}
 
-	m_label_list.Refresh();
+			m_label_list.Refresh();
+		}
+
+	} else {
+		MessageBox(_T("未选中任何标签!"), _T("提示"), MB_ICONINFORMATION);
+	}
 }
 
 void CLabelTab::OnBnClickedLabelRelateProject()
 {
 	int nItem = m_label_list.GetCurSel();
-	if (nItem >= 0)
-	{
+	if (nItem >= 0) {
+
 		CProjectSelectDlg dlg;
 		if (dlg.DoModal() == IDOK)
 		{
@@ -158,11 +158,21 @@ void CLabelTab::OnBnClickedLabelRelateProject()
 
 				CString strLink = m_label_list.GetItemPath(nItem);
 				strLink += _T("\\") + strLabel + _T(".lnk");
-				CreateFileLink(strFolder, strLink);
+				
+				if (FALSE == CreateFileLink(strFolder, strLink)) {
+					CString strContent = _T("关联项目\"\"失败！");
+					strContent.Insert(5, strFolder);
+					MessageBox(strContent, _T("错误"), MB_ICONERROR);
+				}
+			}
+
+			if (dlg.arrProject.GetCount() > 0) {
+				m_label_info.Refresh();
 			}
 		}
 
-		m_label_info.Refresh();
+	} else {
+		MessageBox(_T("未选中任何标签!"), _T("提示"), MB_ICONINFORMATION);
 	}
 }
 
@@ -182,11 +192,32 @@ void CLabelTab::OnBnClickedLabelRelateBook()
 
 				CString strLink = m_label_list.GetItemPath(nItem);
 				strLink += _T("\\") + strLabel + _T(".lnk");
-				CreateFileLink(strFolder, strLink);
+
+				if (FALSE == CreateFileLink(strFolder, strLink)) {
+					CString strContent = _T("关联项目\"\"失败！");
+					strContent.Insert(5, strFolder);
+					MessageBox(strContent, _T("错误"), MB_ICONERROR);
+				}
+			}
+
+			if (dlg.arrBook.GetCount() > 0) {
+				m_label_info.Refresh();
 			}
 		}
 
+	} else {
+		MessageBox(_T("未选中任何标签!"), _T("提示"), MB_ICONINFORMATION);
+	}
+}
+
+void CLabelTab::OnBnClickedRemoveRelationship()
+{
+	int nItem = m_label_info.GetCurSel();
+	if (nItem >= 0) {
+		DeleteFile(m_label_info.GetItemPath(nItem));
 		m_label_info.Refresh();
+	} else {
+		MessageBox(_T("未选中任何标签!"), _T("提示"), MB_ICONINFORMATION);
 	}
 }
 
@@ -212,6 +243,7 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
+		case VK_ESCAPE:
 		case VK_RETURN:
 			{
 				return TRUE;
@@ -221,13 +253,7 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 			{
 				if (pFocusWnd == &m_label_info)
 				{
-					int nItem = m_label_info.GetCurSel();
-					if (nItem >= 0)
-					{
-						DeleteFile(m_label_info.GetItemPath(nItem));
-					}
-
-					m_label_info.Refresh();
+					OnBnClickedRemoveRelationship();
 				}
 
 				if (pFocusWnd == &m_label_list)

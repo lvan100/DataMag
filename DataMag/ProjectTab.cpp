@@ -79,13 +79,6 @@ void CProjectTab::OnSelectChanged()
 	}
 }
 
-BOOL CProjectTab::OnInitDialog()
-{
-	CDialogEx::OnInitDialog();
-
-	return TRUE;
-}
-
 void CProjectTab::OnChangeProjectSearchEdit()
 {
 	CString strFilter;
@@ -101,6 +94,11 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
+		case VK_ESCAPE:
+			{
+				return TRUE;
+			}
+			break;
 		case VK_RETURN:
 			{
 				if (pFocusWnd != &m_item_text) {
@@ -268,8 +266,8 @@ void CProjectTab::OnRenameProject()
 			PathAppend(szNewPath, dlg.m_name);
 
 			CFile::Rename(szOldPath, szNewPath);
+
+			m_project_list.Refresh();
 		}
 	}
-
-	m_project_list.Refresh();
 }

@@ -38,7 +38,7 @@ UINT CMainFrame::MainTabAdapter::GetCount()
 
 LPCTSTR CMainFrame::MainTabAdapter::GetItemText(UINT nItem)
 {
-	LPCTSTR strItems[] = {_T("标签管理"), _T("项目管理"), _T("图书管理")};
+	static LPCTSTR strItems[] = {_T("标签管理"), _T("项目管理"), _T("图书管理")};
 	return strItems[nItem];
 }
 
@@ -111,12 +111,6 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CMainFrame::OnClickedSetting()
-{
-	CSettingDlg dlg;
-	dlg.DoModal();
-}
-
 void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 {
 	CDialogEx::OnActivateApp(bActive, dwThreadID);
@@ -124,4 +118,9 @@ void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 	if (bActive) {
 		m_main_tab.SetFocus();
 	}
+}
+
+void CMainFrame::OnClickedSetting()
+{
+	CSettingDlg().DoModal();
 }
