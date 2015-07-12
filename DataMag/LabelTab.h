@@ -73,4 +73,5 @@ protected:
 	afx_msg void OnChangeLabelSearchEdit();
 	afx_msg void OnBnClickedLabelRelateBook();
 	afx_msg void OnBnClickedLabelRelateProject();
+	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 };

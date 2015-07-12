@@ -150,11 +150,6 @@
   <ItemGroup>
     <ResourceCompile Include="DataMag.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\sqlite3\sqlite3.vcxproj">
-      <Project>{95034e32-a13d-476e-a9e7-453fa54ba912}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

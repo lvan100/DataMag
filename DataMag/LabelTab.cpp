@@ -36,6 +36,7 @@ void CLabelTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
+	ON_WM_SHOWWINDOW()
 	ON_BN_CLICKED(IDC_LABEL_ADD, &CLabelTab::OnBnClickedLabelAdd)
 	ON_BN_CLICKED(IDC_LABEL_DELETE, &CLabelTab::OnBnClickedLabelDelete)
 	ON_BN_CLICKED(IDC_LABEL_RENAME, &CLabelTab::OnBnClickedLabelRename)
@@ -81,21 +82,6 @@ void CLabelTab::LabelInfoEvent::OnDoubleClick()
 BOOL CLabelTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
-	CButton* pButton = (CButton*)GetDlgItem(IDC_LABEL_ADD);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_LABEL_ADD));
-
-	pButton = (CButton*)GetDlgItem(IDC_LABEL_DELETE);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_LABEL_DELETE));
-
-	pButton = (CButton*)GetDlgItem(IDC_LABEL_RENAME);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_LABEL_RENAME));
-
-	pButton = (CButton*)GetDlgItem(IDC_LABEL_RELATE_PROJECT);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_CODE));
-
-	pButton = (CButton*)GetDlgItem(IDC_LABEL_RELATE_BOOK);
-	pButton->SetIcon(AfxGetApp()->LoadIcon(IDI_BOOK));
 
 	return TRUE;
 }
@@ -257,4 +243,13 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CLabelTab::OnShowWindow(BOOL bShow, UINT nStatus)
+{
+	if (bShow) {
+		m_label_search_edit.SetFocus();
+	}
+
+	CDialogEx::OnShowWindow(bShow, nStatus);
 }

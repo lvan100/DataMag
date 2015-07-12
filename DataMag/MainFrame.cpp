@@ -38,7 +38,7 @@ UINT CMainFrame::MainTabAdapter::GetCount()
 
 LPCTSTR CMainFrame::MainTabAdapter::GetItemText(UINT nItem)
 {
-	LPCTSTR strItems[] = {_T("标签"), _T("项目"), _T("图书")};
+	LPCTSTR strItems[] = {_T("标签管理"), _T("项目管理"), _T("图书管理")};
 	return strItems[nItem];
 }
 
@@ -87,7 +87,7 @@ BOOL CMainFrame::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 
-	m_main_tab.SelectTab(1);
+	m_main_tab.SelectTab(0);
 
 	return FALSE;
 }
