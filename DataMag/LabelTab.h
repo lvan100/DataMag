@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SearchEdit.h"
+#include "FileListBox.h"
 #include "ShellListCtrl.h"
 
 /**
@@ -16,17 +17,24 @@ public:
 
 	enum { IDD = IDD_LABELTAB };
 
+	/**
+	 * 响应图书管理目录改变事件
+	 */
+	void OnLabelMagDirChange(CString dir){
+		m_label_list.DisplayFolder(dir);
+	}
+
 protected:
 	/**
 	 * 标签列表事件对象
 	 */
-	class LabelListEvent: public CShellListEventAdapter
+	class LabelListEvent: public CListBoxEventAdapter
 	{
 	public:
 		/**
-		 * 初始化列表控件
+		 * 初始化列表框控件
 		 */
-		virtual void InitShellList();
+		virtual void InitListBox();
 
 		/**
 		 * 列表项发生变化
@@ -38,13 +46,13 @@ protected:
 	/**
 	 * 标签信息事件对象
 	 */
-	class LabelInfoEvent: public CShellListEventAdapter
+	class LabelInfoEvent: public CListBoxEventAdapter
 	{
 	public:
 		/**
-		 * 初始化列表控件
+		 * 初始化列表框控件
 		 */
-		virtual void InitShellList();
+		virtual void InitListBox();
 
 		/**
 		 * 列表项双击事件
@@ -59,8 +67,8 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
-	CShellListCtrl m_label_list;
-	CShellListCtrl m_label_info;
+	CFileListBox m_label_list;
+	CFileListBox m_label_info;
 	CSearchEdit m_info_search_edit;
 	CSearchEdit m_label_search_edit;
 

@@ -6,7 +6,6 @@ IMPLEMENT_DYNAMIC(CNameDlg, CDialog)
 
 CNameDlg::CNameDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(CNameDlg::IDD, pParent)
-	, Op(CNameDlg::New)
 	, m_name(_T(""))
 {
 }
@@ -30,10 +29,7 @@ int CNameDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDialog::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (Op == CNameDlg::Rename)
-	{
-		SetWindowText(_T("ÖØÃüÃû"));
-	}
+	SetWindowText(m_title);
 
 	return 0;
 }

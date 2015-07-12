@@ -7,8 +7,14 @@ IMPLEMENT_DYNAMIC(CBookSelectDlg, CDialog)
 
 CBookSelectDlg::CBookSelectDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(CBookSelectDlg::IDD, pParent)
+	, m_book_list(&theShellManager)
 {
 	m_book_list.SetListEvent(this);
+
+	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_SEARCH)
+		, IMAGE_ICON, 0, 0, 0);
+	m_search_edit.SetSearchIcon(hSearchIcon);
 }
 
 CBookSelectDlg::~CBookSelectDlg()
@@ -27,7 +33,7 @@ BEGIN_MESSAGE_MAP(CBookSelectDlg, CDialog)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookSelectDlg::OnChangeBookSearchEdit)
 END_MESSAGE_MAP()
 
-void CBookSelectDlg::InitShellList()
+void CBookSelectDlg::InitListBox()
 {
 	CString strFolder = theSetting.GetBookMagDir();
 	m_book_list.DisplayFolder(strFolder);
@@ -40,14 +46,12 @@ void CBookSelectDlg::OnDoubleClick()
 
 void CBookSelectDlg::OnBnClickedOk()
 {
-	POSITION pos = m_book_list.GetFirstSelectedItemPosition();
-	int nItem = m_book_list.GetNextSelectedItem(pos);
-	while (nItem != -1) {
-		CString strFolder =	m_book_list.GetItemPath(nItem);
-		arrBook.Add(strFolder);
-		nItem = m_book_list.GetNextSelectedItem(pos);
+	int nSelCount = m_book_list.GetSelCount();
+	for (int i = 0; i < nSelCount; i++) {
+		int nSel = m_book_list.GetSel(i);
+		arrBook.Add(m_book_list.GetItemPath(nSel));
 	}
-	
+
 	CDialog::OnOK();
 }
 

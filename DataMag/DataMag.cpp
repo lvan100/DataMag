@@ -43,7 +43,7 @@ CString CSetting::GetBookMagDir()
 	GetCurrentDirectory(MAX_PATH, szDir);
 
 	PathAppend(szDir, _T("\\Õº È"));
-	
+
 	if (!PathFileExists(szDir))
 	{
 		CreateDirectory(szDir, NULL);
@@ -60,6 +60,36 @@ void CSetting::SetBookMagDir(CString dir)
 
 		for (auto iter = bookMagDirChangeListener.begin()
 			; iter != bookMagDirChangeListener.end()
+			; iter++)
+		{
+			(*iter)(dir);
+		}
+	}
+}
+
+CString CSetting::GetLabelMagDir()
+{
+	TCHAR szDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, szDir);
+
+	PathAppend(szDir, _T("\\±Í«©"));
+
+	if (!PathFileExists(szDir))
+	{
+		CreateDirectory(szDir, NULL);
+	}
+
+	return theApp.GetProfileString(_T("Settings"), _T("LabelDir"), szDir);
+}
+
+void CSetting::SetLabelMagDir(CString dir)
+{
+	if (GetLabelMagDir().CompareNoCase(dir) != 0)
+	{
+		theApp.WriteProfileString(_T("Settings"), _T("LabelDir"), dir);
+
+		for (auto iter = labelMagDirChangeListener.begin()
+			; iter != labelMagDirChangeListener.end()
 			; iter++)
 		{
 			(*iter)(dir);

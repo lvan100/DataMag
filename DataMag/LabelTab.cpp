@@ -11,9 +11,15 @@ IMPLEMENT_DYNAMIC(CLabelTab, CDialogEx)
 
 CLabelTab::CLabelTab(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLabelTab::IDD, pParent)
+	, m_label_list(&theShellManager)
+	, m_label_info(&theShellManager)
 {	
 	m_label_list.SetListEvent(&m_label_event);
 	m_label_info.SetListEvent(&m_label_info_event);
+
+	DirChangeLinster listener;
+	listener = bind(&CLabelTab::OnLabelMagDirChange, this, std::placeholders::_1);
+	theSetting.AddLabelMagDirChangeListener(listener);
 
 	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_SEARCH)
@@ -46,11 +52,11 @@ BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_PROJECT, &CLabelTab::OnBnClickedLabelRelateProject)
 END_MESSAGE_MAP()
 
-void CLabelTab::LabelListEvent::InitShellList()
+void CLabelTab::LabelListEvent::InitListBox()
 {
 	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_event)));
 
-	CString strFolder = theSetting.GetCodeMagDir();
+	CString strFolder = theSetting.GetLabelMagDir();
 	pThis->m_label_list.DisplayFolder(strFolder);
 }
 
@@ -58,8 +64,7 @@ void CLabelTab::LabelListEvent::OnSelectChanged()
 {
 	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_event)));
 
-	POSITION pos = pThis->m_label_list.GetFirstSelectedItemPosition();
-	int nItem = pThis->m_label_list.GetNextSelectedItem(pos);
+	int nItem = pThis->m_label_list.GetCurSel();
 	if (nItem >= 0)
 	{
 		CString strPath = pThis->m_label_list.GetItemPath(nItem);
@@ -67,16 +72,16 @@ void CLabelTab::LabelListEvent::OnSelectChanged()
 	}
 }
 
-void CLabelTab::LabelInfoEvent::InitShellList()
+void CLabelTab::LabelInfoEvent::InitListBox()
 {
 	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_info_event)));
-	pThis->m_label_info.DeleteAllItems();
+	pThis->m_label_info.ResetContent();
 }
 
 void CLabelTab::LabelInfoEvent::OnDoubleClick()
 {
 	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_info_event)));
-	pThis->m_label_info.DoDefaultDClick();
+	pThis->m_label_info.DoDefaultDClick(pThis->m_label_info.GetCurSel());
 }
 
 BOOL CLabelTab::OnInitDialog()
@@ -89,6 +94,7 @@ BOOL CLabelTab::OnInitDialog()
 void CLabelTab::OnBnClickedLabelAdd()
 {
 	CNameDlg dlg;
+	dlg.m_title = _T("新建标签");
 	if (dlg.DoModal() == IDOK)
 	{
 		CString strFolder = theSetting.GetCodeMagDir();
@@ -102,9 +108,7 @@ void CLabelTab::OnBnClickedLabelAdd()
 
 void CLabelTab::OnBnClickedLabelDelete()
 {
-	POSITION pos = m_label_list.GetFirstSelectedItemPosition();
-	int nItem = m_label_list.GetNextSelectedItem(pos);
-
+	int nItem = m_label_list.GetCurSel();
 	if (nItem >= 0)
 	{	
 		CString strFolder = m_label_list.GetItemPath(nItem);
@@ -116,9 +120,7 @@ void CLabelTab::OnBnClickedLabelDelete()
 
 void CLabelTab::OnBnClickedLabelRename()
 {
-	POSITION pos = m_label_list.GetFirstSelectedItemPosition();
-	int nItem = m_label_list.GetNextSelectedItem(pos);
-
+	int nItem = m_label_list.GetCurSel();
 	if (nItem >= 0)
 	{
 		CString strOldFolder = m_label_list.GetItemPath(nItem);
@@ -128,7 +130,7 @@ void CLabelTab::OnBnClickedLabelRename()
 
 		CNameDlg dlg;
 		dlg.m_name = strLabel;
-		dlg.Op = CNameDlg::Rename;
+		dlg.m_title = _T("标签重命名");
 
 		if (dlg.DoModal() == IDOK)
 		{
@@ -142,8 +144,7 @@ void CLabelTab::OnBnClickedLabelRename()
 
 void CLabelTab::OnBnClickedLabelRelateProject()
 {
-	POSITION pos = m_label_list.GetFirstSelectedItemPosition();
-	int nItem = m_label_list.GetNextSelectedItem(pos);
+	int nItem = m_label_list.GetCurSel();
 	if (nItem >= 0)
 	{
 		CProjectSelectDlg dlg;
@@ -167,8 +168,7 @@ void CLabelTab::OnBnClickedLabelRelateProject()
 
 void CLabelTab::OnBnClickedLabelRelateBook()
 {
-	POSITION pos = m_label_list.GetFirstSelectedItemPosition();
-	int nItem = m_label_list.GetNextSelectedItem(pos);
+	int nItem = m_label_list.GetCurSel();
 	if (nItem >= 0)
 	{
 		CBookSelectDlg dlg;
@@ -221,8 +221,7 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 			{
 				if (pFocusWnd == &m_label_info)
 				{
-					POSITION pos = m_label_info.GetFirstSelectedItemPosition();
-					int nItem = m_label_info.GetNextSelectedItem(pos);
+					int nItem = m_label_info.GetCurSel();
 					if (nItem >= 0)
 					{
 						DeleteFile(m_label_info.GetItemPath(nItem));

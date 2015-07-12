@@ -15,12 +15,9 @@ public:
 
 public:
 	/**
-	 * 操作类型
+	 * 对话框标题
 	 */
-	enum {
-		New,		/* 新建	*/
-		Rename,		/* 重命名 */
-	}Op;
+	CString m_title;
 
 	/**
 	 * 标签名称

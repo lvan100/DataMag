@@ -220,7 +220,7 @@ void CBookTab::OnRenameBook()
 	if (nItem >= 0)
 	{
 		CNameDlg dlg;
-		dlg.Op = CNameDlg::Rename;
+		dlg.m_title = _T("Í¼ÊéÖØÃüÃû");
 		m_book_list.GetText(nItem, dlg.m_name);
 
 		if (dlg.DoModal() == IDOK)

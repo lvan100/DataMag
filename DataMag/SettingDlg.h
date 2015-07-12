@@ -19,6 +19,7 @@ protected:
 
 public:
 	CMFCEditBrowseCtrl m_book_browser;
+	CMFCEditBrowseCtrl m_label_browser;
 	CMFCEditBrowseCtrl m_project_browser;
 
 	DECLARE_MESSAGE_MAP()

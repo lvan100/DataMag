@@ -248,7 +248,7 @@ void CProjectTab::OnRenameProject()
 	if (nItem >= 0)
 	{
 		CNameDlg dlg;
-		dlg.Op = CNameDlg::Rename;
+		dlg.m_title = _T("项目重命名");
 		m_project_list.GetText(nItem, dlg.m_name);
 
 		if (dlg.DoModal() == IDOK)

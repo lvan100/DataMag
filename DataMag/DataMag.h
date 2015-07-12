@@ -60,9 +60,33 @@ public:
 
 protected:
 	/**
-	 * 项目图书目录监听器列表
+	 * 图书管理目录监听器列表
 	 */
 	vector<DirChangeLinster> bookMagDirChangeListener;
+
+public:
+	/**
+	 * 获取标签管理目录
+	 */
+	CString GetLabelMagDir();
+
+	/**
+	 * 设置标签管理目录
+	 */
+	void SetLabelMagDir(CString dir);
+
+	/**
+	 * 设置标签管理目录监听器
+	 */
+	void AddLabelMagDirChangeListener(DirChangeLinster listener){
+		labelMagDirChangeListener.push_back(listener);
+	}
+
+protected:
+	/**
+	 * 标签管理目录监听器列表
+	 */
+	vector<DirChangeLinster> labelMagDirChangeListener;
 };
 
 /**

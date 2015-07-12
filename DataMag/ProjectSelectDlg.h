@@ -1,11 +1,12 @@
 #pragma once
 
-#include "ShellListCtrl.h"
+#include "SearchEdit.h"
+#include "FileListBox.h"
 
 /**
  * 项目选择对话框
  */
-class CProjectSelectDlg : public CDialog, CShellListEventAdapter
+class CProjectSelectDlg : public CDialog, CListBoxEventAdapter
 {
 	DECLARE_DYNAMIC(CProjectSelectDlg)
 
@@ -17,9 +18,9 @@ public:
 
 public:
 	/**
-	 * 初始化列表控件
+	 * 初始化列表框控件
 	 */
-	virtual void InitShellList();
+	virtual void InitListBox();
 
 	/**
 	 * 列表项双击事件
@@ -36,8 +37,8 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
-	CEdit m_search_edit;
-	CShellListCtrl m_project_list;
+	CSearchEdit m_search_edit;
+	CFileListBox m_project_list;
 
 	DECLARE_MESSAGE_MAP()
 protected:

@@ -7,8 +7,14 @@ IMPLEMENT_DYNAMIC(CProjectSelectDlg, CDialog)
 
 CProjectSelectDlg::CProjectSelectDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(CProjectSelectDlg::IDD, pParent)
+	, m_project_list(&theShellManager)
 {
 	m_project_list.SetListEvent(this);
+
+	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_SEARCH)
+		, IMAGE_ICON, 0, 0, 0);
+	m_search_edit.SetSearchIcon(hSearchIcon);
 }
 
 CProjectSelectDlg::~CProjectSelectDlg()
@@ -27,7 +33,7 @@ BEGIN_MESSAGE_MAP(CProjectSelectDlg, CDialog)
 	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectSelectDlg::OnChangeProjectSearchEdit)
 END_MESSAGE_MAP()
 
-void CProjectSelectDlg::InitShellList()
+void CProjectSelectDlg::InitListBox()
 {
 	CString strFolder = theSetting.GetCodeMagDir();
 	m_project_list.DisplayFolder(strFolder);
@@ -40,13 +46,10 @@ void CProjectSelectDlg::OnDoubleClick()
 
 void CProjectSelectDlg::OnBnClickedOk()
 {
-	POSITION pos = m_project_list.GetFirstSelectedItemPosition();
-	int nItem = m_project_list.GetNextSelectedItem(pos);
-	while (nItem != -1)
-	{
-		CString strFolder =	m_project_list.GetItemPath(nItem);
-		arrProject.Add(strFolder);
-		nItem = m_project_list.GetNextSelectedItem(pos);
+	int nSelCount = m_project_list.GetSelCount();
+	for (int i = 0; i < nSelCount; i++) {
+		int nSel = m_project_list.GetSel(i);
+		arrProject.Add(m_project_list.GetItemPath(nSel));
 	}
 
 	CDialog::OnOK();
