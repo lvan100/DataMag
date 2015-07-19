@@ -46,12 +46,7 @@ protected:
 	CStringA strText;
 
 protected:
-	/**
-	 * ÷ÿ√¸√˚Õº È
-	 */
-	void OnRenameBook();
-
-protected:
+	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
@@ -62,6 +57,10 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
+	afx_msg void OnBnClickedBookAdd();
+	afx_msg void OnBnClickedBookDelete();
+	afx_msg void OnBnClickedBookRename();
+	afx_msg void OnBnClickedBookRefresh();
 	afx_msg void OnChangeBookSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);

@@ -52,7 +52,6 @@ void CSearchEdit::Init()
 
 	CSize size = GetIconSize(m_search_icon);
 	rc.right -= size.cx + rc.left * 2;
-	rc.left += 1;
 
 	SetRectNP(&rc);
 }
