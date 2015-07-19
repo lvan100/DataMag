@@ -46,12 +46,7 @@ protected:
 	CStringA strText;
 
 protected:
-	/**
-	 * 重命名项目
-	 */
-	void OnRenameProject();
-
-protected:
+	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
@@ -62,6 +57,10 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
+	afx_msg void OnBnClickedProjectAdd();
+	afx_msg void OnBnClickedProjectDelete();
+	afx_msg void OnBnClickedProjectRename();
+	afx_msg void OnBnClickedProjectRefresh();
 	afx_msg void OnChangeProjectSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
