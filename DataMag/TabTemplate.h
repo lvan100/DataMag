@@ -99,7 +99,7 @@ protected:
 	 * ±êÇ©Ò³¿í¸ß
 	 */
 	enum {
-		TAB_WIDTH = 126,
+		TAB_WIDTH = 108,
 		TAB_HEIGHT = 41,
 	};
 
@@ -107,9 +107,9 @@ protected:
 	 * Pedding
 	 */
 	enum {
-		PEDDING_TOP = 15,
-		PEDDING_LEFT = 3,
-		PEDDING_RIGHT = 3,
+		PEDDING_TOP = 8,
+		PEDDING_LEFT = 2,
+		PEDDING_RIGHT = 2,
 		PEDDING_BOTTOM = 2 
 	};
 

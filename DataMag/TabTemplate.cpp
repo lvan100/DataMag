@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <WindowsX.h>
 #include "TabTemplate.h"
 
 IMPLEMENT_DYNAMIC(CTabTemplate, CTabCtrl)
@@ -45,6 +46,8 @@ void CTabTemplate::PreSubclassWindow()
 
 BOOL CTabTemplate::Init()
 {
+	SetExtendedStyle(~TCS_EX_FLATSEPARATORS);
+
 	SetItemSize(CSize(TAB_WIDTH,TAB_HEIGHT));
 
 	if (m_adpter != nullptr)
