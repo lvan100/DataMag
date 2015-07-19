@@ -47,8 +47,13 @@ void CBookSelectDlg::OnDoubleClick()
 void CBookSelectDlg::OnBnClickedOk()
 {
 	int nSelCount = m_book_list.GetSelCount();
+
+	CArray<int,int> aryListBoxSel;
+	aryListBoxSel.SetSize(nSelCount);
+	m_book_list.GetSelItems(nSelCount, aryListBoxSel.GetData());
+
 	for (int i = 0; i < nSelCount; i++) {
-		int nSel = m_book_list.GetSel(i);
+		int nSel = aryListBoxSel.GetAt(i);
 		arrBook.Add(m_book_list.GetItemPath(nSel));
 	}
 

@@ -58,15 +58,27 @@ protected:
 		 */
 		virtual void OnDoubleClick();
 
+		/**
+		 * 列表项发生变化
+		 */
+		virtual void OnSelectChanged();
+
 	}m_label_info_event;
 
+	/**
+	 * 描述文件的内容
+	 */
+	CStringA strText;
+
 protected:
+	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
 	CFileListBox m_label_list;
 	CFileListBox m_label_info;
+	CRichEditCtrl m_item_text;
 	CSearchEdit m_info_search_edit;
 	CSearchEdit m_label_search_edit;
 

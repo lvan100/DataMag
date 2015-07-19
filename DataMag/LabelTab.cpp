@@ -35,6 +35,7 @@ CLabelTab::~CLabelTab()
 void CLabelTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
 	DDX_Control(pDX, IDC_LABEL_LIST, m_label_list);
 	DDX_Control(pDX, IDC_LABEL_INFO_LIST, m_label_info);
 	DDX_Control(pDX, IDC_INFO_SEARCH_EDIT, m_info_search_edit);
@@ -49,6 +50,7 @@ BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
 	ON_EN_CHANGE(IDC_INFO_SEARCH_EDIT, &CLabelTab::OnChangeInfoSearchEdit)
 	ON_EN_CHANGE(IDC_LABEL_SEARCH_EDIT, &CLabelTab::OnChangeLabelSearchEdit)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_BOOK, &CLabelTab::OnBnClickedLabelRelateBook)
+	ON_BN_CLICKED(IDC_REMOVE_RELATIONSHIP, &CLabelTab::OnBnClickedRemoveRelationship)
 	ON_BN_CLICKED(IDC_LABEL_RELATE_PROJECT, &CLabelTab::OnBnClickedLabelRelateProject)
 END_MESSAGE_MAP()
 
@@ -84,6 +86,45 @@ void CLabelTab::LabelInfoEvent::OnDoubleClick()
 	pThis->m_label_info.DoDefaultDClick(pThis->m_label_info.GetCurSel());
 }
 
+void CLabelTab::LabelInfoEvent::OnSelectChanged()
+{
+	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_info_event)));
+	int nItem = pThis->m_label_info.GetCurSel();
+	if (nItem >= 0)
+	{
+		CString strLink = pThis->m_label_info.GetItemPath(nItem);
+
+		CString strPath;
+		GetLinkFilePath(strPath, strLink);
+
+		if (PathIsDirectory(strPath))
+		{
+			CString strFile = strPath + _T("\\描述.txt");
+			CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
+
+			UINT nSize = UINT(file.GetLength()) + 1;
+			char* szText = pThis->strText.GetBuffer();
+
+			if ((UINT)pThis->strText.GetLength() < nSize)
+			{
+				szText = pThis->strText.GetBufferSetLength(nSize);
+			}
+
+			memset(szText, 0, nSize);
+			file.Read(szText, nSize);
+
+			SetWindowTextA(pThis->m_item_text.GetSafeHwnd(), szText);
+		}
+	}
+}
+
+BOOL CLabelTab::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	return FALSE; /* 焦点设置 */
+}
+
 void CLabelTab::OnBnClickedLabelAdd()
 {
 	CNameDlg dlg;
@@ -95,6 +136,10 @@ void CLabelTab::OnBnClickedLabelAdd()
 
 		if (CreateDirectory(strFolder, nullptr)) {
 			m_label_list.Refresh();
+			m_label_info.DisplayFolder(strFolder);
+
+			m_label_list.SetFocus();
+			m_label_list.SelectString(0, dlg.m_name);
 		} else {
 			CString strContent = _T("创建标签\"\"失败！");
 			strContent.Insert(5, strFolder);
@@ -135,6 +180,10 @@ void CLabelTab::OnBnClickedLabelRename()
 			CFile::Rename(strOldFolder, strNewFolder);
 
 			m_label_list.Refresh();
+			m_label_info.DisplayFolder(strNewFolder);
+
+			m_label_list.SetFocus();
+			m_label_list.SelectString(0, dlg.m_name);
 		}
 
 	} else {
@@ -259,6 +308,29 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 				if (pFocusWnd == &m_label_list)
 				{
 					OnBnClickedLabelDelete();
+				}
+
+				return TRUE;
+			}
+			break;
+		case VK_F5:
+			{
+				m_label_list.Refresh();
+				return TRUE;
+			}
+			break;
+		case VK_F3:
+			{
+				m_label_search_edit.SetFocus();
+				return TRUE;
+			}
+			break;
+		case VK_F2:
+			{
+				if (pFocusWnd == &m_label_list)
+				{
+					OnBnClickedLabelRename();
+					return TRUE;
 				}
 			}
 			break;

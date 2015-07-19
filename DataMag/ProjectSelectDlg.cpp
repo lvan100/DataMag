@@ -47,8 +47,13 @@ void CProjectSelectDlg::OnDoubleClick()
 void CProjectSelectDlg::OnBnClickedOk()
 {
 	int nSelCount = m_project_list.GetSelCount();
+
+	CArray<int,int> aryListBoxSel;
+	aryListBoxSel.SetSize(nSelCount);
+	m_project_list.GetSelItems(nSelCount, aryListBoxSel.GetData());
+
 	for (int i = 0; i < nSelCount; i++) {
-		int nSel = m_project_list.GetSel(i);
+		int nSel = aryListBoxSel.GetAt(i);
 		arrProject.Add(m_project_list.GetItemPath(nSel));
 	}
 

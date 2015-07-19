@@ -14,12 +14,14 @@ CString CSetting::GetCodeMagDir()
 
 	PathAppend(szDir, _T("\\‘¥¬Î"));
 
-	if (!PathFileExists(szDir))
+	CString strPath = theApp.GetProfileString(_T("Settings"), _T("CodeDir"), szDir);
+
+	if (!PathFileExists(strPath))
 	{
-		CreateDirectory(szDir, NULL);
+		CreateDirectory(strPath, NULL);
 	}
 
-	return theApp.GetProfileString(_T("Settings"), _T("CodeDir"), szDir);
+	return strPath;
 }
 
 void CSetting::SetCodeMagDir(CString dir)
@@ -44,12 +46,14 @@ CString CSetting::GetBookMagDir()
 
 	PathAppend(szDir, _T("\\Õº È"));
 
-	if (!PathFileExists(szDir))
+	CString strPath = theApp.GetProfileString(_T("Settings"), _T("BookDir"), szDir);
+
+	if (!PathFileExists(strPath))
 	{
-		CreateDirectory(szDir, NULL);
+		CreateDirectory(strPath, NULL);
 	}
 
-	return theApp.GetProfileString(_T("Settings"), _T("BookDir"), szDir);
+	return strPath;
 }
 
 void CSetting::SetBookMagDir(CString dir)
@@ -74,12 +78,14 @@ CString CSetting::GetLabelMagDir()
 
 	PathAppend(szDir, _T("\\±Í«©"));
 
-	if (!PathFileExists(szDir))
+	CString strPath = theApp.GetProfileString(_T("Settings"), _T("LabelDir"), szDir);
+
+	if (!PathFileExists(strPath))
 	{
-		CreateDirectory(szDir, NULL);
+		CreateDirectory(strPath, NULL);
 	}
 
-	return theApp.GetProfileString(_T("Settings"), _T("LabelDir"), szDir);
+	return strPath;
 }
 
 void CSetting::SetLabelMagDir(CString dir)
