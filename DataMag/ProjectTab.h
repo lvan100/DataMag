@@ -11,7 +11,10 @@ class CProjectTab : public CDialogEx, CListBoxEventAdapter
 	DECLARE_DYNAMIC(CProjectTab)
 
 public:
-	CProjectTab(CString strFilter = _T(""), CWnd* pParent = NULL);
+	/**
+	 * ÃüÁî¸ñÊ½:"open","search:xx","add".
+	 */
+	CProjectTab(CString strCommand = _T(""), CWnd* pParent = NULL);
 	virtual ~CProjectTab();
 
 	enum { IDD = IDD_PROJECTTAB };
@@ -46,9 +49,12 @@ protected:
 	CStringA strText;
 	
 	/**
-	 * ËÑË÷¹ýÂËÆ÷
+	 * Ö´ÐÐÃüÁî
 	 */
-	CString m_strFilter;
+	struct Command{
+		CString cmd;
+		CString arg;
+	}m_command;
 
 protected:
 	virtual BOOL OnInitDialog();

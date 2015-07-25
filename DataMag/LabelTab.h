@@ -11,7 +11,10 @@ class CLabelTab : public CDialogEx
 	DECLARE_DYNAMIC(CLabelTab)
 
 public:
-	CLabelTab(CString strFilter = _T(""), CWnd* pParent = NULL);
+	/**
+	 * 命令格式:"open","search:xx","add".
+	 */
+	CLabelTab(CString strCommand = _T(""), CWnd* pParent = NULL);
 	virtual ~CLabelTab();
 
 	enum { IDD = IDD_LABELTAB };
@@ -71,9 +74,12 @@ protected:
 	CStringA strText;
 	
 	/**
-	 * 搜索过滤器
+	 * 执行命令
 	 */
-	CString m_strFilter;
+	struct Command{
+		CString cmd;
+		CString arg;
+	}m_command;
 
 protected:
 	virtual BOOL OnInitDialog();

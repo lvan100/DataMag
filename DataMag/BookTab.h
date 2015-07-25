@@ -11,7 +11,10 @@ class CBookTab : public CDialogEx, CListBoxEventAdapter
 	DECLARE_DYNAMIC(CBookTab)
 
 public:
-	CBookTab(CString strFilter = _T(""), CWnd* pParent = NULL);
+	/**
+	 * 命令格式:"open","search:xx","add".
+	 */
+	CBookTab(CString strCommand = _T(""), CWnd* pParent = NULL);
 	virtual ~CBookTab();
 
 	enum { IDD = IDD_BOOKTAB };
@@ -46,9 +49,12 @@ protected:
 	CStringA strText;
 
 	/**
-	 * 搜索过滤器
+	 * 执行命令
 	 */
-	CString m_strFilter;
+	struct Command{
+		CString cmd;
+		CString arg;
+	}m_command;
 
 protected:
 	virtual BOOL OnInitDialog();

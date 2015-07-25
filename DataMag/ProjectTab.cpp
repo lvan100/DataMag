@@ -7,11 +7,18 @@
 
 IMPLEMENT_DYNAMIC(CProjectTab, CDialogEx)
 
-CProjectTab::CProjectTab(CString strFilter, CWnd* pParent /*=NULL*/)
+CProjectTab::CProjectTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CProjectTab::IDD, pParent)
 	, m_project_list(&theShellManager)
-	, m_strFilter(strFilter)
 {
+	int colon = strCommand.Find(':');
+	if (colon > 0) {
+		m_command.cmd = strCommand.Left(colon);
+		m_command.arg = strCommand.Mid(colon + 1);
+	} else {
+		m_command.cmd = strCommand;
+	}
+
 	m_project_list.SetListEvent(this);
 
 	DirChangeLinster listener;
@@ -89,10 +96,18 @@ BOOL CProjectTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	m_search_edit.SetWindowText(m_strFilter);
-	m_search_edit.SetSel(-1);
+	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
-	m_project_list.SetFilterString(m_strFilter);
+	} else if (m_command.cmd.CompareNoCase(_T("search")) == 0) {
+		if (!m_command.arg.IsEmpty()) {
+			m_search_edit.SetWindowText(m_command.arg);
+			m_search_edit.SetSel(-1);
+			m_project_list.SetFilterString(m_command.arg);
+		}
+
+	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
+		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_PROJECT_ADD, BN_CLICKED), NULL);
+	}
 
 	return FALSE; /* Ωπµ„…Ë÷√ */
 }

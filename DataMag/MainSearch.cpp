@@ -27,18 +27,18 @@ CMainSearch::~CMainSearch()
 void CMainSearch::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_OPEN_BOOK, m_open_book);
-	DDX_Control(pDX, IDC_OPEN_LABEL, m_open_label);
+	DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
+	DDX_Control(pDX, IDC_ADD_LABEL, m_add_label);
 	DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
-	DDX_Control(pDX, IDC_OPEN_PROJECT, m_open_project);
+	DDX_Control(pDX, IDC_ADD_PROJECT, m_add_project);
 	DDX_Control(pDX, IDC_LABEL_SEARCH, m_label_search);
 	DDX_Control(pDX, IDC_PROJECT_SEARCH, m_project_search);
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
-	ON_BN_CLICKED(IDC_OPEN_BOOK, &CMainSearch::OnBnClickedOpenBook)
-	ON_BN_CLICKED(IDC_OPEN_LABEL, &CMainSearch::OnBnClickedOpenLabel)
-	ON_BN_CLICKED(IDC_OPEN_PROJECT, &CMainSearch::OnBnClickedOpenProject)
+	ON_BN_CLICKED(IDC_ADD_LABEL, &CMainSearch::OnBnClickedAddLabel)
+	ON_BN_CLICKED(IDC_ADD_PROJECT, &CMainSearch::OnBnClickedAddProject)
+	ON_BN_CLICKED(IDC_ADD_BOOK, &CMainSearch::OnBnClickedAddBook)
 END_MESSAGE_MAP()
 
 BOOL CMainSearch::OnInitDialog()
@@ -54,37 +54,19 @@ BOOL CMainSearch::OnInitDialog()
 	HICON hLabelIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_LABEL)
 		, IMAGE_ICON, 0, 0, 0);
-	m_open_label.SetImage(hLabelIcon);
+	m_add_label.SetImage(hLabelIcon);
 
 	HICON hProjectIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_CODE)
 		, IMAGE_ICON, 0, 0, 0);
-	m_open_project.SetImage(hProjectIcon);
+	m_add_project.SetImage(hProjectIcon);
 
 	HICON hBookIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_BOOK)
 		, IMAGE_ICON, 0, 0, 0);
-	m_open_book.SetImage(hBookIcon);
+	m_add_book.SetImage(hBookIcon);
 
 	return FALSE;
-}
-
-void CMainSearch::OnBnClickedOpenLabel()
-{
-	CLabelTab().DoModal();
-	m_project_search.SetFocus();
-}
-
-void CMainSearch::OnBnClickedOpenProject()
-{
-	CProjectTab().DoModal();
-	m_project_search.SetFocus();
-}
-
-void CMainSearch::OnBnClickedOpenBook()
-{
-	CBookTab().DoModal();
-	m_project_search.SetFocus();
 }
 
 BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
@@ -101,7 +83,7 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 				if (pFocus == &m_label_search) {
 					m_label_search.GetWindowText(strSearchText);
 
-					CLabelTab(strSearchText).DoModal();
+					CLabelTab(_T("search:") + strSearchText).DoModal();
 
 					m_label_search.SetWindowText(_T(""));
 					m_label_search.SetFocus();
@@ -109,7 +91,7 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 				} else if (pFocus == &m_project_search) {
 					m_project_search.GetWindowText(strSearchText);
 
-					CProjectTab(strSearchText).DoModal();
+					CProjectTab(_T("search:") + strSearchText).DoModal();
 
 					m_project_search.SetWindowText(_T(""));
 					m_project_search.SetFocus();
@@ -117,7 +99,7 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 				} else if (pFocus == &m_book_search) {
 					m_book_search.GetWindowText(strSearchText);
 
-					CBookTab(strSearchText).DoModal();
+					CBookTab(_T("search:") + strSearchText).DoModal();
 
 					m_book_search.SetWindowText(_T(""));
 					m_book_search.SetFocus();
@@ -128,4 +110,22 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CMainSearch::OnBnClickedAddLabel()
+{
+	CLabelTab(_T("add")).DoModal();
+	m_project_search.SetFocus();
+}
+
+void CMainSearch::OnBnClickedAddProject()
+{
+	CProjectTab(_T("add")).DoModal();
+	m_project_search.SetFocus();
+}
+
+void CMainSearch::OnBnClickedAddBook()
+{
+	CBookTab(_T("add")).DoModal();
+	m_project_search.SetFocus();
 }

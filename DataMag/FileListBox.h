@@ -176,10 +176,13 @@ public:
 	 *        ¹ıÂË×Ö·û´®
 	 */
 	void SetFilterString(CString str){
-		m_filter = str;
-		m_filter.MakeLower();
+		if (m_filter.CompareNoCase(str) != 0) {
 
-		DisplayFolder(GetCurrentFolder());
+			m_filter = str;
+			m_filter.MakeLower();
+
+			DisplayFolder(GetCurrentFolder());
+		}
 	}
 	
 protected:

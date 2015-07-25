@@ -19,9 +19,9 @@ protected:
 	HICON m_hIcon;
 
 protected:
-	CMFCButton m_open_book;
-	CMFCButton m_open_label;
-	CMFCButton m_open_project;
+	CMFCButton m_add_book;
+	CMFCButton m_add_label;
+	CMFCButton m_add_project;
 
 	CSearchEdit m_book_search;
 	CSearchEdit m_label_search;
@@ -34,7 +34,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
-	afx_msg void OnBnClickedOpenBook();
-	afx_msg void OnBnClickedOpenLabel();
-	afx_msg void OnBnClickedOpenProject();
+	afx_msg void OnBnClickedAddBook();
+	afx_msg void OnBnClickedAddLabel();
+	afx_msg void OnBnClickedAddProject();
 };

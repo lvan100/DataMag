@@ -9,12 +9,19 @@
 
 IMPLEMENT_DYNAMIC(CLabelTab, CDialogEx)
 
-CLabelTab::CLabelTab(CString strFilter, CWnd* pParent /*=NULL*/)
+CLabelTab::CLabelTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLabelTab::IDD, pParent)
 	, m_label_list(&theShellManager)
 	, m_label_info(&theShellManager)
-	, m_strFilter(strFilter)
 {
+	int colon = strCommand.Find(':');
+	if (colon > 0) {
+		m_command.cmd = strCommand.Left(colon);
+		m_command.arg = strCommand.Mid(colon + 1);
+	} else {
+		m_command.cmd = strCommand;
+	}
+
 	m_label_list.SetListEvent(&m_label_event);
 	m_label_info.SetListEvent(&m_label_info_event);
 
@@ -124,10 +131,18 @@ BOOL CLabelTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	m_label_search_edit.SetWindowText(m_strFilter);
-	m_label_search_edit.SetSel(-1);
+	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
-	m_label_list.SetFilterString(m_strFilter);
+	} else if (m_command.cmd.CompareNoCase(_T("search")) == 0) {
+		if (!m_command.arg.IsEmpty()) {
+			m_label_search_edit.SetWindowText(m_command.arg);
+			m_label_search_edit.SetSel(-1);
+			m_label_list.SetFilterString(m_command.arg);
+		}
+
+	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
+		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_LABEL_ADD, BN_CLICKED), NULL);
+	}
 
 	return FALSE; /* Ωπµ„…Ë÷√ */
 }
