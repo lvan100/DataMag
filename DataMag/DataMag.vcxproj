@@ -101,6 +101,7 @@
     <None Include="res\DataMag.rc2" />
     <None Include="res\delete.ico" />
     <None Include="res\help.ico" />
+    <None Include="res\label.ico" />
     <None Include="res\rename.ico" />
     <None Include="res\search.ico" />
     <None Include="res\setting.ico" />
@@ -114,6 +115,7 @@
     <ClInclude Include="FileOp.h" />
     <ClInclude Include="LabelTab.h" />
     <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="MainSearch.h" />
     <ClInclude Include="NameDlg.h" />
     <ClInclude Include="PrettyEdit.h" />
     <ClInclude Include="ProjectSelectDlg.h" />
@@ -132,6 +134,7 @@
     <ClCompile Include="DataMag.cpp" />
     <ClCompile Include="FileListBox.cpp" />
     <ClCompile Include="FileOp.cpp" />
+    <ClCompile Include="MainSearch.cpp" />
     <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="LabelTab.cpp" />
     <ClCompile Include="MainFrame.cpp" />

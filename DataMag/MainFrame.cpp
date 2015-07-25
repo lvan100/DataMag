@@ -8,8 +8,10 @@
 
 IMPLEMENT_DYNAMIC(CMainFrame, CDialogEx)
 
-CMainFrame::CMainFrame(CWnd* pParent /*=nullptr*/)
+CMainFrame::CMainFrame(MFCommand c, CString a, CWnd* pParent /*=nullptr*/)
 	: CDialogEx(CMainFrame::IDD, pParent)
+	, cmd(c)
+	, arg(a)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -29,6 +31,7 @@ void CMainFrame::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CMainFrame, CDialogEx)
 	ON_BN_CLICKED(IDC_SETTING, &CMainFrame::OnClickedSetting)
 	ON_WM_ACTIVATEAPP()
+	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 UINT CMainFrame::MainTabAdapter::GetCount()
@@ -87,28 +90,43 @@ BOOL CMainFrame::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 
-	m_main_tab.SelectTab(0);
-
-	return FALSE;
-}
-
-BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
-{
-	if (pMsg->message == WM_KEYDOWN)
-	{
-		switch((UINT)pMsg->wParam)
+	switch (cmd) {
+	case OpenLabel:
 		{
-		case VK_RETURN:
-			{
-				return TRUE;
-			}
-			break;
-		default:
-			break;
+			m_main_tab.SelectTab(0);
 		}
+		break;
+	case SearchLabel:
+		{
+			CWnd* label = m_main_tab.SelectTab(0);
+			((CLabelTab*)label)->SetLabelSearch(arg);
+		}
+		break;
+	case OpenProject:
+		{
+			m_main_tab.SelectTab(1);
+		}
+		break;
+	case SearchProject:
+		{
+			CWnd* label = m_main_tab.SelectTab(1);
+			((CProjectTab*)label)->SetProjectSearch(arg);
+		}
+		break;
+	case OpenBook:
+		{
+			m_main_tab.SelectTab(2);
+		}
+		break;
+	case SearchBook:
+		{
+			CWnd* label = m_main_tab.SelectTab(2);
+			((CBookTab*)label)->SetBookSearch(arg);
+		}
+		break;
 	}
 
-	return CDialogEx::PreTranslateMessage(pMsg);
+	return FALSE;
 }
 
 void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
@@ -123,4 +141,13 @@ void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 void CMainFrame::OnClickedSetting()
 {
 	CSettingDlg().DoModal();
+}
+
+void CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if ((nID & SC_MOVE) == SC_MOVE) {
+		// ½ûÖ¹´°¿ÚÒÆ¶¯
+	} else {
+		CDialogEx::OnSysCommand(nID, lParam);
+	}
 }

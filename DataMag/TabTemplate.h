@@ -65,9 +65,9 @@ public:
 	 *
 	 * @patam nItem
 	 *        标签页索引
-	 * @return 成功返回TRUE，失败返回FALSE。
+	 * @return 返回选择的标签页内容
 	 */
-	BOOL SelectTab(UINT nItem);
+	CWnd* SelectTab(UINT nItem);
 	
 	/**
 	 * 删除标签页

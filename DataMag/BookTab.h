@@ -23,6 +23,15 @@ public:
 		m_book_list.DisplayFolder(dir);
 	}
 
+	/**
+	 * 设置图书搜索内容字符串
+	 */
+	void SetBookSearch(CString strSearch){
+		m_search_edit.SetWindowText(strSearch);
+		m_search_edit.SetSel(-1);
+		m_book_list.SetFilterString(strSearch);
+	}
+
 public:
 	/**
 	 * 初始化列表框控件

@@ -22,6 +22,15 @@ public:
 	void OnLabelMagDirChange(CString dir){
 		m_label_list.DisplayFolder(dir);
 	}
+	
+	/**
+	 * ÉèÖÃ±êÇ©ËÑË÷ÄÚÈİ×Ö·û´®
+	 */
+	void SetLabelSearch(CString strSearch){
+		m_label_search_edit.SetWindowText(strSearch);
+		m_label_search_edit.SetSel(-1);
+		m_label_list.SetFilterString(strSearch);
+	}
 
 protected:
 	/**

@@ -23,6 +23,15 @@ public:
 		m_project_list.DisplayFolder(dir);
 	}
 
+	/**
+	 * 设置项目搜索内容字符串
+	 */
+	void SetProjectSearch(CString strSearch){
+		m_search_edit.SetWindowText(strSearch);
+		m_search_edit.SetSel(-1);
+		m_project_list.SetFilterString(strSearch);
+	}
+
 public:
 	/**
 	 * 初始化列表框控件

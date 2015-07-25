@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "DataMag.h"
-#include "MainFrame.h"
+#include "MainSearch.h"
 
 /**
  * 全局的应用设置对象
@@ -146,7 +146,7 @@ BOOL CDataMagApp::InitInstance()
 
 	AfxInitRichEdit2();
 
-	CMainFrame dlg;
+	CMainSearch dlg;
 	dlg.DoModal();
 
 	return FALSE;

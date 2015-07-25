@@ -295,6 +295,7 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 		case VK_ESCAPE:
 		case VK_RETURN:
 			{
+				GetParent()->GetParent()->SendMessage(WM_CLOSE);
 				return TRUE;
 			}
 			break;

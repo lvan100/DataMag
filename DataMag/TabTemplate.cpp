@@ -67,7 +67,7 @@ BOOL CTabTemplate::Init()
 	return TRUE;
 }
 
-BOOL CTabTemplate::SelectTab(UINT nItem)
+CWnd* CTabTemplate::SelectTab(UINT nItem)
 {
 	if (nItem >= 0 && nItem < m_content.size())
 	{
@@ -90,10 +90,10 @@ BOOL CTabTemplate::SelectTab(UINT nItem)
 
 		SetCurSel(nItem);
 
-		return TRUE;
+		return pItem;
 	}
 
-	return FALSE;
+	return NULL;
 }
 
 BOOL CTabTemplate::DeleteTab(UINT nItem)

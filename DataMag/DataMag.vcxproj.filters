@@ -55,6 +55,9 @@
     <Filter Include="Kernel\NameDlg">
       <UniqueIdentifier>{5fa0214c-73ba-4405-b7c5-21a144e30a6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kernel\MainSearch">
+      <UniqueIdentifier>{6688b449-2f8b-46fd-a3e9-5b03de11b2a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -88,6 +91,9 @@
       <Filter>Application\Resource</Filter>
     </None>
     <None Include="res\help.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\label.ico">
       <Filter>Application\Resource</Filter>
     </None>
   </ItemGroup>
@@ -146,6 +152,9 @@
     <ClInclude Include="NameDlg.h">
       <Filter>Kernel\NameDlg</Filter>
     </ClInclude>
+    <ClInclude Include="MainSearch.h">
+      <Filter>Kernel\MainSearch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -195,6 +204,9 @@
     </ClCompile>
     <ClCompile Include="NameDlg.cpp">
       <Filter>Kernel\NameDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="MainSearch.cpp">
+      <Filter>Kernel\MainSearch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -217,6 +217,7 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 		{
 		case VK_ESCAPE:
 			{
+				GetParent()->GetParent()->SendMessage(WM_CLOSE);
 				return TRUE;
 			}
 			break;

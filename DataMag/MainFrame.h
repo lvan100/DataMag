@@ -10,10 +10,35 @@ class CMainFrame : public CDialogEx
 	DECLARE_DYNAMIC(CMainFrame)
 
 public:
-	CMainFrame(CWnd* pParent = nullptr);
+	/**
+	 * 命令类型
+	 */
+	enum MFCommand 
+	{ 
+		OpenLabel,
+		SearchLabel,
+		OpenProject,
+		SearchProject,
+		OpenBook,
+		SearchBook,
+	};
+
+public:
+	CMainFrame(MFCommand cmd, CString arg, CWnd* pParent = nullptr);
 	virtual ~CMainFrame();
 
 	enum { IDD = IDD_MAINFRAME };
+
+protected:
+	/**
+	 * 执行命令
+	 */
+	MFCommand cmd;
+
+	/**
+	 * 命令参数
+	 */
+	CString arg;
 
 protected:
 	class MainTabAdapter : public TabItemAdapter
@@ -59,11 +84,11 @@ protected:
 
 protected:
 	virtual BOOL OnInitDialog();
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnClickedSetting();
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnActivateApp(BOOL bActive, DWORD dwThreadID);
 };
