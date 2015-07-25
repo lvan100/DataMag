@@ -11,7 +11,7 @@ class CProjectTab : public CDialogEx, CListBoxEventAdapter
 	DECLARE_DYNAMIC(CProjectTab)
 
 public:
-	CProjectTab(CWnd* pParent = NULL);
+	CProjectTab(CString strFilter = _T(""), CWnd* pParent = NULL);
 	virtual ~CProjectTab();
 
 	enum { IDD = IDD_PROJECTTAB };
@@ -21,15 +21,6 @@ public:
 	 */
 	void OnCodeMagDirChange(CString dir){
 		m_project_list.DisplayFolder(dir);
-	}
-
-	/**
-	 * 设置项目搜索内容字符串
-	 */
-	void SetProjectSearch(CString strSearch){
-		m_search_edit.SetWindowText(strSearch);
-		m_search_edit.SetSel(-1);
-		m_project_list.SetFilterString(strSearch);
 	}
 
 public:
@@ -53,6 +44,11 @@ protected:
 	 * 描述文件的内容
 	 */
 	CStringA strText;
+	
+	/**
+	 * 搜索过滤器
+	 */
+	CString m_strFilter;
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -72,5 +68,6 @@ protected:
 	afx_msg void OnBnClickedProjectRefresh();
 	afx_msg void OnChangeProjectSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 };

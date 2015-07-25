@@ -11,7 +11,7 @@ class CLabelTab : public CDialogEx
 	DECLARE_DYNAMIC(CLabelTab)
 
 public:
-	CLabelTab(CWnd* pParent = NULL);
+	CLabelTab(CString strFilter = _T(""), CWnd* pParent = NULL);
 	virtual ~CLabelTab();
 
 	enum { IDD = IDD_LABELTAB };
@@ -23,15 +23,6 @@ public:
 		m_label_list.DisplayFolder(dir);
 	}
 	
-	/**
-	 * 设置标签搜索内容字符串
-	 */
-	void SetLabelSearch(CString strSearch){
-		m_label_search_edit.SetWindowText(strSearch);
-		m_label_search_edit.SetSel(-1);
-		m_label_list.SetFilterString(strSearch);
-	}
-
 protected:
 	/**
 	 * 标签列表事件对象
@@ -78,6 +69,11 @@ protected:
 	 * 描述文件的内容
 	 */
 	CStringA strText;
+	
+	/**
+	 * 搜索过滤器
+	 */
+	CString m_strFilter;
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -101,5 +97,6 @@ protected:
 	afx_msg void OnBnClickedLabelRelateBook();
 	afx_msg void OnBnClickedLabelRelateProject();
 	afx_msg void OnBnClickedRemoveRelationship();
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 };

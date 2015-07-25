@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "DataMag.h"
-#include "MainFrame.h"
+#include "BookTab.h"
+#include "LabelTab.h"
+#include "ProjectTab.h"
 #include "MainSearch.h"
 
 IMPLEMENT_DYNAMIC(CMainSearch, CDialogEx)
@@ -69,19 +71,19 @@ BOOL CMainSearch::OnInitDialog()
 
 void CMainSearch::OnBnClickedOpenLabel()
 {
-	CMainFrame(CMainFrame::OpenLabel, _T("")).DoModal();
+	CLabelTab().DoModal();
 	m_project_search.SetFocus();
 }
 
 void CMainSearch::OnBnClickedOpenProject()
 {
-	CMainFrame(CMainFrame::OpenProject, _T("")).DoModal();
+	CProjectTab().DoModal();
 	m_project_search.SetFocus();
 }
 
 void CMainSearch::OnBnClickedOpenBook()
 {
-	CMainFrame(CMainFrame::OpenBook, _T("")).DoModal();
+	CBookTab().DoModal();
 	m_project_search.SetFocus();
 }
 
@@ -98,19 +100,25 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 				CString strSearchText;
 				if (pFocus == &m_label_search) {
 					m_label_search.GetWindowText(strSearchText);
-					CMainFrame(CMainFrame::SearchLabel,strSearchText ).DoModal();
+
+					CLabelTab(strSearchText).DoModal();
+
 					m_label_search.SetWindowText(_T(""));
 					m_label_search.SetFocus();
 
 				} else if (pFocus == &m_project_search) {
 					m_project_search.GetWindowText(strSearchText);
-					CMainFrame(CMainFrame::SearchProject,strSearchText ).DoModal();
+
+					CProjectTab(strSearchText).DoModal();
+
 					m_project_search.SetWindowText(_T(""));
 					m_project_search.SetFocus();
 
 				} else if (pFocus == &m_book_search) {
 					m_book_search.GetWindowText(strSearchText);
-					CMainFrame(CMainFrame::SearchBook,strSearchText ).DoModal();
+
+					CBookTab(strSearchText).DoModal();
+
 					m_book_search.SetWindowText(_T(""));
 					m_book_search.SetFocus();
 				}

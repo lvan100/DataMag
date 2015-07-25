@@ -7,9 +7,10 @@
 
 IMPLEMENT_DYNAMIC(CBookTab, CDialogEx)
 
-CBookTab::CBookTab(CWnd* pParent /*=NULL*/)
+CBookTab::CBookTab(CString strFilter, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CBookTab::IDD, pParent)
 	, m_book_list(&theShellManager)
+	, m_strFilter(strFilter)
 {
 	m_book_list.SetListEvent(this);
 
@@ -43,6 +44,7 @@ BEGIN_MESSAGE_MAP(CBookTab, CDialogEx)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookTab::OnChangeBookSearchEdit)
 	ON_WM_DROPFILES()
 	ON_WM_SHOWWINDOW()
+	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 void CBookTab::InitListBox()
@@ -86,6 +88,11 @@ void CBookTab::OnSelectChanged()
 BOOL CBookTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	m_search_edit.SetWindowText(m_strFilter);
+	m_search_edit.SetSel(-1);
+
+	m_book_list.SetFilterString(m_strFilter);
 
 	return FALSE; /* 焦点设置 */
 }
@@ -193,9 +200,8 @@ void CBookTab::OnBnClickedBookRefresh()
 
 void CBookTab::OnChangeBookSearchEdit()
 {
-	CString strFilter;
-	m_search_edit.GetWindowText(strFilter);
-	m_book_list.SetFilterString(strFilter);
+	m_search_edit.GetWindowText(m_strFilter);
+	m_book_list.SetFilterString(m_strFilter);
 }
 
 BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
@@ -206,12 +212,6 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
-		case VK_ESCAPE:
-			{
-				GetParent()->GetParent()->SendMessage(WM_CLOSE);
-				return TRUE;
-			}
-			break;
 		case VK_RETURN:
 			{
 				if (pFocusWnd != &m_item_text) {
@@ -308,4 +308,13 @@ void CBookTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
+}
+
+void CBookTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if ((nID & SC_MOVE) == SC_MOVE) {
+		// 禁止窗口移动
+	} else {
+		CDialogEx::OnSysCommand(nID, lParam);
+	}
 }

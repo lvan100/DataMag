@@ -7,9 +7,10 @@
 
 IMPLEMENT_DYNAMIC(CProjectTab, CDialogEx)
 
-CProjectTab::CProjectTab(CWnd* pParent /*=NULL*/)
+CProjectTab::CProjectTab(CString strFilter, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CProjectTab::IDD, pParent)
 	, m_project_list(&theShellManager)
+	, m_strFilter(strFilter)
 {
 	m_project_list.SetListEvent(this);
 
@@ -43,6 +44,7 @@ BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
 	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectTab::OnChangeProjectSearchEdit)
 	ON_WM_DROPFILES()
 	ON_WM_SHOWWINDOW()
+	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 void CProjectTab::InitListBox()
@@ -86,6 +88,11 @@ void CProjectTab::OnSelectChanged()
 BOOL CProjectTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	m_search_edit.SetWindowText(m_strFilter);
+	m_search_edit.SetSel(-1);
+
+	m_project_list.SetFilterString(m_strFilter);
 
 	return FALSE; /* 焦点设置 */
 }
@@ -215,12 +222,6 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
-		case VK_ESCAPE:
-			{
-				GetParent()->GetParent()->SendMessage(WM_CLOSE);
-				return TRUE;
-			}
-			break;
 		case VK_RETURN:
 			{
 				if (pFocusWnd != &m_item_text) {
@@ -345,4 +346,13 @@ void CProjectTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
+}
+
+void CProjectTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if ((nID & SC_MOVE) == SC_MOVE) {
+		// 禁止窗口移动
+	} else {
+		CDialogEx::OnSysCommand(nID, lParam);
+	}
 }

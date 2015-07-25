@@ -9,10 +9,11 @@
 
 IMPLEMENT_DYNAMIC(CLabelTab, CDialogEx)
 
-CLabelTab::CLabelTab(CWnd* pParent /*=NULL*/)
+CLabelTab::CLabelTab(CString strFilter, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLabelTab::IDD, pParent)
 	, m_label_list(&theShellManager)
 	, m_label_info(&theShellManager)
+	, m_strFilter(strFilter)
 {
 	m_label_list.SetListEvent(&m_label_event);
 	m_label_info.SetListEvent(&m_label_info_event);
@@ -44,6 +45,7 @@ void CLabelTab::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
 	ON_WM_SHOWWINDOW()
+	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_LABEL_ADD, &CLabelTab::OnBnClickedLabelAdd)
 	ON_BN_CLICKED(IDC_LABEL_DELETE, &CLabelTab::OnBnClickedLabelDelete)
 	ON_BN_CLICKED(IDC_LABEL_RENAME, &CLabelTab::OnBnClickedLabelRename)
@@ -121,6 +123,11 @@ void CLabelTab::LabelInfoEvent::OnSelectChanged()
 BOOL CLabelTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	m_label_search_edit.SetWindowText(m_strFilter);
+	m_label_search_edit.SetSel(-1);
+
+	m_label_list.SetFilterString(m_strFilter);
 
 	return FALSE; /* 焦点设置 */
 }
@@ -292,10 +299,8 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
-		case VK_ESCAPE:
 		case VK_RETURN:
 			{
-				GetParent()->GetParent()->SendMessage(WM_CLOSE);
 				return TRUE;
 			}
 			break;
@@ -350,4 +355,13 @@ void CLabelTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
+}
+
+void CLabelTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if ((nID & SC_MOVE) == SC_MOVE) {
+		// 禁止窗口移动
+	} else {
+		CDialogEx::OnSysCommand(nID, lParam);
+	}
 }

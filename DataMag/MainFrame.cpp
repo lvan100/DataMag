@@ -99,7 +99,6 @@ BOOL CMainFrame::OnInitDialog()
 	case SearchLabel:
 		{
 			CWnd* label = m_main_tab.SelectTab(0);
-			((CLabelTab*)label)->SetLabelSearch(arg);
 		}
 		break;
 	case OpenProject:
@@ -110,7 +109,6 @@ BOOL CMainFrame::OnInitDialog()
 	case SearchProject:
 		{
 			CWnd* label = m_main_tab.SelectTab(1);
-			((CProjectTab*)label)->SetProjectSearch(arg);
 		}
 		break;
 	case OpenBook:
@@ -121,7 +119,6 @@ BOOL CMainFrame::OnInitDialog()
 	case SearchBook:
 		{
 			CWnd* label = m_main_tab.SelectTab(2);
-			((CBookTab*)label)->SetBookSearch(arg);
 		}
 		break;
 	}
