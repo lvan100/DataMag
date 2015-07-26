@@ -58,6 +58,9 @@
     <Filter Include="Kernel\MainSearch">
       <UniqueIdentifier>{6688b449-2f8b-46fd-a3e9-5b03de11b2a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\PrettyButton">
+      <UniqueIdentifier>{63a62df5-f25a-4f23-81eb-09ce11040e6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -155,6 +158,9 @@
     <ClInclude Include="MainSearch.h">
       <Filter>Kernel\MainSearch</Filter>
     </ClInclude>
+    <ClInclude Include="PrettyButton.h">
+      <Filter>Widget\PrettyButton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -207,6 +213,9 @@
     </ClCompile>
     <ClCompile Include="MainSearch.cpp">
       <Filter>Kernel\MainSearch</Filter>
+    </ClCompile>
+    <ClCompile Include="PrettyButton.cpp">
+      <Filter>Widget\PrettyButton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

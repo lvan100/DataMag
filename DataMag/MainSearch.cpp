@@ -33,6 +33,7 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ADD_PROJECT, m_add_project);
 	DDX_Control(pDX, IDC_LABEL_SEARCH, m_label_search);
 	DDX_Control(pDX, IDC_PROJECT_SEARCH, m_project_search);
+	DDX_Control(pDX, IDC_MY_BLOG, m_blog);
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
@@ -65,6 +66,14 @@ BOOL CMainSearch::OnInitDialog()
 		, MAKEINTRESOURCE(IDI_BOOK)
 		, IMAGE_ICON, 0, 0, 0);
 	m_add_book.SetImage(hBookIcon);
+
+	LOGFONT logFont = { 0 };
+	afxGlobalData.fontBold.GetLogFont(&logFont);
+
+	logFont.lfHeight = -20;
+
+	HFONT hFont = CreateFontIndirect(&logFont);
+	m_blog.SetFont(CFont::FromHandle(hFont));
 
 	return FALSE;
 }
