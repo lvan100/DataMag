@@ -135,6 +135,8 @@ BOOL CLabelTab::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 
+	CenterWindow(GetDesktopWindow());
+
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
 	} else if (m_command.cmd.CompareNoCase(_T("search")) == 0) {

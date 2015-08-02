@@ -99,9 +99,9 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 				if (pFocus == &m_label_search) {
 					m_label_search.GetWindowText(strSearchText);
 
-					ShowWindow(SW_HIDE);
+					MoveToHideWindow(TRUE);
 					CLabelTab(_T("search:") + strSearchText).DoModal();
-					ShowWindow(SW_SHOW);
+					MoveToHideWindow(FALSE);
 
 					m_label_search.SetWindowText(_T(""));
 					m_label_search.SetFocus();
@@ -109,9 +109,9 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 				} else if (pFocus == &m_project_search) {
 					m_project_search.GetWindowText(strSearchText);
 
-					ShowWindow(SW_HIDE);
+					MoveToHideWindow(TRUE);
 					CProjectTab(_T("search:") + strSearchText).DoModal();
-					ShowWindow(SW_SHOW);
+					MoveToHideWindow(FALSE);
 
 					m_project_search.SetWindowText(_T(""));
 					m_project_search.SetFocus();
@@ -119,9 +119,9 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 				} else if (pFocus == &m_book_search) {
 					m_book_search.GetWindowText(strSearchText);
 
-					ShowWindow(SW_HIDE);
+					MoveToHideWindow(TRUE);
 					CBookTab(_T("search:") + strSearchText).DoModal();
-					ShowWindow(SW_SHOW);
+					MoveToHideWindow(FALSE);
 
 					m_book_search.SetWindowText(_T(""));
 					m_book_search.SetFocus();
@@ -136,27 +136,27 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 
 void CMainSearch::OnBnClickedAddLabel()
 {
-	ShowWindow(SW_HIDE);
+	MoveToHideWindow(TRUE);
 	CLabelTab(_T("add")).DoModal();
-	ShowWindow(SW_SHOW);
+	MoveToHideWindow(FALSE);
 
 	m_project_search.SetFocus();
 }
 
 void CMainSearch::OnBnClickedAddProject()
 {
-	ShowWindow(SW_HIDE);
+	MoveToHideWindow(TRUE);
 	CProjectTab(_T("add")).DoModal();
-	ShowWindow(SW_SHOW);
+	MoveToHideWindow(FALSE);
 
 	m_project_search.SetFocus();
 }
 
 void CMainSearch::OnBnClickedAddBook()
 {
-	ShowWindow(SW_HIDE);
+	MoveToHideWindow(TRUE);
 	CBookTab(_T("add")).DoModal();
-	ShowWindow(SW_SHOW);
+	MoveToHideWindow(FALSE);
 
 	m_project_search.SetFocus();
 }
@@ -168,4 +168,28 @@ void CMainSearch::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	if (nState != WA_INACTIVE && GetFocus() != &m_project_search) {
 		m_project_search.SetFocus();
 	}
+}
+
+void CMainSearch::MoveToHideWindow(BOOL bHide)
+{
+	CRect rcWnd;
+	GetWindowRect(rcWnd);
+	
+	int top = rcWnd.top;
+	int bottom = rcWnd.bottom;
+
+	if (bHide) {
+		if (top >= 0 && bottom >= 0) {
+			rcWnd.bottom = -top;
+			rcWnd.top = -bottom;
+		}
+
+	} else {
+		if (top < 0 && bottom < 0) {
+			rcWnd.bottom = -top;
+			rcWnd.top = -bottom;
+		}
+	}
+
+	MoveWindow(rcWnd);
 }

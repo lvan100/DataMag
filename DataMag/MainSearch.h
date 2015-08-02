@@ -20,6 +20,12 @@ protected:
 	HICON m_hIcon;
 
 protected:
+	/**
+	 * 移动窗口到不可见区域，以达到隐藏窗口的目的
+	 */
+	void MoveToHideWindow(BOOL bHide);
+
+protected:
 	CStatic m_blog;
 
 	CPrettyButton m_add_book;
