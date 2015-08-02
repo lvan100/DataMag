@@ -114,7 +114,6 @@
     <ClInclude Include="FileListBox.h" />
     <ClInclude Include="FileOp.h" />
     <ClInclude Include="LabelTab.h" />
-    <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MainSearch.h" />
     <ClInclude Include="NameDlg.h" />
     <ClInclude Include="PrettyButton.h" />
@@ -138,7 +137,6 @@
     <ClCompile Include="MainSearch.cpp" />
     <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="LabelTab.cpp" />
-    <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="PrettyButton.cpp" />
     <ClCompile Include="PrettyEdit.cpp" />
     <ClCompile Include="ProjectSelectDlg.cpp" />

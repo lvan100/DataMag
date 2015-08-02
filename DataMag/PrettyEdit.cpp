@@ -25,7 +25,6 @@ int CPrettyEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-
 void CPrettyEdit::PreSubclassWindow()
 {
 	CEdit::PreSubclassWindow();

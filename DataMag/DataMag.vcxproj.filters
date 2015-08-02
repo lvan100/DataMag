@@ -10,9 +10,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{7541c96c-da31-47c6-b995-270318e61250}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\MainFrame">
-      <UniqueIdentifier>{f804470b-b371-44bc-9544-00084421d65b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Kernel\BookSelectDlg">
       <UniqueIdentifier>{c28d5e6f-bc10-458c-a18b-fabba33ee288}</UniqueIdentifier>
     </Filter>
@@ -119,9 +116,6 @@
     <ClInclude Include="ShellListCtrl.h">
       <Filter>Widget\ShellListCtrl</Filter>
     </ClInclude>
-    <ClInclude Include="MainFrame.h">
-      <Filter>Kernel\MainFrame</Filter>
-    </ClInclude>
     <ClInclude Include="TabTemplate.h">
       <Filter>Widget\TabTemplate</Filter>
     </ClInclude>
@@ -174,9 +168,6 @@
     </ClCompile>
     <ClCompile Include="ShellListCtrl.cpp">
       <Filter>Widget\ShellListCtrl</Filter>
-    </ClCompile>
-    <ClCompile Include="MainFrame.cpp">
-      <Filter>Kernel\MainFrame</Filter>
     </ClCompile>
     <ClCompile Include="TabTemplate.cpp">
       <Filter>Widget\TabTemplate</Filter>

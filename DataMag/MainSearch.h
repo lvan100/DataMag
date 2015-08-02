@@ -40,4 +40,5 @@ protected:
 	afx_msg void OnBnClickedAddBook();
 	afx_msg void OnBnClickedAddLabel();
 	afx_msg void OnBnClickedAddProject();
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

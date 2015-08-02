@@ -27,19 +27,20 @@ CMainSearch::~CMainSearch()
 void CMainSearch::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_MY_BLOG, m_blog);
 	DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
 	DDX_Control(pDX, IDC_ADD_LABEL, m_add_label);
 	DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
 	DDX_Control(pDX, IDC_ADD_PROJECT, m_add_project);
 	DDX_Control(pDX, IDC_LABEL_SEARCH, m_label_search);
 	DDX_Control(pDX, IDC_PROJECT_SEARCH, m_project_search);
-	DDX_Control(pDX, IDC_MY_BLOG, m_blog);
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
-	ON_BN_CLICKED(IDC_ADD_LABEL, &CMainSearch::OnBnClickedAddLabel)
 	ON_BN_CLICKED(IDC_ADD_PROJECT, &CMainSearch::OnBnClickedAddProject)
+	ON_BN_CLICKED(IDC_ADD_LABEL, &CMainSearch::OnBnClickedAddLabel)
 	ON_BN_CLICKED(IDC_ADD_BOOK, &CMainSearch::OnBnClickedAddBook)
+	ON_WM_ACTIVATE()
 END_MESSAGE_MAP()
 
 BOOL CMainSearch::OnInitDialog()
@@ -67,13 +68,19 @@ BOOL CMainSearch::OnInitDialog()
 		, IMAGE_ICON, 0, 0, 0);
 	m_add_book.SetImage(hBookIcon);
 
-	LOGFONT logFont = { 0 };
-	afxGlobalData.fontBold.GetLogFont(&logFont);
+	[&](){
+		LOGFONT logFont = { 0 };
+		afxGlobalData.fontBold.GetLogFont(&logFont);
 
-	logFont.lfHeight = -20;
+		logFont.lfHeight = -20;
 
-	HFONT hFont = CreateFontIndirect(&logFont);
-	m_blog.SetFont(CFont::FromHandle(hFont));
+		HFONT hFont = CreateFontIndirect(&logFont);
+		m_blog.SetFont(CFont::FromHandle(hFont));
+	}();
+	
+	m_book_search.SetHintText(_T("ËÑË÷Í¼Êé"));
+	m_label_search.SetHintText(_T("ËÑË÷±êÇ©"));
+	m_project_search.SetHintText(_T("ËÑË÷ÏîÄ¿"));
 
 	return FALSE;
 }
@@ -137,4 +144,13 @@ void CMainSearch::OnBnClickedAddBook()
 {
 	CBookTab(_T("add")).DoModal();
 	m_project_search.SetFocus();
+}
+
+void CMainSearch::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	if (nState != WA_INACTIVE && GetFocus() != &m_project_search) {
+		m_project_search.SetFocus();
+	}
 }

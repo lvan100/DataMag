@@ -4,6 +4,8 @@
 IMPLEMENT_DYNAMIC(CSearchEdit, CEdit)
 
 CSearchEdit::CSearchEdit()
+	: m_bFocused(FALSE)
+	, m_bTextIsHint(FALSE)
 {
 }
 
@@ -15,6 +17,7 @@ BEGIN_MESSAGE_MAP(CSearchEdit, CEdit)
 	ON_WM_ERASEBKGND()
 	ON_WM_SETFOCUS()
 	ON_WM_KILLFOCUS()
+	ON_WM_CTLCOLOR_REFLECT()
 END_MESSAGE_MAP()
 
 /**
@@ -58,9 +61,6 @@ void CSearchEdit::Init()
 
 BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 {
-	CRect rc;
-	GetRect(rc);
-
 	CRect rcClient;
 	GetClientRect(rcClient);
 
@@ -85,12 +85,46 @@ void CSearchEdit::OnSetFocus(CWnd* pOldWnd)
 {
 	CPrettyEdit::OnSetFocus(pOldWnd);
 
-	Invalidate();
+	m_bFocused = TRUE;
+	InvalidateWithHint();
 }
 
 void CSearchEdit::OnKillFocus(CWnd* pNewWnd)
 {
 	CPrettyEdit::OnKillFocus(pNewWnd);
 
-	Invalidate();
+	m_bFocused = FALSE;
+	InvalidateWithHint();
+}
+
+void CSearchEdit::InvalidateWithHint()
+{
+	if (m_bFocused) {
+		if (m_bTextIsHint) {
+			SetWindowText(_T(""));
+			m_bTextIsHint = FALSE;
+		}
+
+	} else {
+		CString strText;
+		GetWindowText(strText);
+
+		if (strText.IsEmpty()) {
+			SetWindowText(m_strHint);
+			m_bTextIsHint = TRUE;
+		}
+	}
+
+	Invalidate(TRUE);
+}
+
+HBRUSH CSearchEdit::CtlColor(CDC* pDC, UINT nCtlColor)
+{
+	if (m_bTextIsHint) {
+		pDC->SetTextColor(RGB(210,210,210));
+	} else {
+		pDC->SetTextColor(RGB(0,0,0));
+	}
+
+	return GetSysColorBrush(0);
 }
