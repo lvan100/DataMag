@@ -14,6 +14,8 @@ CLabelTab::CLabelTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	, m_label_list(&theShellManager)
 	, m_label_info(&theShellManager)
 {
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
 		m_command.cmd = strCommand.Left(colon);
@@ -52,7 +54,6 @@ void CLabelTab::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
 	ON_WM_SHOWWINDOW()
-	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_LABEL_ADD, &CLabelTab::OnBnClickedLabelAdd)
 	ON_BN_CLICKED(IDC_LABEL_DELETE, &CLabelTab::OnBnClickedLabelDelete)
 	ON_BN_CLICKED(IDC_LABEL_RENAME, &CLabelTab::OnBnClickedLabelRename)
@@ -130,6 +131,9 @@ void CLabelTab::LabelInfoEvent::OnSelectChanged()
 BOOL CLabelTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	SetIcon(m_hIcon, TRUE);
+	SetIcon(m_hIcon, FALSE);
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
@@ -370,13 +374,4 @@ void CLabelTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
-}
-
-void CLabelTab::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if ((nID & SC_MOVE) == SC_MOVE) {
-		// ½ûÖ¹´°¿ÚÒÆ¶¯
-	} else {
-		CDialogEx::OnSysCommand(nID, lParam);
-	}
 }

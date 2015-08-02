@@ -44,6 +44,11 @@ public:
 
 protected:
 	/**
+	 * 窗体图标
+	 */
+	HICON m_hIcon;
+
+	/**
 	 * 描述文件的内容
 	 */
 	CStringA strText;
@@ -74,6 +79,5 @@ protected:
 	afx_msg void OnBnClickedProjectRefresh();
 	afx_msg void OnChangeProjectSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 };

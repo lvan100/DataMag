@@ -11,6 +11,8 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CBookTab::IDD, pParent)
 	, m_book_list(&theShellManager)
 {
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
 		m_command.cmd = strCommand.Left(colon);
@@ -51,7 +53,6 @@ BEGIN_MESSAGE_MAP(CBookTab, CDialogEx)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookTab::OnChangeBookSearchEdit)
 	ON_WM_DROPFILES()
 	ON_WM_SHOWWINDOW()
-	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 void CBookTab::InitListBox()
@@ -95,6 +96,9 @@ void CBookTab::OnSelectChanged()
 BOOL CBookTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	SetIcon(m_hIcon, TRUE);
+	SetIcon(m_hIcon, FALSE);
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
@@ -324,13 +328,4 @@ void CBookTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
-}
-
-void CBookTab::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if ((nID & SC_MOVE) == SC_MOVE) {
-		// ½ûÖ¹´°¿ÚÒÆ¶¯
-	} else {
-		CDialogEx::OnSysCommand(nID, lParam);
-	}
 }

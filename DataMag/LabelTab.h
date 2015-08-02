@@ -69,6 +69,11 @@ protected:
 	}m_label_info_event;
 
 	/**
+	 * 窗体图标
+	 */
+	HICON m_hIcon;
+
+	/**
 	 * 描述文件的内容
 	 */
 	CStringA strText;
@@ -103,6 +108,5 @@ protected:
 	afx_msg void OnBnClickedLabelRelateBook();
 	afx_msg void OnBnClickedLabelRelateProject();
 	afx_msg void OnBnClickedRemoveRelationship();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 };
