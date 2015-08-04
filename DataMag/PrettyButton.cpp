@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PrettyButton.h"
 
-IMPLEMENT_DYNAMIC(CPrettyButton, CMFCButton)
+IMPLEMENT_DYNAMIC(CPrettyButton, CHilitButton)
 
 CPrettyButton::CPrettyButton()
 {
@@ -11,18 +11,8 @@ CPrettyButton::~CPrettyButton()
 {
 }
 
-BEGIN_MESSAGE_MAP(CPrettyButton, CMFCButton)
+BEGIN_MESSAGE_MAP(CPrettyButton, CHilitButton)
 END_MESSAGE_MAP()
-
-void CPrettyButton::OnFillBackground(CDC* pDC, const CRect& rectClient)
-{
-	CMFCButton::OnFillBackground(pDC, rectClient);
-
-	if (m_bHighlighted) {
-		CDrawingManager(*pDC).HighlightRect(rectClient);
-		pDC->FrameRect(rectClient, &afxGlobalData.brHilite);
-	}
-}
 
 void CPrettyButton::OnDrawText(CDC* pDC, const CRect& rect, const CString& strText, UINT uiDTFlags, UINT /*uiState*/)
 {
@@ -73,9 +63,4 @@ void CPrettyButton::OnDrawText(CDC* pDC, const CRect& rect, const CString& strTe
 	pDC->DrawTextEx(strContent, rectTextDown, DT_LEFT | DT_TOP | DT_SINGLELINE, NULL);
 
 	pDC->SelectObject(&pOldFont);
-}
-
-void CPrettyButton::PreSubclassWindow()
-{
-	CMFCButton::PreSubclassWindow();
 }

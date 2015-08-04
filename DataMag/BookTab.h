@@ -2,6 +2,7 @@
 
 #include "SearchEdit.h"
 #include "FileListBox.h"
+#include "HilitButton.h"
 
 /**
  * Õº È±Í«©“≥
@@ -67,6 +68,11 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	CHilitButton m_book_add;
+	CHilitButton m_book_delete;
+	CHilitButton m_book_rename;
+	CHilitButton m_refresh_list;
+
 	CFileListBox m_book_list;
 	CSearchEdit m_search_edit;
 	CRichEditCtrl m_item_text;

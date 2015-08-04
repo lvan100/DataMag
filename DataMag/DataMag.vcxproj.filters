@@ -155,6 +155,9 @@
     <ClInclude Include="PrettyButton.h">
       <Filter>Widget\PrettyButton</Filter>
     </ClInclude>
+    <ClInclude Include="HilitButton.h">
+      <Filter>Widget\PrettyButton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -206,6 +209,9 @@
       <Filter>Kernel\MainSearch</Filter>
     </ClCompile>
     <ClCompile Include="PrettyButton.cpp">
+      <Filter>Widget\PrettyButton</Filter>
+    </ClCompile>
+    <ClCompile Include="HilitButton.cpp">
       <Filter>Widget\PrettyButton</Filter>
     </ClCompile>
   </ItemGroup>

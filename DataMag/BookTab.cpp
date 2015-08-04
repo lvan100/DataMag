@@ -40,8 +40,12 @@ CBookTab::~CBookTab()
 void CBookTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_BOOK_ADD, m_book_add);
 	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
 	DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
+	DDX_Control(pDX, IDC_BOOK_DELETE, m_book_delete);
+	DDX_Control(pDX, IDC_BOOK_RENAME, m_book_rename);
+	DDX_Control(pDX, IDC_BOOK_REFRESH, m_refresh_list);
 	DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_search_edit);
 }
 

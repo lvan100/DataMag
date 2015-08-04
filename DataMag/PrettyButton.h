@@ -1,6 +1,8 @@
 #pragma once
 
-class CPrettyButton : public CMFCButton
+#include "HilitButton.h"
+
+class CPrettyButton : public CHilitButton
 {
 	DECLARE_DYNAMIC(CPrettyButton)
 
@@ -9,10 +11,6 @@ public:
 	virtual ~CPrettyButton();
 
 protected:
-	virtual void PreSubclassWindow();
-
-protected:
-	virtual void OnFillBackground(CDC* pDC, const CRect& rectClient);
 	virtual void OnDrawText(CDC* pDC, const CRect& rect, const CString& strText, UINT uiDTFlags, UINT uiState);
 
 	DECLARE_MESSAGE_MAP()

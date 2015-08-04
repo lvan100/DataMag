@@ -113,6 +113,7 @@
     <ClInclude Include="DataMag.h" />
     <ClInclude Include="FileListBox.h" />
     <ClInclude Include="FileOp.h" />
+    <ClInclude Include="HilitButton.h" />
     <ClInclude Include="LabelTab.h" />
     <ClInclude Include="MainSearch.h" />
     <ClInclude Include="NameDlg.h" />
@@ -134,6 +135,7 @@
     <ClCompile Include="DataMag.cpp" />
     <ClCompile Include="FileListBox.cpp" />
     <ClCompile Include="FileOp.cpp" />
+    <ClCompile Include="HilitButton.cpp" />
     <ClCompile Include="MainSearch.cpp" />
     <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="LabelTab.cpp" />
