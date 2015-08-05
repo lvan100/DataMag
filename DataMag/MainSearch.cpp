@@ -4,6 +4,7 @@
 #include "LabelTab.h"
 #include "ProjectTab.h"
 #include "MainSearch.h"
+#include "DDXControl.h"
 
 IMPLEMENT_DYNAMIC(CMainSearch, CDialogEx)
 
@@ -27,13 +28,13 @@ CMainSearch::~CMainSearch()
 void CMainSearch::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_MY_BLOG, m_blog);
-	DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
-	DDX_Control(pDX, IDC_ADD_LABEL, m_add_label);
-	DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
-	DDX_Control(pDX, IDC_ADD_PROJECT, m_add_project);
-	DDX_Control(pDX, IDC_LABEL_SEARCH, m_label_search);
-	DDX_Control(pDX, IDC_PROJECT_SEARCH, m_project_search);
+	MFC_DDX_Control(pDX, IDC_MY_BLOG, m_blog);
+	MFC_DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
+	MFC_DDX_Control(pDX, IDC_ADD_LABEL, m_add_label);
+	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
+	MFC_DDX_Control(pDX, IDC_ADD_PROJECT, m_add_project);
+	MFC_DDX_Control(pDX, IDC_LABEL_SEARCH, m_label_search);
+	MFC_DDX_Control(pDX, IDC_PROJECT_SEARCH, m_project_search);
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)

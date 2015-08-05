@@ -68,6 +68,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	CHilitButton m_setting;
 	CHilitButton m_book_add;
 	CHilitButton m_book_delete;
 	CHilitButton m_book_rename;
@@ -80,6 +81,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnBnClickedBookAdd();
+	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedBookDelete();
 	afx_msg void OnBnClickedBookRename();
 	afx_msg void OnBnClickedBookRefresh();

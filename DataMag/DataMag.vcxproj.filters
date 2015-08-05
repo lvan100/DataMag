@@ -58,6 +58,9 @@
     <Filter Include="Widget\PrettyButton">
       <UniqueIdentifier>{63a62df5-f25a-4f23-81eb-09ce11040e6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\DDXControl">
+      <UniqueIdentifier>{cd6c29ad-3cca-4f08-9124-6c12bc6d7425}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -158,6 +161,9 @@
     <ClInclude Include="HilitButton.h">
       <Filter>Widget\PrettyButton</Filter>
     </ClInclude>
+    <ClInclude Include="DDXControl.h">
+      <Filter>Widget\DDXControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -213,6 +219,9 @@
     </ClCompile>
     <ClCompile Include="HilitButton.cpp">
       <Filter>Widget\PrettyButton</Filter>
+    </ClCompile>
+    <ClCompile Include="DDXControl.cpp">
+      <Filter>Widget\DDXControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

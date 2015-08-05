@@ -4,6 +4,7 @@
 #include "NameDlg.h"
 #include "BookTab.h"
 #include "SettingDlg.h"
+#include "DDXControl.h"
 
 IMPLEMENT_DYNAMIC(CBookTab, CDialogEx)
 
@@ -40,23 +41,25 @@ CBookTab::~CBookTab()
 void CBookTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_BOOK_ADD, m_book_add);
-	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
-	DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
-	DDX_Control(pDX, IDC_BOOK_DELETE, m_book_delete);
-	DDX_Control(pDX, IDC_BOOK_RENAME, m_book_rename);
-	DDX_Control(pDX, IDC_BOOK_REFRESH, m_refresh_list);
-	DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_search_edit);
+	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
+	MFC_DDX_Control(pDX, IDC_BOOK_ADD, m_book_add);
+	MFC_DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
+	MFC_DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
+	MFC_DDX_Control(pDX, IDC_BOOK_DELETE, m_book_delete);
+	MFC_DDX_Control(pDX, IDC_BOOK_RENAME, m_book_rename);
+	MFC_DDX_Control(pDX, IDC_BOOK_REFRESH, m_refresh_list);
+	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_search_edit);
 }
 
 BEGIN_MESSAGE_MAP(CBookTab, CDialogEx)
+	ON_WM_DROPFILES()
+	ON_WM_SHOWWINDOW()
+	ON_BN_CLICKED(IDC_SETTING, &CBookTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_BOOK_ADD, &CBookTab::OnBnClickedBookAdd)
 	ON_BN_CLICKED(IDC_BOOK_DELETE, &CBookTab::OnBnClickedBookDelete)
 	ON_BN_CLICKED(IDC_BOOK_RENAME, &CBookTab::OnBnClickedBookRename)
 	ON_BN_CLICKED(IDC_BOOK_REFRESH, &CBookTab::OnBnClickedBookRefresh)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookTab::OnChangeBookSearchEdit)
-	ON_WM_DROPFILES()
-	ON_WM_SHOWWINDOW()
 END_MESSAGE_MAP()
 
 void CBookTab::InitListBox()
@@ -334,4 +337,9 @@ void CBookTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
+}
+
+void CBookTab::OnBnClickedSetting()
+{
+	CSettingDlg().DoModal();
 }

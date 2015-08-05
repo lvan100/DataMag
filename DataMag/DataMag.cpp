@@ -149,5 +149,9 @@ BOOL CDataMagApp::InitInstance()
 	CMainSearch dlg;
 	dlg.DoModal();
 
+	// 如果在程序中使用了 CMFCButton 等控件
+	// 需要手动释放 CMFCVisualManager 对象.
+	CMFCVisualManager::DestroyInstance();
+
 	return FALSE;
 }
