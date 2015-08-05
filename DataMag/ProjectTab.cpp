@@ -4,6 +4,7 @@
 #include "NameDlg.h"
 #include "SettingDlg.h"
 #include "ProjectTab.h"
+#include "DDXControl.h"
 
 IMPLEMENT_DYNAMIC(CProjectTab, CDialogEx)
 
@@ -40,19 +41,25 @@ CProjectTab::~CProjectTab()
 void CProjectTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
-	DDX_Control(pDX, IDC_PROJECT_LIST, m_project_list);
-	DDX_Control(pDX, IDC_PROJECT_SEARCH_EDIT, m_search_edit);
+	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
+	MFC_DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
+	MFC_DDX_Control(pDX, IDC_PROJECT_ADD, m_project_add);
+	MFC_DDX_Control(pDX, IDC_PROJECT_LIST, m_project_list);
+	MFC_DDX_Control(pDX, IDC_PROJECT_DELETE, m_project_delete);
+	MFC_DDX_Control(pDX, IDC_PROJECT_RENAME, m_project_rename);
+	MFC_DDX_Control(pDX, IDC_PROJECT_SEARCH_EDIT, m_search_edit);
+	MFC_DDX_Control(pDX, IDC_PROJECT_REFRESH, m_project_refresh);
 }
 
 BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
+	ON_WM_DROPFILES()
+	ON_WM_SHOWWINDOW()
+	ON_BN_CLICKED(IDC_SETTING, &CProjectTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_PROJECT_ADD, &CProjectTab::OnBnClickedProjectAdd)
 	ON_BN_CLICKED(IDC_PROJECT_DELETE, &CProjectTab::OnBnClickedProjectDelete)
 	ON_BN_CLICKED(IDC_PROJECT_RENAME, &CProjectTab::OnBnClickedProjectRename)
 	ON_BN_CLICKED(IDC_PROJECT_REFRESH, &CProjectTab::OnBnClickedProjectRefresh)
 	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectTab::OnChangeProjectSearchEdit)
-	ON_WM_DROPFILES()
-	ON_WM_SHOWWINDOW()
 END_MESSAGE_MAP()
 
 void CProjectTab::InitListBox()
@@ -367,4 +374,9 @@ void CProjectTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
+}
+
+void CProjectTab::OnBnClickedSetting()
+{
+	CSettingDlg().DoModal();
 }

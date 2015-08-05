@@ -2,6 +2,7 @@
 
 #include "SearchEdit.h"
 #include "FileListBox.h"
+#include "HilitButton.h"
 
 /**
  * ÏîÄ¿±êÇ©Ò³
@@ -67,12 +68,19 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	CHilitButton m_setting;
+	CHilitButton m_project_add;
+	CHilitButton m_project_delete;
+	CHilitButton m_project_rename;
+	CHilitButton m_project_refresh;
+
 	CSearchEdit m_search_edit;
 	CRichEditCtrl m_item_text;
 	CFileListBox m_project_list;
 
 	DECLARE_MESSAGE_MAP()
 protected:
+	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedProjectAdd();
 	afx_msg void OnBnClickedProjectDelete();
 	afx_msg void OnBnClickedProjectRename();
