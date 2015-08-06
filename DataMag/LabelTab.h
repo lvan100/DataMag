@@ -2,6 +2,7 @@
 
 #include "SearchEdit.h"
 #include "FileListBox.h"
+#include "HilitButton.h"
 
 /**
  * ±Í«©π‹¿Ì“≥
@@ -92,6 +93,14 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	CHilitButton m_setting;
+	CHilitButton m_label_add;
+	CHilitButton m_relate_book;
+	CHilitButton m_label_delete;
+	CHilitButton m_label_rename;
+	CHilitButton m_remove_relate;
+	CHilitButton m_relate_project;
+
 	CFileListBox m_label_list;
 	CFileListBox m_label_info;
 	CRichEditCtrl m_item_text;
@@ -100,6 +109,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
+	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedLabelAdd();
 	afx_msg void OnBnClickedLabelDelete();
 	afx_msg void OnBnClickedLabelRename();

@@ -4,6 +4,7 @@
 #include "NameDlg.h"
 #include "LabelTab.h"
 #include "SettingDlg.h"
+#include "DDXControl.h"
 #include "BookSelectDlg.h"
 #include "ProjectSelectDlg.h"
 
@@ -45,15 +46,23 @@ CLabelTab::~CLabelTab()
 void CLabelTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
-	DDX_Control(pDX, IDC_LABEL_LIST, m_label_list);
-	DDX_Control(pDX, IDC_LABEL_INFO_LIST, m_label_info);
-	DDX_Control(pDX, IDC_INFO_SEARCH_EDIT, m_info_search_edit);
-	DDX_Control(pDX, IDC_LABEL_SEARCH_EDIT, m_label_search_edit);
+	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
+	MFC_DDX_Control(pDX, IDC_LABEL_ADD, m_label_add);
+	MFC_DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
+	MFC_DDX_Control(pDX, IDC_LABEL_LIST, m_label_list);
+	MFC_DDX_Control(pDX, IDC_LABEL_DELETE, m_label_delete);
+	MFC_DDX_Control(pDX, IDC_LABEL_RENAME, m_label_rename);
+	MFC_DDX_Control(pDX, IDC_LABEL_INFO_LIST, m_label_info);
+	MFC_DDX_Control(pDX, IDC_LABEL_RELATE_BOOK, m_relate_book);
+	MFC_DDX_Control(pDX, IDC_INFO_SEARCH_EDIT, m_info_search_edit);
+	MFC_DDX_Control(pDX, IDC_REMOVE_RELATIONSHIP, m_remove_relate);
+	MFC_DDX_Control(pDX, IDC_LABEL_RELATE_PROJECT, m_relate_project);
+	MFC_DDX_Control(pDX, IDC_LABEL_SEARCH_EDIT, m_label_search_edit);
 }
 
 BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
 	ON_WM_SHOWWINDOW()
+	ON_BN_CLICKED(IDC_SETTING, &CLabelTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_LABEL_ADD, &CLabelTab::OnBnClickedLabelAdd)
 	ON_BN_CLICKED(IDC_LABEL_DELETE, &CLabelTab::OnBnClickedLabelDelete)
 	ON_BN_CLICKED(IDC_LABEL_RENAME, &CLabelTab::OnBnClickedLabelRename)
@@ -376,4 +385,9 @@ void CLabelTab::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 
 	CDialogEx::OnShowWindow(bShow, nStatus);
+}
+
+void CLabelTab::OnBnClickedSetting()
+{
+	CSettingDlg().DoModal();
 }
