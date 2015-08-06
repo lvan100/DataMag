@@ -6,11 +6,22 @@
 #include "MainSearch.h"
 #include "DDXControl.h"
 
+/**
+ * 全局的主搜索对话框对象
+ */
+CMainSearch* theMainSearch = NULL;
+
 IMPLEMENT_DYNAMIC(CMainSearch, CDialogEx)
 
 CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CMainSearch::IDD, pParent)
 {
+	if (theMainSearch == NULL) {
+		theMainSearch = this;
+	} else {
+		ASSERT(FALSE);
+	}
+
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
 	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
@@ -42,6 +53,7 @@ BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
 	ON_BN_CLICKED(IDC_ADD_LABEL, &CMainSearch::OnBnClickedAddLabel)
 	ON_BN_CLICKED(IDC_ADD_BOOK, &CMainSearch::OnBnClickedAddBook)
 	ON_WM_ACTIVATE()
+	ON_WM_MOVE()
 END_MESSAGE_MAP()
 
 BOOL CMainSearch::OnInitDialog()
@@ -180,12 +192,14 @@ void CMainSearch::MoveToHideWindow(BOOL bHide)
 	int bottom = rcWnd.bottom;
 
 	if (bHide) {
+		// 如果可见将移动到不可见区域
 		if (top >= 0 && bottom >= 0) {
 			rcWnd.bottom = -top;
 			rcWnd.top = -bottom;
 		}
 
 	} else {
+		// 如果不可见将移动到可见区域
 		if (top < 0 && bottom < 0) {
 			rcWnd.bottom = -top;
 			rcWnd.top = -bottom;
@@ -193,4 +207,13 @@ void CMainSearch::MoveToHideWindow(BOOL bHide)
 	}
 
 	MoveWindow(rcWnd);
+}
+
+void CMainSearch::OnMove(int x, int y)
+{
+	CDialogEx::OnMove(x, y);
+
+	if (x >= 0 && y >= 0) {
+		GetWindowRect(m_rect_if_visiable);
+	}
 }
