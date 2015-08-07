@@ -61,6 +61,9 @@
     <Filter Include="Widget\DDXControl">
       <UniqueIdentifier>{cd6c29ad-3cca-4f08-9124-6c12bc6d7425}</UniqueIdentifier>
     </Filter>
+    <Filter Include="WndHelp">
+      <UniqueIdentifier>{0cdb1e75-f2ac-46b3-a37b-3dfd13742c9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -164,6 +167,9 @@
     <ClInclude Include="DDXControl.h">
       <Filter>Widget\DDXControl</Filter>
     </ClInclude>
+    <ClInclude Include="WndHelp.h">
+      <Filter>WndHelp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -222,6 +228,9 @@
     </ClCompile>
     <ClCompile Include="DDXControl.cpp">
       <Filter>Widget\DDXControl</Filter>
+    </ClCompile>
+    <ClCompile Include="WndHelp.cpp">
+      <Filter>WndHelp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

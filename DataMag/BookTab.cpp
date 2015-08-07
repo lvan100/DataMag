@@ -3,6 +3,8 @@
 #include "DataMag.h"
 #include "NameDlg.h"
 #include "BookTab.h"
+#include "WndHelp.h"
+#include "MainSearch.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
 
@@ -107,7 +109,7 @@ BOOL CBookTab::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 
-	CenterWindow(GetDesktopWindow());
+	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
@@ -127,7 +129,7 @@ BOOL CBookTab::OnInitDialog()
 
 void CBookTab::OnBnClickedBookAdd()
 {
-	CNameDlg dlg;
+	CNameDlg dlg(this);
 	dlg.m_title = _T("ÐÂ½¨Í¼Êé");
 	if (dlg.DoModal() == IDOK) {
 

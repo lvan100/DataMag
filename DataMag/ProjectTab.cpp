@@ -2,6 +2,8 @@
 #include "FileOp.h"
 #include "DataMag.h"
 #include "NameDlg.h"
+#include "WndHelp.h"
+#include "MainSearch.h"
 #include "SettingDlg.h"
 #include "ProjectTab.h"
 #include "DDXControl.h"
@@ -107,7 +109,7 @@ BOOL CProjectTab::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 
-	CenterWindow(GetDesktopWindow());
+	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
@@ -127,7 +129,7 @@ BOOL CProjectTab::OnInitDialog()
 
 void CProjectTab::OnBnClickedProjectAdd()
 {
-	CNameDlg dlg;
+	CNameDlg dlg(this);
 	dlg.m_title = _T("新建项目");
 	if (dlg.DoModal() == IDOK) {
 

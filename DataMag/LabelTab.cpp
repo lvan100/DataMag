@@ -2,7 +2,9 @@
 #include "FileOp.h"
 #include "DataMag.h"
 #include "NameDlg.h"
+#include "WndHelp.h"
 #include "LabelTab.h"
+#include "MainSearch.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
 #include "BookSelectDlg.h"
@@ -144,7 +146,7 @@ BOOL CLabelTab::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 
-	CenterWindow(GetDesktopWindow());
+	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
@@ -164,7 +166,7 @@ BOOL CLabelTab::OnInitDialog()
 
 void CLabelTab::OnBnClickedLabelAdd()
 {
-	CNameDlg dlg;
+	CNameDlg dlg(this);
 	dlg.m_title = _T("ÐÂ½¨±êÇ©");
 	if (dlg.DoModal() == IDOK)
 	{
