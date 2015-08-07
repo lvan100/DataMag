@@ -110,6 +110,7 @@ BOOL CBookTab::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
+	ShowWindow(SW_SHOW);
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 

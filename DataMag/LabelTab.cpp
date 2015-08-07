@@ -147,6 +147,7 @@ BOOL CLabelTab::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
+	ShowWindow(SW_SHOW);
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
@@ -168,8 +169,8 @@ void CLabelTab::OnBnClickedLabelAdd()
 {
 	CNameDlg dlg(this);
 	dlg.m_title = _T("ÐÂ½¨±êÇ©");
-	if (dlg.DoModal() == IDOK)
-	{
+	if (dlg.DoModal() == IDOK) {
+
 		CString strFolder = theSetting.GetLabelMagDir();
 		strFolder += _T("\\") + dlg.m_name;
 
