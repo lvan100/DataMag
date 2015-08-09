@@ -99,6 +99,8 @@ void CSearchEdit::OnKillFocus(CWnd* pNewWnd)
 
 void CSearchEdit::InvalidateWithHint()
 {
+	ASSERT(::IsWindow(m_hWnd));
+
 	if (m_bFocused) {
 		if (m_bTextIsHint) {
 			SetWindowText(_T(""));

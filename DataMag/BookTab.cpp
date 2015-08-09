@@ -109,8 +109,9 @@ BOOL CBookTab::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 
+	m_search_edit.SetHintText(_T("ËÑË÷Í¼Êé"));
+
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
-	ShowWindow(SW_SHOW);
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
