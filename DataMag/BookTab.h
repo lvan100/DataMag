@@ -62,6 +62,12 @@ protected:
 		CString arg;
 	}m_command;
 
+	/**
+	 * 最后获得焦点的控件，不记录焦点在切换过程
+	 * 中的变化，只用于窗口失去激活状态前的焦点
+	 */
+	CWnd* m_pLastFocusWnd;
+
 protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -87,5 +93,6 @@ protected:
 	afx_msg void OnBnClickedBookRefresh();
 	afx_msg void OnChangeBookSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

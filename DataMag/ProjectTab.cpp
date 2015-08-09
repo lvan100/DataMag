@@ -13,6 +13,7 @@ IMPLEMENT_DYNAMIC(CProjectTab, CDialogEx)
 CProjectTab::CProjectTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CProjectTab::IDD, pParent)
 	, m_project_list(&theShellManager)
+	, m_pLastFocusWnd(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -56,6 +57,7 @@ void CProjectTab::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
+	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CProjectTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_PROJECT_ADD, &CProjectTab::OnBnClickedProjectAdd)
 	ON_BN_CLICKED(IDC_PROJECT_DELETE, &CProjectTab::OnBnClickedProjectDelete)
@@ -381,11 +383,28 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 	CDialogEx::OnDropFiles(hDropInfo);
 }
 
+void CProjectTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if (nID == SC_MINIMIZE) {
+		m_pLastFocusWnd = GetFocus();
+	}
+
+	CDialogEx::OnSysCommand(nID, lParam);
+}
+
 void CProjectTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
-	if (nState != WA_INACTIVE && GetFocus() != &m_search_edit) {
-		m_search_edit.SetFocus();
+	if (nState == WA_INACTIVE) {
+		if (!bMinimized) {
+			m_pLastFocusWnd = GetFocus();
+		}
+	} else {
+		if (m_pLastFocusWnd != NULL) {
+			m_pLastFocusWnd->SetFocus();
+		} else {
+			m_search_edit.SetFocus();
+		}
 	}
 }

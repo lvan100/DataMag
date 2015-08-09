@@ -13,6 +13,7 @@ IMPLEMENT_DYNAMIC(CBookTab, CDialogEx)
 CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CBookTab::IDD, pParent)
 	, m_book_list(&theShellManager)
+	, m_pLastFocusWnd(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -56,6 +57,7 @@ void CBookTab::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CBookTab, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
+	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CBookTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_BOOK_ADD, &CBookTab::OnBnClickedBookAdd)
 	ON_BN_CLICKED(IDC_BOOK_DELETE, &CBookTab::OnBnClickedBookDelete)
@@ -344,11 +346,28 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 	CDialogEx::OnDropFiles(hDropInfo);
 }
 
+void CBookTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if (nID == SC_MINIMIZE) {
+		m_pLastFocusWnd = GetFocus();
+	}
+
+	CDialogEx::OnSysCommand(nID, lParam);
+}
+
 void CBookTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
-	if (nState != WA_INACTIVE && GetFocus() != &m_search_edit) {
-		m_search_edit.SetFocus();
+	if (nState == WA_INACTIVE ) {
+		if (!bMinimized) {
+			m_pLastFocusWnd = GetFocus();
+		}
+	} else {
+		if (m_pLastFocusWnd != NULL) {
+			m_pLastFocusWnd->SetFocus();
+		} else {
+			m_search_edit.SetFocus();
+		}
 	}
 }

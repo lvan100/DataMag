@@ -16,6 +16,7 @@ CLabelTab::CLabelTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLabelTab::IDD, pParent)
 	, m_label_list(&theShellManager)
 	, m_label_info(&theShellManager)
+	, m_pLastFocusWnd(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -64,6 +65,7 @@ void CLabelTab::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
 	ON_WM_ACTIVATE()
+	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CLabelTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_LABEL_ADD, &CLabelTab::OnBnClickedLabelAdd)
 	ON_BN_CLICKED(IDC_LABEL_DELETE, &CLabelTab::OnBnClickedLabelDelete)
@@ -388,11 +390,28 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
+void CLabelTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if (nID == SC_MINIMIZE) {
+		m_pLastFocusWnd = GetFocus();
+	}
+
+	CDialogEx::OnSysCommand(nID, lParam);
+}
+
 void CLabelTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
-	if (nState != WA_INACTIVE && GetFocus() != &m_label_search_edit) {
-		m_label_search_edit.SetFocus();
+	if (nState == WA_INACTIVE) {
+		if (!bMinimized) {
+			m_pLastFocusWnd = GetFocus();
+		}
+	} else {
+		if (m_pLastFocusWnd != NULL) {
+			m_pLastFocusWnd->SetFocus();
+		} else {
+			m_label_search_edit.SetFocus();
+		}
 	}
 }
