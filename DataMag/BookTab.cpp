@@ -176,57 +176,72 @@ void CBookTab::OnBnClickedBookDelete()
 	}
 }
 
+CString CBookTab::RenameBook(function<CString()> getSelName, function<CString()> getSelPath)
+{
+	CNameDlg dlg;
+	dlg.m_name = getSelName();
+	dlg.m_title = _T("图书重命名");
+
+	if (dlg.DoModal() == IDOK)
+	{
+		TCHAR szOldPath[MAX_PATH];
+		_tcsncpy_s(szOldPath, getSelPath(), MAX_PATH);
+
+		TCHAR szOldName[MAX_PATH];
+		_tcsncpy_s(szOldName, szOldPath, MAX_PATH);
+
+		PathStripPath(szOldName);
+
+		TCHAR szNewPath[MAX_PATH];
+		_tcsncpy_s(szNewPath, szOldPath, MAX_PATH);
+
+		PathRemoveFileSpec(szNewPath);
+		PathAppend(szNewPath, dlg.m_name);
+
+		if (PathFileExists(szOldPath)) {
+			if (PathFileExists(szNewPath)) {
+				CString strContent = _T("图书目录\"\"已存在！");
+				strContent.Insert(5, szNewPath);
+				MessageBox(strContent, _T("错误"), MB_ICONERROR);
+				return _T(""); /* 文件已存在，重命名失败! */
+
+			} else {
+				CFile::Rename(szOldPath, szNewPath);
+			}
+		}
+
+		_tcsncpy_s(szOldPath, szNewPath, MAX_PATH);
+
+		PathAppend(szNewPath, dlg.m_name);
+		PathAppend(szOldPath, szOldName);
+
+		if (PathFileExists(szOldPath)) {
+			CFile::Rename(szOldPath, szNewPath);
+		}
+
+		return dlg.m_name;
+	}
+	return _T("");
+}
+
 void CBookTab::OnBnClickedBookRename()
 {
 	int nItem = m_book_list.GetCurSel();
 	if (nItem >= 0)
 	{
-		CNameDlg dlg;
-		dlg.m_title = _T("图书重命名");
-		m_book_list.GetText(nItem, dlg.m_name);
+		CString strName = RenameBook([&]()->CString{
+			CString strName;
+			m_book_list.GetText(nItem, strName);
+			return strName;
+		}, [&]()->CString{
+			return m_book_list.GetItemPath(nItem);
+		});
 
-		if (dlg.DoModal() == IDOK)
-		{
-			TCHAR szOldPath[MAX_PATH];
-			_tcsncpy_s(szOldPath, m_book_list.GetItemPath(nItem), MAX_PATH);
-
-			TCHAR szOldName[MAX_PATH];
-			_tcsncpy_s(szOldName, szOldPath, MAX_PATH);
-
-			PathStripPath(szOldName);
-
-			TCHAR szNewPath[MAX_PATH];
-			_tcsncpy_s(szNewPath, szOldPath, MAX_PATH);
-
-			PathRemoveFileSpec(szNewPath);
-			PathAppend(szNewPath, dlg.m_name);
-
-			if (PathFileExists(szOldPath)) {
-				if (PathFileExists(szNewPath)) {
-					CString strContent = _T("图书目录\"\"已存在！");
-					strContent.Insert(5, szNewPath);
-					MessageBox(strContent, _T("错误"), MB_ICONERROR);
-					return; /* 文件已存在，重命名失败! */
-
-				} else {
-					CFile::Rename(szOldPath, szNewPath);
-				}
-			}
-
-			_tcsncpy_s(szOldPath, szNewPath, MAX_PATH);
-
-			PathAppend(szNewPath, dlg.m_name);
-			PathAppend(szOldPath, szOldName);
-
-			if (PathFileExists(szOldPath)) {
-				CFile::Rename(szOldPath, szNewPath);
-			}
-
+		if (strName.GetLength() > 0) {
 			m_book_list.Refresh();
+			m_book_list.SetFocus();
+			m_book_list.SelectString(0, strName);
 		}
-
-		m_book_list.SetFocus();
-		m_book_list.SelectString(0, dlg.m_name);
 	}
 }
 
@@ -302,15 +317,13 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 
 void CBookTab::OnDropFiles(HDROP hDropInfo)
 {
-	m_book_list.SetFocus();
-
 	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
 	{
-		TCHAR szFilePath[MAX_PATH];
-		DragQueryFile(hDropInfo, i, szFilePath, MAX_PATH);
+		TCHAR szOrgFilePath[MAX_PATH];
+		DragQueryFile(hDropInfo, i, szOrgFilePath, MAX_PATH);
 
 		TCHAR szFileName[MAX_PATH];
-		_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
+		_tcsncpy_s(szFileName, szOrgFilePath, MAX_PATH);
 
 		PathStripPath(szFileName);
 
@@ -321,16 +334,17 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 		strBookDir += _T("\\");
 		strBookDir += szFileName;
 
-		_tcsncpy_s(szFileName, strBookDir, MAX_PATH);
+		TCHAR szNewFilePath[MAX_PATH];
+		_tcsncpy_s(szNewFilePath, strBookDir, MAX_PATH);
 
-		memset(szFilePath + _tcslen(szFilePath), 0, sizeof(TCHAR) * 2);
-		memset(szFileName + _tcslen(szFileName), 0, sizeof(TCHAR) * 2);
+		memset(szOrgFilePath + _tcslen(szOrgFilePath), 0, sizeof(TCHAR) * 2);
+		memset(szNewFilePath + _tcslen(szNewFilePath), 0, sizeof(TCHAR) * 2);
 
 		SHFILEOPSTRUCT fileOp = {0};
 		fileOp.hwnd = GetSafeHwnd();
 		fileOp.wFunc = FO_COPY;
-		fileOp.pFrom = szFilePath;
-		fileOp.pTo = szFileName;
+		fileOp.pFrom = szOrgFilePath;
+		fileOp.pTo = szNewFilePath;
 		fileOp.fFlags = FOF_NOCONFIRMMKDIR;
 
 		SHFileOperation(&fileOp);
@@ -339,6 +353,12 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 		PathAppend(strBookDir.GetBuffer(), _T("描述.txt"));
 		
 		CloseHandle(CreateFile(strBookDir, 0, 0, NULL, CREATE_ALWAYS, 0, NULL));
+
+		RenameBook([&]()->CString{
+			return szFileName;
+		},[&]()->CString{
+			return theSetting.GetBookMagDir() + _T("\\") + szFileName;
+		});
 	}
 
 	m_book_list.Refresh();

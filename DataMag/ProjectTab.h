@@ -69,6 +69,12 @@ protected:
 	CWnd* m_pLastFocusWnd;
 
 protected:
+	/**
+	 * 执行重命名操作
+	 */
+	CString RenameBook(function<CString()> getSelName, function<CString()> getSelPath);
+
+protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);

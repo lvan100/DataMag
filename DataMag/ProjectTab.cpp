@@ -194,48 +194,63 @@ void CProjectTab::OnBnClickedProjectDelete()
 	}
 }
 
+CString CProjectTab::RenameBook(function<CString()> getSelName, function<CString()> getSelPath)
+{
+	CNameDlg dlg;
+	dlg.m_name = getSelName();
+	dlg.m_title = _T("项目重命名");
+
+	if (dlg.DoModal() == IDOK)
+	{
+		TCHAR szOldPath[MAX_PATH];
+		_tcsncpy_s(szOldPath, getSelPath(), MAX_PATH);
+
+		TCHAR szOldName[MAX_PATH];
+		_tcsncpy_s(szOldName, szOldPath, MAX_PATH);
+
+		PathStripPath(szOldName);
+
+		TCHAR szNewPath[MAX_PATH];
+		_tcsncpy_s(szNewPath, szOldPath, MAX_PATH);
+
+		PathRemoveFileSpec(szNewPath);
+		PathAppend(szNewPath, dlg.m_name);
+
+		if (PathFileExists(szOldPath)) {
+			if (PathFileExists(szNewPath)) {
+				CString strContent = _T("项目目录\"\"已存在！");
+				strContent.Insert(5, szNewPath);
+				MessageBox(strContent, _T("错误"), MB_ICONERROR);
+				return _T(""); /* 文件已存在，重命名失败! */
+
+			} else {
+				CFile::Rename(szOldPath, szNewPath);
+			}
+		}
+
+		return dlg.m_name;
+	}
+	return _T("");
+}
+
 void CProjectTab::OnBnClickedProjectRename()
 {
 	int nItem = m_project_list.GetCurSel();
-	if (nItem >= 0)
-	{
-		CNameDlg dlg;
-		dlg.m_title = _T("项目重命名");
-		m_project_list.GetText(nItem, dlg.m_name);
+	if (nItem >= 0) {
 
-		if (dlg.DoModal() == IDOK)
-		{
-			TCHAR szOldPath[MAX_PATH];
-			_tcsncpy_s(szOldPath, m_project_list.GetItemPath(nItem), MAX_PATH);
+		CString strNewName = RenameBook([&]()->CString{
+			CString strName;
+			m_project_list.GetText(nItem, strName);
+			return strName;
+		}, [&]()->CString{
+			return m_project_list.GetItemPath(nItem);
+		});
 
-			TCHAR szOldName[MAX_PATH];
-			_tcsncpy_s(szOldName, szOldPath, MAX_PATH);
-
-			PathStripPath(szOldName);
-
-			TCHAR szNewPath[MAX_PATH];
-			_tcsncpy_s(szNewPath, szOldPath, MAX_PATH);
-
-			PathRemoveFileSpec(szNewPath);
-			PathAppend(szNewPath, dlg.m_name);
-
-			if (PathFileExists(szOldPath)) {
-				if (PathFileExists(szNewPath)) {
-					CString strContent = _T("项目目录\"\"已存在！");
-					strContent.Insert(5, szNewPath);
-					MessageBox(strContent, _T("错误"), MB_ICONERROR);
-					return; /* 文件已存在，重命名失败! */
-
-				} else {
-					CFile::Rename(szOldPath, szNewPath);
-				}
-			}
-
+		if (strNewName.GetLength() > 0) {
 			m_project_list.Refresh();
+			m_project_list.SetFocus();
+			m_project_list.SelectString(0, strNewName);
 		}
-
-		m_project_list.SetFocus();
-		m_project_list.SelectString(0, dlg.m_name);
 	}
 }
 
@@ -311,15 +326,13 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 
 void CProjectTab::OnDropFiles(HDROP hDropInfo)
 {
-	m_project_list.SetFocus();
-
 	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
 	{
-		TCHAR szFilePath[MAX_PATH];
-		DragQueryFile(hDropInfo, i, szFilePath, MAX_PATH);
+		TCHAR szOrgFilePath[MAX_PATH];
+		DragQueryFile(hDropInfo, i, szOrgFilePath, MAX_PATH);
 
 		TCHAR szFileName[MAX_PATH];
-		_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
+		_tcsncpy_s(szFileName, szOrgFilePath, MAX_PATH);
 
 		PathStripPath(szFileName);
 		PathRemoveExtension(szFileName);
@@ -328,14 +341,14 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 		strBookDir += _T("\\");
 		strBookDir += szFileName;
 
-		if (PathIsDirectory(szFilePath))
+		if (PathIsDirectory(szOrgFilePath))
 		{
 			strBookDir += _T("\\源码\\");
 			strBookDir += szFileName;
 		}
 		else
 		{
-			_tcsncpy_s(szFileName, szFilePath, MAX_PATH);
+			_tcsncpy_s(szFileName, szOrgFilePath, MAX_PATH);
 
 			PathStripPath(szFileName);
 
@@ -343,16 +356,17 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 			strBookDir += szFileName;
 		}
 
-		_tcsncpy_s(szFileName, strBookDir, MAX_PATH);
+		TCHAR szNewFilePath[MAX_PATH];
+		_tcsncpy_s(szNewFilePath, strBookDir, MAX_PATH);
 
-		memset(szFilePath + _tcslen(szFilePath), 0, sizeof(TCHAR) * 2);
-		memset(szFileName + _tcslen(szFileName), 0, sizeof(TCHAR) * 2);
+		memset(szOrgFilePath + _tcslen(szOrgFilePath), 0, sizeof(TCHAR) * 2);
+		memset(szNewFilePath + _tcslen(szNewFilePath), 0, sizeof(TCHAR) * 2);
 
 		SHFILEOPSTRUCT fileOp = {0};
 		fileOp.hwnd = GetSafeHwnd();
 		fileOp.wFunc = FO_COPY;
-		fileOp.pFrom = szFilePath;
-		fileOp.pTo = szFileName;
+		fileOp.pFrom = szOrgFilePath;
+		fileOp.pTo = szNewFilePath;
 		fileOp.fFlags = FOF_NOCONFIRMMKDIR;
 
 		SHFileOperation(&fileOp);
@@ -376,6 +390,12 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 		PathAppend(strBookDir.GetBuffer(), _T("\\官网"));
 
 		CreateDirectory(strBookDir, NULL);
+
+		RenameBook([&]()->CString{
+			return szFileName;
+		}, [&]()->CString{
+			return theSetting.GetCodeMagDir() + _T("\\") + szFileName;
+		});
 	}
 
 	m_project_list.Refresh();
