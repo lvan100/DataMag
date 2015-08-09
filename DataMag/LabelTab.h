@@ -118,5 +118,5 @@ protected:
 	afx_msg void OnBnClickedLabelRelateBook();
 	afx_msg void OnBnClickedLabelRelateProject();
 	afx_msg void OnBnClickedRemoveRelationship();
-	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

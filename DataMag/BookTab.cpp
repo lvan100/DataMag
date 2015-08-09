@@ -54,8 +54,8 @@ void CBookTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CBookTab, CDialogEx)
+	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
-	ON_WM_SHOWWINDOW()
 	ON_BN_CLICKED(IDC_SETTING, &CBookTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_BOOK_ADD, &CBookTab::OnBnClickedBookAdd)
 	ON_BN_CLICKED(IDC_BOOK_DELETE, &CBookTab::OnBnClickedBookDelete)
@@ -147,6 +147,9 @@ void CBookTab::OnBnClickedBookAdd()
 			m_book_list.SetFocus();
 			m_book_list.SelectString(0, dlg.m_name);
 
+			// 立即打开文件夹以方便后续操作
+			OpenFoler(strFolder);
+
 		} else {
 			CString strContent = _T("创建图书目录\"\"失败！");
 			strContent.Insert(7, strFolder);
@@ -225,6 +228,11 @@ void CBookTab::OnBnClickedBookRename()
 	}
 }
 
+void CBookTab::OnBnClickedSetting()
+{
+	CSettingDlg().DoModal();
+}
+
 void CBookTab::OnBnClickedBookRefresh()
 {
 	m_book_list.Refresh();
@@ -292,6 +300,8 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 
 void CBookTab::OnDropFiles(HDROP hDropInfo)
 {
+	m_book_list.SetFocus();
+
 	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
 	{
 		TCHAR szFilePath[MAX_PATH];
@@ -334,16 +344,11 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 	CDialogEx::OnDropFiles(hDropInfo);
 }
 
-void CBookTab::OnShowWindow(BOOL bShow, UINT nStatus)
+void CBookTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
-	if (bShow) {
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	if (nState != WA_INACTIVE && GetFocus() != &m_search_edit) {
 		m_search_edit.SetFocus();
 	}
-
-	CDialogEx::OnShowWindow(bShow, nStatus);
-}
-
-void CBookTab::OnBnClickedSetting()
-{
-	CSettingDlg().DoModal();
 }

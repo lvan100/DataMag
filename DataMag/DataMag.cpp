@@ -12,7 +12,7 @@ CString CSetting::GetCodeMagDir()
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
 
-	PathAppend(szDir, _T("\\源码"));
+	PathAppend(szDir, _T("\\..\\源码"));
 
 	CString strPath = theApp.GetProfileString(_T("Settings"), _T("CodeDir"), szDir);
 
@@ -44,7 +44,7 @@ CString CSetting::GetBookMagDir()
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
 
-	PathAppend(szDir, _T("\\图书"));
+	PathAppend(szDir, _T("\\..\\图书"));
 
 	CString strPath = theApp.GetProfileString(_T("Settings"), _T("BookDir"), szDir);
 
@@ -76,7 +76,7 @@ CString CSetting::GetLabelMagDir()
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
 
-	PathAppend(szDir, _T("\\标签"));
+	PathAppend(szDir, _T("\\..\\标签"));
 
 	CString strPath = theApp.GetProfileString(_T("Settings"), _T("LabelDir"), szDir);
 

@@ -63,7 +63,7 @@ void CLabelTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
-	ON_WM_SHOWWINDOW()
+	ON_WM_ACTIVATE()
 	ON_BN_CLICKED(IDC_SETTING, &CLabelTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_LABEL_ADD, &CLabelTab::OnBnClickedLabelAdd)
 	ON_BN_CLICKED(IDC_LABEL_DELETE, &CLabelTab::OnBnClickedLabelDelete)
@@ -312,6 +312,11 @@ void CLabelTab::OnBnClickedRemoveRelationship()
 	}
 }
 
+void CLabelTab::OnBnClickedSetting()
+{
+	CSettingDlg().DoModal();
+}
+
 void CLabelTab::OnChangeLabelSearchEdit()
 {
 	CString strFilter;
@@ -383,16 +388,11 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CLabelTab::OnShowWindow(BOOL bShow, UINT nStatus)
+void CLabelTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
-	if (bShow) {
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	if (nState != WA_INACTIVE && GetFocus() != &m_label_search_edit) {
 		m_label_search_edit.SetFocus();
 	}
-
-	CDialogEx::OnShowWindow(bShow, nStatus);
-}
-
-void CLabelTab::OnBnClickedSetting()
-{
-	CSettingDlg().DoModal();
 }

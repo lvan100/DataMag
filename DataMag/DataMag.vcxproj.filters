@@ -111,7 +111,9 @@
     <None Include="res\add_label.ico">
       <Filter>Application\Resource</Filter>
     </None>
-    <None Include="res\remove_link.ico" />
+    <None Include="res\remove_link.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataMag.h">

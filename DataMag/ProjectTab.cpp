@@ -54,8 +54,8 @@ void CProjectTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
+	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
-	ON_WM_SHOWWINDOW()
 	ON_BN_CLICKED(IDC_SETTING, &CProjectTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_PROJECT_ADD, &CProjectTab::OnBnClickedProjectAdd)
 	ON_BN_CLICKED(IDC_PROJECT_DELETE, &CProjectTab::OnBnClickedProjectDelete)
@@ -165,6 +165,9 @@ void CProjectTab::OnBnClickedProjectAdd()
 			m_project_list.SetFocus();
 			m_project_list.SelectString(0, dlg.m_name);
 
+			// 立即打开文件夹以方便后续操作
+			OpenFoler(strFolder);
+
 		} else {
 			CString strContent = _T("创建项目目录\"\"失败！");
 			strContent.Insert(7, strFolder);
@@ -234,6 +237,11 @@ void CProjectTab::OnBnClickedProjectRename()
 	}
 }
 
+void CProjectTab::OnBnClickedSetting()
+{
+	CSettingDlg().DoModal();
+}
+
 void CProjectTab::OnBnClickedProjectRefresh()
 {
 	m_project_list.Refresh();
@@ -301,6 +309,8 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 
 void CProjectTab::OnDropFiles(HDROP hDropInfo)
 {
+	m_project_list.SetFocus();
+
 	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
 	{
 		TCHAR szFilePath[MAX_PATH];
@@ -371,16 +381,11 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 	CDialogEx::OnDropFiles(hDropInfo);
 }
 
-void CProjectTab::OnShowWindow(BOOL bShow, UINT nStatus)
+void CProjectTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
-	if (bShow) {
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	if (nState != WA_INACTIVE && GetFocus() != &m_search_edit) {
 		m_search_edit.SetFocus();
 	}
-
-	CDialogEx::OnShowWindow(bShow, nStatus);
-}
-
-void CProjectTab::OnBnClickedSetting()
-{
-	CSettingDlg().DoModal();
 }

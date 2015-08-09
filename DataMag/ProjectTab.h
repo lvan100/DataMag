@@ -87,5 +87,5 @@ protected:
 	afx_msg void OnBnClickedProjectRefresh();
 	afx_msg void OnChangeProjectSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
-	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };
