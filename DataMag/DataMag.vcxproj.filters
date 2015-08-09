@@ -78,9 +78,6 @@
     <None Include="res\delete.ico">
       <Filter>Application\Resource</Filter>
     </None>
-    <None Include="res\add.ico">
-      <Filter>Application\Resource</Filter>
-    </None>
     <None Include="res\DataMag.ico">
       <Filter>Application\Resource</Filter>
     </None>
@@ -102,6 +99,19 @@
     <None Include="res\label.ico">
       <Filter>Application\Resource</Filter>
     </None>
+    <None Include="res\refresh.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\add_book.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\add_code.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\add_label.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\remove_link.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataMag.h">

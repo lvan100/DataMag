@@ -12,6 +12,7 @@ protected:
 	virtual void PreSubclassWindow();
 
 protected:
+	virtual int GetVertMargin() const { return 3; }
 	virtual void OnFillBackground(CDC* pDC, const CRect& rectClient);
 
 	DECLARE_MESSAGE_MAP()

@@ -94,7 +94,9 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="res\add.ico" />
+    <None Include="res\add_book.ico" />
+    <None Include="res\add_code.ico" />
+    <None Include="res\add_label.ico" />
     <None Include="res\book.ico" />
     <None Include="res\code.ico" />
     <None Include="res\DataMag.ico" />
@@ -102,6 +104,8 @@
     <None Include="res\delete.ico" />
     <None Include="res\help.ico" />
     <None Include="res\label.ico" />
+    <None Include="res\refresh.ico" />
+    <None Include="res\remove_link.ico" />
     <None Include="res\rename.ico" />
     <None Include="res\search.ico" />
     <None Include="res\setting.ico" />
