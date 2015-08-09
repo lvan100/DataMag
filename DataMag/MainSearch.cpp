@@ -41,9 +41,11 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_MY_BLOG, m_blog);
 	MFC_DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
+	DDX_Control(pDX, IDC_RECENT_LIST, m_recent_list);
 	MFC_DDX_Control(pDX, IDC_ADD_LABEL, m_add_label);
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
 	MFC_DDX_Control(pDX, IDC_ADD_PROJECT, m_add_project);
+	DDX_Control(pDX, IDC_FRENQUENT_LIST, m_frequent_list);
 	MFC_DDX_Control(pDX, IDC_LABEL_SEARCH, m_label_search);
 	MFC_DDX_Control(pDX, IDC_PROJECT_SEARCH, m_project_search);
 }
@@ -69,17 +71,25 @@ BOOL CMainSearch::OnInitDialog()
 	HICON hLabelIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_LABEL)
 		, IMAGE_ICON, 0, 0, 0);
-	m_add_label.SetImage(hLabelIcon);
+	m_add_label.SetImage(hLabelIcon, FALSE);
 
 	HICON hProjectIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_CODE)
 		, IMAGE_ICON, 0, 0, 0);
-	m_add_project.SetImage(hProjectIcon);
+	m_add_project.SetImage(hProjectIcon, FALSE);
 
 	HICON hBookIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_BOOK)
 		, IMAGE_ICON, 0, 0, 0);
-	m_add_book.SetImage(hBookIcon);
+	m_add_book.SetImage(hBookIcon, FALSE);
+
+	m_recent_list.SetBookImage(hBookIcon);
+	m_recent_list.SetLabelImage(hLabelIcon);
+	m_recent_list.SetCodeImage(hProjectIcon);
+
+	m_frequent_list.SetBookImage(hBookIcon);
+	m_frequent_list.SetLabelImage(hLabelIcon);
+	m_frequent_list.SetCodeImage(hProjectIcon);
 
 	[&](){
 		LOGFONT logFont = { 0 };
@@ -94,6 +104,26 @@ BOOL CMainSearch::OnInitDialog()
 	m_book_search.SetHintText(_T("搜索图书"));
 	m_label_search.SetHintText(_T("搜索标签"));
 	m_project_search.SetHintText(_T("搜索项目"));
+
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\图书\\23"));
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\标签\\23"));
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\图书\\23"));
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\标签\\23"));
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\图书\\23"));
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\标签\\23"));
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
 
 	return FALSE;
 }

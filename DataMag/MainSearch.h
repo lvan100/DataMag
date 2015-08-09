@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RecentList.h"
 #include "SearchEdit.h"
 #include "PrettyButton.h"
 
@@ -39,6 +40,9 @@ protected:
 
 protected:
 	CStatic m_blog;
+
+	CRecentList m_recent_list;
+	CRecentList m_frequent_list;
 
 	CPrettyButton m_add_book;
 	CPrettyButton m_add_label;

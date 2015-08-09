@@ -120,12 +120,14 @@
     <ClInclude Include="FileOp.h" />
     <ClInclude Include="HilitButton.h" />
     <ClInclude Include="LabelTab.h" />
+    <ClInclude Include="ListBoxEvent.h" />
     <ClInclude Include="MainSearch.h" />
     <ClInclude Include="NameDlg.h" />
     <ClInclude Include="PrettyButton.h" />
     <ClInclude Include="PrettyEdit.h" />
     <ClInclude Include="ProjectSelectDlg.h" />
     <ClInclude Include="ProjectTab.h" />
+    <ClInclude Include="RecentList.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SearchEdit.h" />
     <ClInclude Include="SettingDlg.h" />
@@ -150,6 +152,7 @@
     <ClCompile Include="PrettyEdit.cpp" />
     <ClCompile Include="ProjectSelectDlg.cpp" />
     <ClCompile Include="ProjectTab.cpp" />
+    <ClCompile Include="RecentList.cpp" />
     <ClCompile Include="SearchEdit.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="ShellListCtrl.cpp" />
