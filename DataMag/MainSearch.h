@@ -14,6 +14,21 @@ public:
 
 	enum { IDD = IDD_MAINSEARCH };
 
+protected:
+	/**
+	 * 最近访问列表事件对象
+	 */
+	class RecentListEvent: public CListBoxEventAdapter
+	{
+	public:
+		/**
+		 * 列表项双击事件
+		 */
+		virtual void OnDoubleClick();
+
+	}m_recent_list_event;
+
+public:
 	/**
 	 * 响应最近访问列表变化
 	 */

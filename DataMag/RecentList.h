@@ -7,7 +7,7 @@ class CRecentList : public CListBox
 	DECLARE_DYNAMIC(CRecentList)
 
 public:
-	CRecentList();
+	CRecentList(CShellManager* pShellManager);
 	virtual ~CRecentList();
 
 public:
@@ -18,11 +18,23 @@ public:
 		m_event = event;
 	}
 
+	/**
+	 * 执行默认的双击操作
+	 */
+	void DoDefaultDClick(int iItem) {
+		DoDefault(iItem);
+	}
+
 protected:
 	/**
 	 * 客户端实现的事件对象
 	 */
 	ListBoxEvent* m_event;
+
+	/**
+	 * 关联的 Shell 管理器接口
+	 */
+	CShellManager* m_pShellManager;
 
 public:
 	void SetLabelImage(HICON hIcon)
@@ -38,6 +50,12 @@ protected:
 	HICON m_hCodeImage;
 	HICON m_hBookImage;
 	HICON m_hLabelImage;
+
+protected:
+	/**
+	 * 执行默认动作
+	 */
+	virtual void DoDefault(int iItem);
 
 protected:
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);

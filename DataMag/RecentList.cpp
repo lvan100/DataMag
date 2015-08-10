@@ -4,11 +4,12 @@
 
 IMPLEMENT_DYNAMIC(CRecentList, CListBox)
 
-CRecentList::CRecentList()
-	: m_hLabelImage(NULL)
+CRecentList::CRecentList(CShellManager* pShellManager)
+	: m_event(NULL)
 	, m_hCodeImage(NULL)
 	, m_hBookImage(NULL)
-	, m_event(NULL)
+	, m_hLabelImage(NULL)
+	, m_pShellManager(pShellManager)
 {
 }
 
@@ -76,6 +77,84 @@ void CRecentList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 void CRecentList::MeasureItem(LPMEASUREITEMSTRUCT /*lpMeasureItemStruct*/)
 {
 	// Do default.
+}
+
+void CRecentList::DoDefault(int iItem)
+{
+	AFX_SHELLITEMINFO info;
+
+	LPCTSTR szPath = (LPCTSTR)GetItemData(iItem);
+	HRESULT hr = m_pShellManager->ItemFromPath(szPath, info.pidlRel);
+
+	if (FAILED(hr))
+	{
+		return;
+	}
+	
+	IShellFolder *psfFolder = info.pParentFolder;
+	if (psfFolder == nullptr)
+	{
+		HRESULT hr = SHGetDesktopFolder(&psfFolder);
+		if (FAILED(hr))
+		{
+			ASSERT(FALSE);
+			return;
+		}
+	}
+	else
+	{
+		psfFolder->AddRef();
+	}
+
+	if (psfFolder == nullptr)
+	{
+		return;
+	}
+
+	// If specified element is a folder, try to display it:
+	ULONG ulAttrs = SFGAO_FOLDER;
+	psfFolder->GetAttributesOf(1, (const struct _ITEMIDLIST **) &info.pidlRel, &ulAttrs);
+
+	// Invoke a default menu command:
+	IContextMenu *pcm;
+	hr = psfFolder->GetUIObjectOf(GetSafeHwnd(), 1, (LPCITEMIDLIST*)&info.pidlRel, IID_IContextMenu, nullptr, (LPVOID*)&pcm);
+
+	if (SUCCEEDED(hr))
+	{
+		HMENU hPopup = CreatePopupMenu();
+
+		if (hPopup != nullptr)
+		{
+			hr = pcm->QueryContextMenu(hPopup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
+
+			if (SUCCEEDED(hr))
+			{
+				UINT idCmd = ::GetMenuDefaultItem(hPopup, FALSE, 0);
+				if (idCmd != 0 && idCmd != (UINT)-1)
+				{
+					CMINVOKECOMMANDINFO cmi;
+					cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
+					cmi.fMask = 0;
+					cmi.hwnd = GetParent()->GetSafeHwnd();
+					cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
+					cmi.lpParameters = nullptr;
+					cmi.lpDirectory = nullptr;
+					cmi.nShow = SW_SHOWNORMAL;
+					cmi.dwHotKey = 0;
+					cmi.hIcon = nullptr;
+
+					pcm->InvokeCommand(&cmi);
+				}
+			}
+		}
+
+		pcm->Release();
+	}
+
+	psfFolder->Release();
+
+	// 释放内核资源
+	m_pShellManager->FreeItem(info.pidlRel);
 }
 
 void CRecentList::OnLbnDblclk()

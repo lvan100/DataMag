@@ -15,6 +15,8 @@ IMPLEMENT_DYNAMIC(CMainSearch, CDialogEx)
 
 CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CMainSearch::IDD, pParent)
+	, m_recent_list(&theShellManager)
+	, m_frequent_list(&theShellManager)
 {
 	if (theMainSearch == NULL) {
 		theMainSearch = this;
@@ -30,6 +32,9 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	m_book_search.SetSearchIcon(hSearchIcon);
 	m_label_search.SetSearchIcon(hSearchIcon);
 	m_project_search.SetSearchIcon(hSearchIcon);
+
+	m_recent_list.SetListEvent(&m_recent_list_event);
+	// m_label_info.SetListEvent(&m_label_info_event);
 
 	RecentListChangeListener listener;
 	listener = bind(&CMainSearch::OnRecentListChange, this);
@@ -61,6 +66,12 @@ BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_MOVE()
 END_MESSAGE_MAP()
+
+void CMainSearch::RecentListEvent::OnDoubleClick()
+{
+	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recent_list_event)));
+	pThis->m_recent_list.DoDefaultDClick(pThis->m_recent_list.GetCurSel());
+}
 
 BOOL CMainSearch::OnInitDialog()
 {
