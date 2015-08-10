@@ -31,7 +31,7 @@ CLabelTab::CLabelTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	m_label_list.SetListEvent(&m_label_event);
 	m_label_info.SetListEvent(&m_label_info_event);
 
-	DirChangeLinster listener;
+	DirChangeListener listener;
 	listener = bind(&CLabelTab::OnLabelMagDirChange, this, std::placeholders::_1);
 	theSetting.AddLabelMagDirChangeListener(listener);
 

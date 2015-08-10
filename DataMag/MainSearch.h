@@ -14,6 +14,11 @@ public:
 
 	enum { IDD = IDD_MAINSEARCH };
 
+	/**
+	 * 响应最近访问列表变化
+	 */
+	void OnRecentListChange();
+
 protected:
 	/**
 	 * 窗体图标

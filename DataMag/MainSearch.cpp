@@ -30,6 +30,10 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	m_book_search.SetSearchIcon(hSearchIcon);
 	m_label_search.SetSearchIcon(hSearchIcon);
 	m_project_search.SetSearchIcon(hSearchIcon);
+
+	RecentListChangeListener listener;
+	listener = bind(&CMainSearch::OnRecentListChange, this);
+	theSetting.AddRecentListChangeListener(listener);
 }
 
 CMainSearch::~CMainSearch()
@@ -105,15 +109,10 @@ BOOL CMainSearch::OnInitDialog()
 	m_label_search.SetHintText(_T("搜索标签"));
 	m_project_search.SetHintText(_T("搜索项目"));
 
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\图书\\23"));
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\标签\\23"));
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_recent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
+	auto& list = theSetting.GetRecentFileList();
+	for (int i = 0; i < list.size(); i++) {
+		m_recent_list.AddString(list.at(i));
+	}
 
 	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
 	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\图书\\23"));
@@ -245,5 +244,15 @@ void CMainSearch::OnMove(int x, int y)
 
 	if (x >= 0 && y >= 0) {
 		GetWindowRect(m_rect_if_visiable);
+	}
+}
+
+void CMainSearch::OnRecentListChange()
+{
+	m_recent_list.ResetContent();
+
+	auto& list = theSetting.GetRecentFileList();
+	for (int i = 0; i < list.size(); i++) {
+		m_recent_list.AddString(list.at(i));
 	}
 }

@@ -9,13 +9,21 @@ using namespace std;
 /**
  * 定义目录监听器类型
  */
-typedef function<void(CString)> DirChangeLinster;
+typedef function<void(CString)> DirChangeListener;
+
+/**
+ * 最近访问列表监听器
+ */
+typedef function<void()> RecentListChangeListener;
 
 /**
  * 应用设置类
  */
 class CSetting
 {
+public:
+	CSetting();
+
 public:
 	/**
 	 * 获取项目管理目录
@@ -30,7 +38,7 @@ public:
 	/**
 	 * 设置项目管理目录监听器
 	 */
-	void AddCodeMagDirChangeListener(DirChangeLinster listener) {
+	void AddCodeMagDirChangeListener(DirChangeListener listener) {
 		codeMagDirChangeListener.push_back(listener);
 	}
 
@@ -38,7 +46,7 @@ protected:
 	/**
 	 * 项目管理目录监听器列表
 	 */
-	vector<DirChangeLinster> codeMagDirChangeListener;
+	vector<DirChangeListener> codeMagDirChangeListener;
 
 public:
 	/**
@@ -54,7 +62,7 @@ public:
 	/**
 	 * 设置图书管理目录监听器
 	 */
-	void AddBookMagDirChangeListener(DirChangeLinster listener){
+	void AddBookMagDirChangeListener(DirChangeListener listener){
 		bookMagDirChangeListener.push_back(listener);
 	}
 
@@ -62,7 +70,7 @@ protected:
 	/**
 	 * 图书管理目录监听器列表
 	 */
-	vector<DirChangeLinster> bookMagDirChangeListener;
+	vector<DirChangeListener> bookMagDirChangeListener;
 
 public:
 	/**
@@ -78,7 +86,7 @@ public:
 	/**
 	 * 设置标签管理目录监听器
 	 */
-	void AddLabelMagDirChangeListener(DirChangeLinster listener){
+	void AddLabelMagDirChangeListener(DirChangeListener listener){
 		labelMagDirChangeListener.push_back(listener);
 	}
 
@@ -86,7 +94,41 @@ protected:
 	/**
 	 * 标签管理目录监听器列表
 	 */
-	vector<DirChangeLinster> labelMagDirChangeListener;
+	vector<DirChangeListener> labelMagDirChangeListener;
+
+public:
+	/**
+	 * 最近访问列表的最大数量
+	 */
+	enum { MaxRecentFileCount = 9 };
+
+	/**
+	 * 获取最近访问文件列表
+	 */
+	const vector<CString>& GetRecentFileList();
+
+	/**
+	 * 设置最近访问文件
+	 */
+	void SetRecentFile(CString file);
+
+	/**
+	 * 设置最近访问列表监听器
+	 */
+	void AddRecentListChangeListener(RecentListChangeListener listener){
+		recentListChangeListener.push_back(listener);
+	}
+
+protected:
+	/**
+	 * 最近访问列表
+	 */
+	vector<CString> recentFileList;
+
+	/**
+	 * 最近访问列表监听器列表
+	 */
+	vector<RecentListChangeListener> recentListChangeListener;
 };
 
 /**

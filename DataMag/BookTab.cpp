@@ -27,7 +27,7 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=NULL*/)
 
 	m_book_list.SetListEvent(this);
 
-	DirChangeLinster listener;
+	DirChangeListener listener;
 	listener = bind(&CBookTab::OnBookMagDirChange, this, std::placeholders::_1);
 	theSetting.AddBookMagDirChangeListener(listener);
 
@@ -74,7 +74,11 @@ void CBookTab::InitListBox()
 
 void CBookTab::OnDoubleClick()
 {
-	m_book_list.DoDefaultDClick(m_book_list.GetCurSel());
+	int nItem = m_book_list.GetCurSel();
+	m_book_list.DoDefaultDClick(nItem);
+
+	CString strFile = m_book_list.GetItemPath(nItem);
+	theSetting.SetRecentFile(strFile);
 }
 
 void CBookTab::OnSelectChanged()

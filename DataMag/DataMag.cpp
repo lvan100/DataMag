@@ -7,6 +7,10 @@
  */
 CSetting theSetting;
 
+CSetting::CSetting()
+{
+}
+
 CString CSetting::GetCodeMagDir()
 {
 	TCHAR szDir[MAX_PATH];
@@ -100,6 +104,49 @@ void CSetting::SetLabelMagDir(CString dir)
 		{
 			(*iter)(dir);
 		}
+	}
+}
+
+const vector<CString>& CSetting::GetRecentFileList()
+{
+	if (recentFileList.size() == 0)
+	{
+		for (int i = 0; i < MaxRecentFileCount; i++)
+		{
+			CString recentFileIndex;
+			recentFileIndex.Format(_T("File%d"), i);
+
+			CString strFile = theApp.GetProfileString(_T("RecentFile"), recentFileIndex, NULL);
+			if (strFile.GetLength() > 0) {
+				recentFileList.push_back(strFile);
+			}
+		}
+	}
+
+	return recentFileList;
+}
+
+void CSetting::SetRecentFile(CString file)
+{
+	if (recentFileList.size() == MaxRecentFileCount) {
+		recentFileList.pop_back();
+	}
+
+	recentFileList.insert(recentFileList.begin(), file);
+
+	for (int i = 0; i < recentFileList.size(); i++) {
+
+		CString recentFileIndex;
+		recentFileIndex.Format(_T("File%d"), i);
+
+		theApp.WriteProfileString(_T("RecentFile"), recentFileIndex, recentFileList.at(i));
+	}
+
+	for (auto iter = recentListChangeListener.begin()
+		; iter != recentListChangeListener.end()
+		; iter++)
+	{
+		(*iter)();
 	}
 }
 

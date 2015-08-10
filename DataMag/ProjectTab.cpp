@@ -27,7 +27,7 @@ CProjectTab::CProjectTab(CString strCommand, CWnd* pParent /*=NULL*/)
 
 	m_project_list.SetListEvent(this);
 
-	DirChangeLinster listener;
+	DirChangeListener listener;
 	listener = bind(&CProjectTab::OnCodeMagDirChange, this, std::placeholders::_1);
 	theSetting.AddCodeMagDirChangeListener(listener);
 
@@ -74,7 +74,11 @@ void CProjectTab::InitListBox()
 
 void CProjectTab::OnDoubleClick()
 {
-	m_project_list.DoDefaultDClick(m_project_list.GetCurSel());
+	int nItem = m_project_list.GetCurSel();
+	m_project_list.DoDefaultDClick(nItem);
+
+	CString strFile = m_project_list.GetItemPath(nItem);
+	theSetting.SetRecentFile(strFile);
 }
 
 void CProjectTab::OnSelectChanged()
