@@ -61,8 +61,8 @@ protected:
 protected:
 	CStatic m_blog;
 
+	CStatic m_recent_group;
 	CRecentList m_recent_list;
-	CRecentList m_frequent_list;
 
 	CPrettyButton m_add_book;
 	CPrettyButton m_add_label;

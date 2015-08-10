@@ -134,7 +134,7 @@ void CSetting::SetRecentFile(CString file)
 
 	recentFileList.insert(recentFileList.begin(), file);
 
-	for (int i = 0; i < recentFileList.size(); i++) {
+	for (size_t i = 0; i < recentFileList.size(); i++) {
 
 		CString recentFileIndex;
 		recentFileIndex.Format(_T("File%d"), i);

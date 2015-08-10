@@ -100,7 +100,7 @@ public:
 	/**
 	 * 最近访问列表的最大数量
 	 */
-	enum { MaxRecentFileCount = 9 };
+	enum { MaxRecentFileCount = 8 };
 
 	/**
 	 * 获取最近访问文件列表

@@ -18,6 +18,8 @@ CRecentList::~CRecentList()
 }
 
 BEGIN_MESSAGE_MAP(CRecentList, CListBox)
+	ON_WM_KILLFOCUS()
+	ON_WM_ERASEBKGND()
 	ON_WM_CTLCOLOR_REFLECT()
 	ON_CONTROL_REFLECT(LBN_DBLCLK, &CRecentList::OnLbnDblclk)
 END_MESSAGE_MAP()
@@ -43,14 +45,14 @@ void CRecentList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 	CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 
-	if ((lpDrawItemStruct->itemState & ODS_SELECTED) == ODS_SELECTED) {
+	if ((GetFocus() == this) && ((lpDrawItemStruct->itemState & ODS_SELECTED) == ODS_SELECTED)) {
 		pDC->FillRect(&lpDrawItemStruct->rcItem, &afxGlobalData.brHilite);
 	} else {
 		pDC->FillRect(&lpDrawItemStruct->rcItem, &afxGlobalData.brBtnFace);
 	}
 
 	CRect rcIcon(lpDrawItemStruct->rcItem);
-	rcIcon.left += 2;
+	rcIcon.left += 7;
 	rcIcon.right = rcIcon.left + rcIcon.Height();
 
 	if (strType.CompareNoCase(_T("ิดย๋")) == 0) {
@@ -162,4 +164,16 @@ void CRecentList::OnLbnDblclk()
 	if (m_event != NULL) {
 		m_event->OnDoubleClick();
 	}
+}
+
+void CRecentList::OnKillFocus(CWnd* pNewWnd)
+{
+	CListBox::OnKillFocus(pNewWnd);
+
+	Invalidate();
+}
+
+BOOL CRecentList::OnEraseBkgnd(CDC* pDC)
+{
+	return TRUE;
 }

@@ -16,7 +16,6 @@ IMPLEMENT_DYNAMIC(CMainSearch, CDialogEx)
 CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CMainSearch::IDD, pParent)
 	, m_recent_list(&theShellManager)
-	, m_frequent_list(&theShellManager)
 {
 	if (theMainSearch == NULL) {
 		theMainSearch = this;
@@ -34,7 +33,6 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	m_project_search.SetSearchIcon(hSearchIcon);
 
 	m_recent_list.SetListEvent(&m_recent_list_event);
-	// m_label_info.SetListEvent(&m_label_info_event);
 
 	RecentListChangeListener listener;
 	listener = bind(&CMainSearch::OnRecentListChange, this);
@@ -54,8 +52,8 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_ADD_LABEL, m_add_label);
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
 	MFC_DDX_Control(pDX, IDC_ADD_PROJECT, m_add_project);
-	DDX_Control(pDX, IDC_FRENQUENT_LIST, m_frequent_list);
 	MFC_DDX_Control(pDX, IDC_LABEL_SEARCH, m_label_search);
+	MFC_DDX_Control(pDX, IDC_RECENT_GROUP, m_recent_group);
 	MFC_DDX_Control(pDX, IDC_PROJECT_SEARCH, m_project_search);
 }
 
@@ -102,15 +100,11 @@ BOOL CMainSearch::OnInitDialog()
 	m_recent_list.SetLabelImage(hLabelIcon);
 	m_recent_list.SetCodeImage(hProjectIcon);
 
-	m_frequent_list.SetBookImage(hBookIcon);
-	m_frequent_list.SetLabelImage(hLabelIcon);
-	m_frequent_list.SetCodeImage(hProjectIcon);
-
 	[&](){
 		LOGFONT logFont = { 0 };
 		afxGlobalData.fontBold.GetLogFont(&logFont);
 
-		logFont.lfHeight = -20;
+		logFont.lfHeight = -28;
 
 		HFONT hFont = CreateFontIndirect(&logFont);
 		m_blog.SetFont(CFont::FromHandle(hFont));
@@ -120,20 +114,20 @@ BOOL CMainSearch::OnInitDialog()
 	m_label_search.SetHintText(_T("搜索标签"));
 	m_project_search.SetHintText(_T("搜索项目"));
 
+	[&](){
+		LOGFONT logFont = { 0 };
+		afxGlobalData.fontRegular.GetLogFont(&logFont);
+
+		logFont.lfHeight = -16;
+
+		HFONT hFont = CreateFontIndirect(&logFont);
+		m_recent_group.SetFont(CFont::FromHandle(hFont));
+	}();
+
 	auto& list = theSetting.GetRecentFileList();
-	for (int i = 0; i < list.size(); i++) {
+	for (size_t i = 0; i < list.size(); i++) {
 		m_recent_list.AddString(list.at(i));
 	}
-
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\图书\\23"));
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\标签\\23"));
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\图书\\23"));
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\标签\\23"));
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
-	m_frequent_list.AddString(_T("C:\\Users\\欢\\Desktop\\资料管理\\源码\\23"));
 
 	return FALSE;
 }
@@ -263,7 +257,7 @@ void CMainSearch::OnRecentListChange()
 	m_recent_list.ResetContent();
 
 	auto& list = theSetting.GetRecentFileList();
-	for (int i = 0; i < list.size(); i++) {
+	for (size_t i = 0; i < list.size(); i++) {
 		m_recent_list.AddString(list.at(i));
 	}
 }
