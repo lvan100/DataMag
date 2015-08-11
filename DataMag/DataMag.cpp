@@ -51,7 +51,7 @@ BOOL CDataMagApp::InitInstance()
 	return FALSE;
 }
 
-CString CDataMagApp::GetCodeMagDir()
+CString CDataMagApp::GetCodeDir()
 {
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
@@ -68,14 +68,14 @@ CString CDataMagApp::GetCodeMagDir()
 	return strPath;
 }
 
-void CDataMagApp::SetCodeMagDir(CString dir)
+void CDataMagApp::SetCodeDir(CString dir)
 {
-	if (GetCodeMagDir().CompareNoCase(dir) != 0)
+	if (GetCodeDir().CompareNoCase(dir) != 0)
 	{
 		theApp.WriteProfileString(_T("Settings"), _T("CodeDir"), dir);
 
-		for (auto iter = codeMagDirChangeListener.begin()
-				; iter != codeMagDirChangeListener.end()
+		for (auto iter = codeDirChangeListener.begin()
+				; iter != codeDirChangeListener.end()
 				; iter++)
 		{
 			(*iter)(dir);
@@ -83,7 +83,7 @@ void CDataMagApp::SetCodeMagDir(CString dir)
 	}
 }
 
-CString CDataMagApp::GetBookMagDir()
+CString CDataMagApp::GetBookDir()
 {
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
@@ -100,14 +100,14 @@ CString CDataMagApp::GetBookMagDir()
 	return strPath;
 }
 
-void CDataMagApp::SetBookMagDir(CString dir)
+void CDataMagApp::SetBookDir(CString dir)
 {
-	if (GetBookMagDir().CompareNoCase(dir) != 0)
+	if (GetBookDir().CompareNoCase(dir) != 0)
 	{
 		theApp.WriteProfileString(_T("Settings"), _T("BookDir"), dir);
 
-		for (auto iter = bookMagDirChangeListener.begin()
-			; iter != bookMagDirChangeListener.end()
+		for (auto iter = bookDirChangeListener.begin()
+			; iter != bookDirChangeListener.end()
 			; iter++)
 		{
 			(*iter)(dir);
@@ -115,14 +115,14 @@ void CDataMagApp::SetBookMagDir(CString dir)
 	}
 }
 
-CString CDataMagApp::GetLabelMagDir()
+CString CDataMagApp::GetTagDir()
 {
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
 
 	PathAppend(szDir, _T("\\..\\±Í«©"));
 
-	CString strPath = theApp.GetProfileString(_T("Settings"), _T("LabelDir"), szDir);
+	CString strPath = theApp.GetProfileString(_T("Settings"), _T("TagDir"), szDir);
 
 	if (!PathFileExists(strPath))
 	{
@@ -132,14 +132,14 @@ CString CDataMagApp::GetLabelMagDir()
 	return strPath;
 }
 
-void CDataMagApp::SetLabelMagDir(CString dir)
+void CDataMagApp::SetTagDir(CString dir)
 {
-	if (GetLabelMagDir().CompareNoCase(dir) != 0)
+	if (GetTagDir().CompareNoCase(dir) != 0)
 	{
-		theApp.WriteProfileString(_T("Settings"), _T("LabelDir"), dir);
+		theApp.WriteProfileString(_T("Settings"), _T("TagDir"), dir);
 
-		for (auto iter = labelMagDirChangeListener.begin()
-			; iter != labelMagDirChangeListener.end()
+		for (auto iter = tagDirChangeListener.begin()
+			; iter != tagDirChangeListener.end()
 			; iter++)
 		{
 			(*iter)(dir);

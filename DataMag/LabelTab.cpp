@@ -33,7 +33,7 @@ CLabelTab::CLabelTab(CString strCommand, CWnd* pParent /*=NULL*/)
 
 	DirChangeListener listener;
 	listener = bind(&CLabelTab::OnLabelMagDirChange, this, std::placeholders::_1);
-	theApp.AddLabelMagDirChangeListener(listener);
+	theApp.AddTagDirChangeListener(listener);
 
 	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_SEARCH)
@@ -81,7 +81,7 @@ void CLabelTab::LabelListEvent::InitListBox()
 {
 	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_event)));
 
-	CString strFolder = theApp.GetLabelMagDir();
+	CString strFolder = theApp.GetTagDir();
 	pThis->m_label_list.DisplayFolder(strFolder);
 }
 
@@ -175,7 +175,7 @@ void CLabelTab::OnBnClickedLabelAdd()
 	dlg.m_title = _T("ÐÂ½¨±êÇ©");
 	if (dlg.DoModal() == IDOK) {
 
-		CString strFolder = theApp.GetLabelMagDir();
+		CString strFolder = theApp.GetTagDir();
 		strFolder += _T("\\") + dlg.m_name;
 
 		if (CreateDirectory(strFolder, nullptr)) {
@@ -219,7 +219,7 @@ void CLabelTab::OnBnClickedLabelRename()
 
 		if (dlg.DoModal() == IDOK)
 		{
-			CString strNewFolder = theApp.GetLabelMagDir();
+			CString strNewFolder = theApp.GetTagDir();
 			strNewFolder += _T("\\") + dlg.m_name;
 			CFile::Rename(strOldFolder, strNewFolder);
 

@@ -29,7 +29,7 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=NULL*/)
 
 	DirChangeListener listener;
 	listener = bind(&CBookTab::OnBookMagDirChange, this, std::placeholders::_1);
-	theApp.AddBookMagDirChangeListener(listener);
+	theApp.AddBookDirChangeListener(listener);
 
 	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_SEARCH)
@@ -68,7 +68,7 @@ END_MESSAGE_MAP()
 
 void CBookTab::InitListBox()
 {
-	CString strFolder = theApp.GetBookMagDir();
+	CString strFolder = theApp.GetBookDir();
 	m_book_list.DisplayFolder(strFolder);
 }
 
@@ -141,7 +141,7 @@ void CBookTab::OnBnClickedBookAdd()
 	dlg.m_title = _T("ÐÂ½¨Í¼Êé");
 	if (dlg.DoModal() == IDOK) {
 
-		CString strFolder = theApp.GetBookMagDir();
+		CString strFolder = theApp.GetBookDir();
 		strFolder += _T("\\") + dlg.m_name;
 
 		if (CreateDirectory(strFolder, nullptr)) {
@@ -331,7 +331,7 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 
 		PathStripPath(szFileName);
 
-		CString strBookDir = theApp.GetBookMagDir();
+		CString strBookDir = theApp.GetBookDir();
 		strBookDir += _T("\\");
 		strBookDir += szFileName;
 
@@ -361,7 +361,7 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 		RenameBook([&]()->CString{
 			return szFileName;
 		},[&]()->CString{
-			return theApp.GetBookMagDir() + _T("\\") + szFileName;
+			return theApp.GetBookDir() + _T("\\") + szFileName;
 		});
 	}
 

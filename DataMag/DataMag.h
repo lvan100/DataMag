@@ -29,75 +29,75 @@ public:
 
 public:
 	/**
-	 * 获取项目管理目录
+	 * 获取源码目录
 	 */
-	CString GetCodeMagDir();
+	CString GetCodeDir();
 
 	/**
-	 * 设置项目管理目录
+	 * 设置源码目录
 	 */
-	void SetCodeMagDir(CString dir);
+	void SetCodeDir(CString dir);
 
 	/**
-	 * 设置项目管理目录监听器
+	 * 添加源码目录监听器
 	 */
-	void AddCodeMagDirChangeListener(DirChangeListener listener) {
-		codeMagDirChangeListener.push_back(listener);
+	void AddCodeDirChangeListener(DirChangeListener listener) {
+		codeDirChangeListener.push_back(listener);
 	}
 
 protected:
 	/**
-	 * 项目管理目录监听器列表
+	 * 源码目录监听器列表
 	 */
-	vector<DirChangeListener> codeMagDirChangeListener;
+	vector<DirChangeListener> codeDirChangeListener;
 
 public:
 	/**
-	 * 获取图书管理目录
+	 * 获取图书目录
 	 */
-	CString GetBookMagDir();
+	CString GetBookDir();
 
 	/**
-	 * 设置图书管理目录
+	 * 设置图书目录
 	 */
-	void SetBookMagDir(CString dir);
+	void SetBookDir(CString dir);
 
 	/**
-	 * 设置图书管理目录监听器
+	 * 设置图书目录监听器
 	 */
-	void AddBookMagDirChangeListener(DirChangeListener listener){
-		bookMagDirChangeListener.push_back(listener);
+	void AddBookDirChangeListener(DirChangeListener listener){
+		bookDirChangeListener.push_back(listener);
 	}
 
 protected:
 	/**
-	 * 图书管理目录监听器列表
+	 * 图书目录监听器列表
 	 */
-	vector<DirChangeListener> bookMagDirChangeListener;
+	vector<DirChangeListener> bookDirChangeListener;
 
 public:
 	/**
-	 * 获取标签管理目录
+	 * 获取标签目录
 	 */
-	CString GetLabelMagDir();
+	CString GetTagDir();
 
 	/**
-	 * 设置标签管理目录
+	 * 设置标签目录
 	 */
-	void SetLabelMagDir(CString dir);
+	void SetTagDir(CString dir);
 
 	/**
-	 * 设置标签管理目录监听器
+	 * 设置标签目录监听器
 	 */
-	void AddLabelMagDirChangeListener(DirChangeListener listener){
-		labelMagDirChangeListener.push_back(listener);
+	void AddTagDirChangeListener(DirChangeListener listener){
+		tagDirChangeListener.push_back(listener);
 	}
 
 protected:
 	/**
-	 * 标签管理目录监听器列表
+	 * 标签目录监听器列表
 	 */
-	vector<DirChangeListener> labelMagDirChangeListener;
+	vector<DirChangeListener> tagDirChangeListener;
 
 public:
 	/**

@@ -29,7 +29,7 @@ CProjectTab::CProjectTab(CString strCommand, CWnd* pParent /*=NULL*/)
 
 	DirChangeListener listener;
 	listener = bind(&CProjectTab::OnCodeMagDirChange, this, std::placeholders::_1);
-	theApp.AddCodeMagDirChangeListener(listener);
+	theApp.AddCodeDirChangeListener(listener);
 
 	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_SEARCH)
@@ -68,7 +68,7 @@ END_MESSAGE_MAP()
 
 void CProjectTab::InitListBox()
 {
-	CString strFolder = theApp.GetCodeMagDir();
+	CString strFolder = theApp.GetCodeDir();
 	m_project_list.DisplayFolder(strFolder);
 }
 
@@ -141,7 +141,7 @@ void CProjectTab::OnBnClickedProjectAdd()
 	dlg.m_title = _T("新建项目");
 	if (dlg.DoModal() == IDOK) {
 
-		CString strFolder = theApp.GetCodeMagDir();
+		CString strFolder = theApp.GetCodeDir();
 		strFolder += _T("\\") + dlg.m_name;
 
 		if (CreateDirectory(strFolder, nullptr)) {
@@ -341,7 +341,7 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 		PathStripPath(szFileName);
 		PathRemoveExtension(szFileName);
 
-		CString strBookDir = theApp.GetCodeMagDir();
+		CString strBookDir = theApp.GetCodeDir();
 		strBookDir += _T("\\");
 		strBookDir += szFileName;
 
@@ -398,7 +398,7 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 		RenameBook([&]()->CString{
 			return szFileName;
 		}, [&]()->CString{
-			return theApp.GetCodeMagDir() + _T("\\") + szFileName;
+			return theApp.GetCodeDir() + _T("\\") + szFileName;
 		});
 	}
 
