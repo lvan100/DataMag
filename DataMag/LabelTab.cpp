@@ -50,31 +50,31 @@ void CLabelTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
-	MFC_DDX_Control(pDX, IDC_LABEL_ADD, m_label_add);
-	MFC_DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
-	MFC_DDX_Control(pDX, IDC_LABEL_LIST, m_label_list);
-	MFC_DDX_Control(pDX, IDC_LABEL_DELETE, m_label_delete);
-	MFC_DDX_Control(pDX, IDC_LABEL_RENAME, m_label_rename);
-	MFC_DDX_Control(pDX, IDC_LABEL_INFO_LIST, m_label_info);
-	MFC_DDX_Control(pDX, IDC_LABEL_RELATE_BOOK, m_relate_book);
+	MFC_DDX_Control(pDX, IDC_TAG_ADD, m_label_add);
+	MFC_DDX_Control(pDX, IDC_TAG_LIST, m_label_list);
+	MFC_DDX_Control(pDX, IDC_TAG_DELETE, m_label_delete);
+	MFC_DDX_Control(pDX, IDC_TAG_ITEM_INFO, m_item_text);
+	MFC_DDX_Control(pDX, IDC_TAG_RENAME, m_label_rename);
+	MFC_DDX_Control(pDX, IDC_TAG_INFO_LIST, m_label_info);
+	MFC_DDX_Control(pDX, IDC_TAG_RELATE_BOOK, m_relate_book);
+	MFC_DDX_Control(pDX, IDC_TAG_RELATE_CODE, m_relate_project);
+	MFC_DDX_Control(pDX, IDC_TAG_SEARCH_EDIT, m_label_search_edit);
 	MFC_DDX_Control(pDX, IDC_INFO_SEARCH_EDIT, m_info_search_edit);
 	MFC_DDX_Control(pDX, IDC_REMOVE_RELATIONSHIP, m_remove_relate);
-	MFC_DDX_Control(pDX, IDC_LABEL_RELATE_PROJECT, m_relate_project);
-	MFC_DDX_Control(pDX, IDC_LABEL_SEARCH_EDIT, m_label_search_edit);
 }
 
 BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CLabelTab::OnBnClickedSetting)
-	ON_BN_CLICKED(IDC_LABEL_ADD, &CLabelTab::OnBnClickedLabelAdd)
-	ON_BN_CLICKED(IDC_LABEL_DELETE, &CLabelTab::OnBnClickedLabelDelete)
-	ON_BN_CLICKED(IDC_LABEL_RENAME, &CLabelTab::OnBnClickedLabelRename)
+	ON_BN_CLICKED(IDC_TAG_ADD, &CLabelTab::OnBnClickedLabelAdd)
+	ON_BN_CLICKED(IDC_TAG_DELETE, &CLabelTab::OnBnClickedLabelDelete)
+	ON_BN_CLICKED(IDC_TAG_RENAME, &CLabelTab::OnBnClickedLabelRename)
 	ON_EN_CHANGE(IDC_INFO_SEARCH_EDIT, &CLabelTab::OnChangeInfoSearchEdit)
-	ON_EN_CHANGE(IDC_LABEL_SEARCH_EDIT, &CLabelTab::OnChangeLabelSearchEdit)
-	ON_BN_CLICKED(IDC_LABEL_RELATE_BOOK, &CLabelTab::OnBnClickedLabelRelateBook)
+	ON_EN_CHANGE(IDC_TAG_SEARCH_EDIT, &CLabelTab::OnChangeLabelSearchEdit)
+	ON_BN_CLICKED(IDC_TAG_RELATE_BOOK, &CLabelTab::OnBnClickedLabelRelateBook)
+	ON_BN_CLICKED(IDC_TAG_RELATE_CODE, &CLabelTab::OnBnClickedLabelRelateProject)
 	ON_BN_CLICKED(IDC_REMOVE_RELATIONSHIP, &CLabelTab::OnBnClickedRemoveRelationship)
-	ON_BN_CLICKED(IDC_LABEL_RELATE_PROJECT, &CLabelTab::OnBnClickedLabelRelateProject)
 END_MESSAGE_MAP()
 
 void CLabelTab::LabelListEvent::InitListBox()
@@ -163,7 +163,7 @@ BOOL CLabelTab::OnInitDialog()
 		}
 
 	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
-		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_LABEL_ADD, BN_CLICKED), NULL);
+		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_TAG_ADD, BN_CLICKED), NULL);
 	}
 
 	return FALSE; /* Ωπµ„…Ë÷√ */

@@ -96,12 +96,6 @@
     <None Include="res\search.ico">
       <Filter>Application\Resource</Filter>
     </None>
-    <None Include="res\tip.ico">
-      <Filter>Application\Resource</Filter>
-    </None>
-    <None Include="res\help.ico">
-      <Filter>Application\Resource</Filter>
-    </None>
     <None Include="res\label.ico">
       <Filter>Application\Resource</Filter>
     </None>

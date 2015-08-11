@@ -46,20 +46,19 @@ CMainSearch::~CMainSearch()
 void CMainSearch::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	MFC_DDX_Control(pDX, IDC_MY_BLOG, m_blog);
 	MFC_DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
+	MFC_DDX_Control(pDX, IDC_ADD_TAG, m_add_label);
 	DDX_Control(pDX, IDC_RECENT_LIST, m_recent_list);
-	MFC_DDX_Control(pDX, IDC_ADD_LABEL, m_add_label);
+	MFC_DDX_Control(pDX, IDC_ADD_CODE, m_add_project);
+	MFC_DDX_Control(pDX, IDC_TAG_SEARCH, m_label_search);
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
-	MFC_DDX_Control(pDX, IDC_ADD_PROJECT, m_add_project);
-	MFC_DDX_Control(pDX, IDC_LABEL_SEARCH, m_label_search);
 	MFC_DDX_Control(pDX, IDC_RECENT_GROUP, m_recent_group);
-	MFC_DDX_Control(pDX, IDC_PROJECT_SEARCH, m_project_search);
+	MFC_DDX_Control(pDX, IDC_CODE_SEARCH, m_project_search);
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
-	ON_BN_CLICKED(IDC_ADD_PROJECT, &CMainSearch::OnBnClickedAddProject)
-	ON_BN_CLICKED(IDC_ADD_LABEL, &CMainSearch::OnBnClickedAddLabel)
+	ON_BN_CLICKED(IDC_ADD_CODE, &CMainSearch::OnBnClickedAddProject)
+	ON_BN_CLICKED(IDC_ADD_TAG, &CMainSearch::OnBnClickedAddLabel)
 	ON_BN_CLICKED(IDC_ADD_BOOK, &CMainSearch::OnBnClickedAddBook)
 	ON_WM_ACTIVATE()
 	ON_WM_MOVE()
@@ -82,7 +81,7 @@ BOOL CMainSearch::OnInitDialog()
 	m_project_search.SetFocus();
 
 	HICON hLabelIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_LABEL)
+		, MAKEINTRESOURCE(IDI_TAG)
 		, IMAGE_ICON, 0, 0, 0);
 	m_add_label.SetImage(hLabelIcon, FALSE);
 
@@ -99,16 +98,6 @@ BOOL CMainSearch::OnInitDialog()
 	m_recent_list.SetBookImage(hBookIcon);
 	m_recent_list.SetLabelImage(hLabelIcon);
 	m_recent_list.SetCodeImage(hProjectIcon);
-
-	[&](){
-		LOGFONT logFont = { 0 };
-		afxGlobalData.fontBold.GetLogFont(&logFont);
-
-		logFont.lfHeight = -28;
-
-		HFONT hFont = CreateFontIndirect(&logFont);
-		m_blog.SetFont(CFont::FromHandle(hFont));
-	}();
 	
 	m_book_search.SetHintText(_T("ËÑË÷Í¼Êé"));
 	m_label_search.SetHintText(_T("ËÑË÷±êÇ©"));

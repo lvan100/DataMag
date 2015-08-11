@@ -24,13 +24,13 @@ CProjectSelectDlg::~CProjectSelectDlg()
 void CProjectSelectDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_PROJECT_LIST, m_project_list);
-	DDX_Control(pDX, IDC_PROJECT_SEARCH_EDIT, m_search_edit);
+	DDX_Control(pDX, IDC_CODE_LIST, m_project_list);
+	DDX_Control(pDX, IDC_CODE_SEARCH_EDIT, m_search_edit);
 }
 
 BEGIN_MESSAGE_MAP(CProjectSelectDlg, CDialog)
 	ON_BN_CLICKED(IDOK, &CProjectSelectDlg::OnBnClickedOk)
-	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectSelectDlg::OnChangeProjectSearchEdit)
+	ON_EN_CHANGE(IDC_CODE_SEARCH_EDIT, &CProjectSelectDlg::OnChangeProjectSearchEdit)
 END_MESSAGE_MAP()
 
 void CProjectSelectDlg::InitListBox()

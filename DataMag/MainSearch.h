@@ -59,8 +59,6 @@ protected:
 	void MoveToHideWindow(BOOL bHide);
 
 protected:
-	CStatic m_blog;
-
 	CStatic m_recent_group;
 	CRecentList m_recent_list;
 

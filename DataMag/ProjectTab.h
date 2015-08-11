@@ -18,7 +18,7 @@ public:
 	CProjectTab(CString strCommand = _T(""), CWnd* pParent = NULL);
 	virtual ~CProjectTab();
 
-	enum { IDD = IDD_PROJECTTAB };
+	enum { IDD = IDD_CODETAB };
 
 	/**
 	 * 响应项目管理目录改变事件

@@ -14,7 +14,7 @@ public:
 	CProjectSelectDlg(CWnd* pParent = nullptr);
 	virtual ~CProjectSelectDlg();
 
-	enum { IDD = IDD_PROJECTSELECTDLG };
+	enum { IDD = IDD_CODESELECTDLG };
 
 public:
 	/**

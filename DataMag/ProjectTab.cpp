@@ -45,13 +45,13 @@ void CProjectTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
-	MFC_DDX_Control(pDX, IDC_ITEM_INFO, m_item_text);
-	MFC_DDX_Control(pDX, IDC_PROJECT_ADD, m_project_add);
-	MFC_DDX_Control(pDX, IDC_PROJECT_LIST, m_project_list);
-	MFC_DDX_Control(pDX, IDC_PROJECT_DELETE, m_project_delete);
-	MFC_DDX_Control(pDX, IDC_PROJECT_RENAME, m_project_rename);
-	MFC_DDX_Control(pDX, IDC_PROJECT_SEARCH_EDIT, m_search_edit);
-	MFC_DDX_Control(pDX, IDC_PROJECT_REFRESH, m_project_refresh);
+	MFC_DDX_Control(pDX, IDC_CODE_ADD, m_project_add);
+	MFC_DDX_Control(pDX, IDC_CODE_LIST, m_project_list);
+	MFC_DDX_Control(pDX, IDC_TAG_ITEM_INFO, m_item_text);
+	MFC_DDX_Control(pDX, IDC_CODE_DELETE, m_project_delete);
+	MFC_DDX_Control(pDX, IDC_CODE_RENAME, m_project_rename);
+	MFC_DDX_Control(pDX, IDC_CODE_SEARCH_EDIT, m_search_edit);
+	MFC_DDX_Control(pDX, IDC_CODE_REFRESH, m_project_refresh);
 }
 
 BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
@@ -59,11 +59,11 @@ BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
 	ON_WM_DROPFILES()
 	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CProjectTab::OnBnClickedSetting)
-	ON_BN_CLICKED(IDC_PROJECT_ADD, &CProjectTab::OnBnClickedProjectAdd)
-	ON_BN_CLICKED(IDC_PROJECT_DELETE, &CProjectTab::OnBnClickedProjectDelete)
-	ON_BN_CLICKED(IDC_PROJECT_RENAME, &CProjectTab::OnBnClickedProjectRename)
-	ON_BN_CLICKED(IDC_PROJECT_REFRESH, &CProjectTab::OnBnClickedProjectRefresh)
-	ON_EN_CHANGE(IDC_PROJECT_SEARCH_EDIT, &CProjectTab::OnChangeProjectSearchEdit)
+	ON_BN_CLICKED(IDC_CODE_ADD, &CProjectTab::OnBnClickedProjectAdd)
+	ON_BN_CLICKED(IDC_CODE_DELETE, &CProjectTab::OnBnClickedProjectDelete)
+	ON_BN_CLICKED(IDC_CODE_RENAME, &CProjectTab::OnBnClickedProjectRename)
+	ON_BN_CLICKED(IDC_CODE_REFRESH, &CProjectTab::OnBnClickedProjectRefresh)
+	ON_EN_CHANGE(IDC_CODE_SEARCH_EDIT, &CProjectTab::OnChangeProjectSearchEdit)
 END_MESSAGE_MAP()
 
 void CProjectTab::InitListBox()
@@ -129,7 +129,7 @@ BOOL CProjectTab::OnInitDialog()
 		}
 
 	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
-		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_PROJECT_ADD, BN_CLICKED), NULL);
+		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_CODE_ADD, BN_CLICKED), NULL);
 	}
 
 	return FALSE; /* Ωπµ„…Ë÷√ */

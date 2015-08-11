@@ -18,7 +18,7 @@ public:
 	CLabelTab(CString strCommand = _T(""), CWnd* pParent = NULL);
 	virtual ~CLabelTab();
 
-	enum { IDD = IDD_LABELTAB };
+	enum { IDD = IDD_TAGTAB };
 
 	/**
 	 * 响应标签管理目录改变事件

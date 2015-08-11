@@ -17,8 +17,8 @@ void CSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BOOK_BROWSER, m_book_browser);
-	DDX_Control(pDX, IDC_LABEL_BROWSER, m_label_browser);
-	DDX_Control(pDX, IDC_PROJECT_BROWSER, m_project_browser);
+	DDX_Control(pDX, IDC_TAG_BROWSER, m_label_browser);
+	DDX_Control(pDX, IDC_CODE_BROWSER, m_project_browser);
 }
 
 BEGIN_MESSAGE_MAP(CSettingDlg, CDialog)
