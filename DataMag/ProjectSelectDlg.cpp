@@ -35,7 +35,7 @@ END_MESSAGE_MAP()
 
 void CProjectSelectDlg::InitListBox()
 {
-	CString strFolder = theSetting.GetCodeMagDir();
+	CString strFolder = theApp.GetCodeMagDir();
 	m_project_list.DisplayFolder(strFolder);
 }
 

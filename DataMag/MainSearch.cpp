@@ -36,7 +36,7 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 
 	RecentListChangeListener listener;
 	listener = bind(&CMainSearch::OnRecentListChange, this);
-	theSetting.AddRecentListChangeListener(listener);
+	theApp.AddRecentListChangeListener(listener);
 }
 
 CMainSearch::~CMainSearch()
@@ -124,7 +124,7 @@ BOOL CMainSearch::OnInitDialog()
 		m_recent_group.SetFont(CFont::FromHandle(hFont));
 	}();
 
-	auto& list = theSetting.GetRecentFileList();
+	auto& list = theApp.GetRecentFileList();
 	for (size_t i = 0; i < list.size(); i++) {
 		m_recent_list.AddString(list.at(i));
 	}
@@ -256,7 +256,7 @@ void CMainSearch::OnRecentListChange()
 {
 	m_recent_list.ResetContent();
 
-	auto& list = theSetting.GetRecentFileList();
+	auto& list = theApp.GetRecentFileList();
 	for (size_t i = 0; i < list.size(); i++) {
 		m_recent_list.AddString(list.at(i));
 	}

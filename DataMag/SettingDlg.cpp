@@ -30,13 +30,13 @@ BOOL CSettingDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	m_book_browser.EnableFolderBrowseButton();
-	m_book_browser.SetWindowText(theSetting.GetBookMagDir());
+	m_book_browser.SetWindowText(theApp.GetBookMagDir());
 
 	m_label_browser.EnableFolderBrowseButton();
-	m_label_browser.SetWindowText(theSetting.GetLabelMagDir());
+	m_label_browser.SetWindowText(theApp.GetLabelMagDir());
 
 	m_project_browser.EnableFolderBrowseButton();
-	m_project_browser.SetWindowText(theSetting.GetCodeMagDir());
+	m_project_browser.SetWindowText(theApp.GetCodeMagDir());
 	
 	return TRUE;
 }
@@ -45,15 +45,15 @@ void CSettingDlg::OnBnClickedOk()
 {
 	CString strBookDir;
 	m_book_browser.GetWindowText(strBookDir);
-	theSetting.SetBookMagDir(strBookDir);
+	theApp.SetBookMagDir(strBookDir);
 
 	CString strLabelDir;
 	m_label_browser.GetWindowText(strLabelDir);
-	theSetting.SetLabelMagDir(strLabelDir);
+	theApp.SetLabelMagDir(strLabelDir);
 
 	CString strProjectDir;
 	m_project_browser.GetWindowText(strProjectDir);
-	theSetting.SetCodeMagDir(strProjectDir);
+	theApp.SetCodeMagDir(strProjectDir);
 	
 	CDialog::OnOK();
 }

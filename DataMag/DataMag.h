@@ -17,12 +17,15 @@ typedef function<void(CString)> DirChangeListener;
 typedef function<void()> RecentListChangeListener;
 
 /**
- * 应用设置类
+ * 应用程序类
  */
-class CSetting
+class CDataMagApp : public CWinApp
 {
 public:
-	CSetting();
+	CDataMagApp();
+
+public:
+	virtual BOOL InitInstance();
 
 public:
 	/**
@@ -129,23 +132,6 @@ protected:
 	 * 最近访问列表监听器列表
 	 */
 	vector<RecentListChangeListener> recentListChangeListener;
-};
-
-/**
- * 全局的应用设置对象
- */
-extern CSetting theSetting;
-
-/**
- * 应用程序类
- */
-class CDataMagApp : public CWinApp
-{
-public:
-	CDataMagApp();
-
-public:
-	virtual BOOL InitInstance();
 };
 
 /**

@@ -35,7 +35,7 @@ END_MESSAGE_MAP()
 
 void CBookSelectDlg::InitListBox()
 {
-	CString strFolder = theSetting.GetBookMagDir();
+	CString strFolder = theApp.GetBookMagDir();
 	m_book_list.DisplayFolder(strFolder);
 }
 
