@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "DataMag.h"
+#include "BookDlg.h"
 #include "SettingDlg.h"
-#include "BookSelectDlg.h"
 
-IMPLEMENT_DYNAMIC(CBookSelectDlg, CDialog)
+IMPLEMENT_DYNAMIC(CBookDlg, CDialog)
 
-CBookSelectDlg::CBookSelectDlg(CWnd* pParent /*=nullptr*/)
-	: CDialog(CBookSelectDlg::IDD, pParent)
+CBookDlg::CBookDlg(CWnd* pParent /*=nullptr*/)
+	: CDialog(CBookDlg::IDD, pParent)
 	, m_book_list(&theShellManager)
 {
 	m_book_list.SetListEvent(this);
@@ -17,34 +17,34 @@ CBookSelectDlg::CBookSelectDlg(CWnd* pParent /*=nullptr*/)
 	m_search_edit.SetSearchIcon(hSearchIcon);
 }
 
-CBookSelectDlg::~CBookSelectDlg()
+CBookDlg::~CBookDlg()
 {
 }
 
-void CBookSelectDlg::DoDataExchange(CDataExchange* pDX)
+void CBookDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
 	DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_search_edit);
 }
 
-BEGIN_MESSAGE_MAP(CBookSelectDlg, CDialog)
-	ON_BN_CLICKED(IDOK, &CBookSelectDlg::OnBnClickedOk)
-	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookSelectDlg::OnChangeBookSearchEdit)
+BEGIN_MESSAGE_MAP(CBookDlg, CDialog)
+	ON_BN_CLICKED(IDOK, &CBookDlg::OnBnClickedOk)
+	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookDlg::OnChangeBookSearchEdit)
 END_MESSAGE_MAP()
 
-void CBookSelectDlg::InitListBox()
+void CBookDlg::InitListBox()
 {
 	CString strFolder = theApp.GetBookDir();
 	m_book_list.DisplayFolder(strFolder);
 }
 
-void CBookSelectDlg::OnDoubleClick()
+void CBookDlg::OnDoubleClick()
 {
 	OnBnClickedOk();
 }
 
-void CBookSelectDlg::OnBnClickedOk()
+void CBookDlg::OnBnClickedOk()
 {
 	int nSelCount = m_book_list.GetSelCount();
 
@@ -60,7 +60,7 @@ void CBookSelectDlg::OnBnClickedOk()
 	CDialog::OnOK();
 }
 
-void CBookSelectDlg::OnChangeBookSearchEdit()
+void CBookDlg::OnChangeBookSearchEdit()
 {
 	CString strFilter;
 	m_search_edit.GetWindowText(strFilter);

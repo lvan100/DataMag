@@ -6,13 +6,13 @@
 /**
  * 项目选择对话框
  */
-class CProjectSelectDlg : public CDialog, CListBoxEventAdapter
+class CCodeDlg : public CDialog, CListBoxEventAdapter
 {
-	DECLARE_DYNAMIC(CProjectSelectDlg)
+	DECLARE_DYNAMIC(CCodeDlg)
 
 public:
-	CProjectSelectDlg(CWnd* pParent = nullptr);
-	virtual ~CProjectSelectDlg();
+	CCodeDlg(CWnd* pParent = nullptr);
+	virtual ~CCodeDlg();
 
 	enum { IDD = IDD_CODESELECTDLG };
 

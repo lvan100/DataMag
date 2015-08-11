@@ -1,17 +1,17 @@
 #include "stdafx.h"
 #include "FileOp.h"
 #include "DataMag.h"
+#include "CodeTab.h"
 #include "NameDlg.h"
 #include "WndHelp.h"
 #include "MainSearch.h"
 #include "SettingDlg.h"
-#include "ProjectTab.h"
 #include "DDXControl.h"
 
-IMPLEMENT_DYNAMIC(CProjectTab, CDialogEx)
+IMPLEMENT_DYNAMIC(CCodeTab, CDialogEx)
 
-CProjectTab::CProjectTab(CString strCommand, CWnd* pParent /*=NULL*/)
-	: CDialogEx(CProjectTab::IDD, pParent)
+CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=NULL*/)
+	: CDialogEx(CCodeTab::IDD, pParent)
 	, m_project_list(&theShellManager)
 	, m_pLastFocusWnd(NULL)
 {
@@ -28,7 +28,7 @@ CProjectTab::CProjectTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	m_project_list.SetListEvent(this);
 
 	DirChangeListener listener;
-	listener = bind(&CProjectTab::OnCodeMagDirChange, this, std::placeholders::_1);
+	listener = bind(&CCodeTab::OnCodeMagDirChange, this, std::placeholders::_1);
 	theApp.AddCodeDirChangeListener(listener);
 
 	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
@@ -37,11 +37,11 @@ CProjectTab::CProjectTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	m_search_edit.SetSearchIcon(hSearchIcon);
 }
 
-CProjectTab::~CProjectTab()
+CCodeTab::~CCodeTab()
 {
 }
 
-void CProjectTab::DoDataExchange(CDataExchange* pDX)
+void CCodeTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
@@ -54,25 +54,25 @@ void CProjectTab::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_CODE_REFRESH, m_project_refresh);
 }
 
-BEGIN_MESSAGE_MAP(CProjectTab, CDialogEx)
+BEGIN_MESSAGE_MAP(CCodeTab, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
 	ON_WM_SYSCOMMAND()
-	ON_BN_CLICKED(IDC_SETTING, &CProjectTab::OnBnClickedSetting)
-	ON_BN_CLICKED(IDC_CODE_ADD, &CProjectTab::OnBnClickedProjectAdd)
-	ON_BN_CLICKED(IDC_CODE_DELETE, &CProjectTab::OnBnClickedProjectDelete)
-	ON_BN_CLICKED(IDC_CODE_RENAME, &CProjectTab::OnBnClickedProjectRename)
-	ON_BN_CLICKED(IDC_CODE_REFRESH, &CProjectTab::OnBnClickedProjectRefresh)
-	ON_EN_CHANGE(IDC_CODE_SEARCH_EDIT, &CProjectTab::OnChangeProjectSearchEdit)
+	ON_BN_CLICKED(IDC_SETTING, &CCodeTab::OnBnClickedSetting)
+	ON_BN_CLICKED(IDC_CODE_ADD, &CCodeTab::OnBnClickedProjectAdd)
+	ON_BN_CLICKED(IDC_CODE_DELETE, &CCodeTab::OnBnClickedProjectDelete)
+	ON_BN_CLICKED(IDC_CODE_RENAME, &CCodeTab::OnBnClickedProjectRename)
+	ON_BN_CLICKED(IDC_CODE_REFRESH, &CCodeTab::OnBnClickedProjectRefresh)
+	ON_EN_CHANGE(IDC_CODE_SEARCH_EDIT, &CCodeTab::OnChangeProjectSearchEdit)
 END_MESSAGE_MAP()
 
-void CProjectTab::InitListBox()
+void CCodeTab::InitListBox()
 {
 	CString strFolder = theApp.GetCodeDir();
 	m_project_list.DisplayFolder(strFolder);
 }
 
-void CProjectTab::OnDoubleClick()
+void CCodeTab::OnDoubleClick()
 {
 	int nItem = m_project_list.GetCurSel();
 	m_project_list.DoDefaultDClick(nItem);
@@ -81,7 +81,7 @@ void CProjectTab::OnDoubleClick()
 	theApp.SetRecentFile(strFile);
 }
 
-void CProjectTab::OnSelectChanged()
+void CCodeTab::OnSelectChanged()
 {
 	int nItem = m_project_list.GetCurSel();
 	if (nItem >= 0)
@@ -108,7 +108,7 @@ void CProjectTab::OnSelectChanged()
 	}
 }
 
-BOOL CProjectTab::OnInitDialog()
+BOOL CCodeTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
@@ -135,7 +135,7 @@ BOOL CProjectTab::OnInitDialog()
 	return FALSE; /* 焦点设置 */
 }
 
-void CProjectTab::OnBnClickedProjectAdd()
+void CCodeTab::OnBnClickedProjectAdd()
 {
 	CNameDlg dlg(this);
 	dlg.m_title = _T("新建项目");
@@ -182,7 +182,7 @@ void CProjectTab::OnBnClickedProjectAdd()
 	}
 }
 
-void CProjectTab::OnBnClickedProjectDelete()
+void CCodeTab::OnBnClickedProjectDelete()
 {
 	int nItem = m_project_list.GetCurSel();
 	if (nItem >= 0)
@@ -198,7 +198,7 @@ void CProjectTab::OnBnClickedProjectDelete()
 	}
 }
 
-CString CProjectTab::RenameBook(function<CString()> getSelName, function<CString()> getSelPath)
+CString CCodeTab::RenameBook(function<CString()> getSelName, function<CString()> getSelPath)
 {
 	CNameDlg dlg;
 	dlg.m_name = getSelName();
@@ -237,7 +237,7 @@ CString CProjectTab::RenameBook(function<CString()> getSelName, function<CString
 	return _T("");
 }
 
-void CProjectTab::OnBnClickedProjectRename()
+void CCodeTab::OnBnClickedProjectRename()
 {
 	int nItem = m_project_list.GetCurSel();
 	if (nItem >= 0) {
@@ -258,24 +258,24 @@ void CProjectTab::OnBnClickedProjectRename()
 	}
 }
 
-void CProjectTab::OnBnClickedSetting()
+void CCodeTab::OnBnClickedSetting()
 {
 	CSettingDlg().DoModal();
 }
 
-void CProjectTab::OnBnClickedProjectRefresh()
+void CCodeTab::OnBnClickedProjectRefresh()
 {
 	m_project_list.Refresh();
 }
 
-void CProjectTab::OnChangeProjectSearchEdit()
+void CCodeTab::OnChangeProjectSearchEdit()
 {
 	CString strFilter;
 	m_search_edit.GetWindowText(strFilter);
 	m_project_list.SetFilterString(strFilter);
 }
 
-BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
+BOOL CCodeTab::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN)
 	{
@@ -328,7 +328,7 @@ BOOL CProjectTab::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CProjectTab::OnDropFiles(HDROP hDropInfo)
+void CCodeTab::OnDropFiles(HDROP hDropInfo)
 {
 	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
 	{
@@ -407,7 +407,7 @@ void CProjectTab::OnDropFiles(HDROP hDropInfo)
 	CDialogEx::OnDropFiles(hDropInfo);
 }
 
-void CProjectTab::OnSysCommand(UINT nID, LPARAM lParam)
+void CCodeTab::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if (nID == SC_MINIMIZE) {
 		m_pLastFocusWnd = GetFocus();
@@ -416,7 +416,7 @@ void CProjectTab::OnSysCommand(UINT nID, LPARAM lParam)
 	CDialogEx::OnSysCommand(nID, lParam);
 }
 
-void CProjectTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+void CCodeTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 

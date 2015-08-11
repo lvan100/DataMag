@@ -16,8 +16,8 @@ CSettingDlg::~CSettingDlg()
 void CSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_TAG_BROWSER, m_tag_browser);
 	DDX_Control(pDX, IDC_BOOK_BROWSER, m_book_browser);
-	DDX_Control(pDX, IDC_TAG_BROWSER, m_label_browser);
 	DDX_Control(pDX, IDC_CODE_BROWSER, m_project_browser);
 }
 
@@ -32,8 +32,8 @@ BOOL CSettingDlg::OnInitDialog()
 	m_book_browser.EnableFolderBrowseButton();
 	m_book_browser.SetWindowText(theApp.GetBookDir());
 
-	m_label_browser.EnableFolderBrowseButton();
-	m_label_browser.SetWindowText(theApp.GetTagDir());
+	m_tag_browser.EnableFolderBrowseButton();
+	m_tag_browser.SetWindowText(theApp.GetTagDir());
 
 	m_project_browser.EnableFolderBrowseButton();
 	m_project_browser.SetWindowText(theApp.GetCodeDir());
@@ -48,7 +48,7 @@ void CSettingDlg::OnBnClickedOk()
 	theApp.SetBookDir(strBookDir);
 
 	CString strTagDir;
-	m_label_browser.GetWindowText(strTagDir);
+	m_tag_browser.GetWindowText(strTagDir);
 	theApp.SetTagDir(strTagDir);
 
 	CString strProjectDir;

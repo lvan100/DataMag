@@ -7,16 +7,16 @@
 /**
  * 项目标签页
  */
-class CProjectTab : public CDialogEx, CListBoxEventAdapter
+class CCodeTab : public CDialogEx, CListBoxEventAdapter
 {
-	DECLARE_DYNAMIC(CProjectTab)
+	DECLARE_DYNAMIC(CCodeTab)
 
 public:
 	/**
 	 * 命令格式:"open","search:xx","add".
 	 */
-	CProjectTab(CString strCommand = _T(""), CWnd* pParent = NULL);
-	virtual ~CProjectTab();
+	CCodeTab(CString strCommand = _T(""), CWnd* pParent = NULL);
+	virtual ~CCodeTab();
 
 	enum { IDD = IDD_CODETAB };
 

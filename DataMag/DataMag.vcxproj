@@ -110,21 +110,21 @@
     <None Include="res\setting.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BookSelectDlg.h" />
+    <ClInclude Include="BookDlg.h" />
     <ClInclude Include="BookTab.h" />
     <ClInclude Include="DataMag.h" />
     <ClInclude Include="DDXControl.h" />
     <ClInclude Include="FileListBox.h" />
     <ClInclude Include="FileOp.h" />
     <ClInclude Include="HilitButton.h" />
-    <ClInclude Include="LabelTab.h" />
+    <ClInclude Include="TagTab.h" />
     <ClInclude Include="ListBoxEvent.h" />
     <ClInclude Include="MainSearch.h" />
     <ClInclude Include="NameDlg.h" />
     <ClInclude Include="PrettyButton.h" />
     <ClInclude Include="PrettyEdit.h" />
-    <ClInclude Include="ProjectSelectDlg.h" />
-    <ClInclude Include="ProjectTab.h" />
+    <ClInclude Include="CodeDlg.h" />
+    <ClInclude Include="CodeTab.h" />
     <ClInclude Include="RecentList.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SearchEdit.h" />
@@ -136,7 +136,7 @@
     <ClInclude Include="WndHelp.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BookSelectDlg.cpp" />
+    <ClCompile Include="BookDlg.cpp" />
     <ClCompile Include="BookTab.cpp" />
     <ClCompile Include="DataMag.cpp" />
     <ClCompile Include="DDXControl.cpp" />
@@ -145,11 +145,11 @@
     <ClCompile Include="HilitButton.cpp" />
     <ClCompile Include="MainSearch.cpp" />
     <ClCompile Include="NameDlg.cpp" />
-    <ClCompile Include="LabelTab.cpp" />
+    <ClCompile Include="TagTab.cpp" />
     <ClCompile Include="PrettyButton.cpp" />
     <ClCompile Include="PrettyEdit.cpp" />
-    <ClCompile Include="ProjectSelectDlg.cpp" />
-    <ClCompile Include="ProjectTab.cpp" />
+    <ClCompile Include="CodeDlg.cpp" />
+    <ClCompile Include="CodeTab.cpp" />
     <ClCompile Include="RecentList.cpp" />
     <ClCompile Include="SearchEdit.cpp" />
     <ClCompile Include="SettingDlg.cpp" />

@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "SettingDlg.h"
-#include "ProjectSelectDlg.h"
+#include "CodeDlg.h"
 
-IMPLEMENT_DYNAMIC(CProjectSelectDlg, CDialog)
+IMPLEMENT_DYNAMIC(CCodeDlg, CDialog)
 
-CProjectSelectDlg::CProjectSelectDlg(CWnd* pParent /*=nullptr*/)
-	: CDialog(CProjectSelectDlg::IDD, pParent)
+CCodeDlg::CCodeDlg(CWnd* pParent /*=nullptr*/)
+	: CDialog(CCodeDlg::IDD, pParent)
 	, m_project_list(&theShellManager)
 {
 	m_project_list.SetListEvent(this);
@@ -17,34 +17,34 @@ CProjectSelectDlg::CProjectSelectDlg(CWnd* pParent /*=nullptr*/)
 	m_search_edit.SetSearchIcon(hSearchIcon);
 }
 
-CProjectSelectDlg::~CProjectSelectDlg()
+CCodeDlg::~CCodeDlg()
 {
 }
 
-void CProjectSelectDlg::DoDataExchange(CDataExchange* pDX)
+void CCodeDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_CODE_LIST, m_project_list);
 	DDX_Control(pDX, IDC_CODE_SEARCH_EDIT, m_search_edit);
 }
 
-BEGIN_MESSAGE_MAP(CProjectSelectDlg, CDialog)
-	ON_BN_CLICKED(IDOK, &CProjectSelectDlg::OnBnClickedOk)
-	ON_EN_CHANGE(IDC_CODE_SEARCH_EDIT, &CProjectSelectDlg::OnChangeProjectSearchEdit)
+BEGIN_MESSAGE_MAP(CCodeDlg, CDialog)
+	ON_BN_CLICKED(IDOK, &CCodeDlg::OnBnClickedOk)
+	ON_EN_CHANGE(IDC_CODE_SEARCH_EDIT, &CCodeDlg::OnChangeProjectSearchEdit)
 END_MESSAGE_MAP()
 
-void CProjectSelectDlg::InitListBox()
+void CCodeDlg::InitListBox()
 {
 	CString strFolder = theApp.GetCodeDir();
 	m_project_list.DisplayFolder(strFolder);
 }
 
-void CProjectSelectDlg::OnDoubleClick()
+void CCodeDlg::OnDoubleClick()
 {
 	OnBnClickedOk();
 }
 
-void CProjectSelectDlg::OnBnClickedOk()
+void CCodeDlg::OnBnClickedOk()
 {
 	int nSelCount = m_project_list.GetSelCount();
 
@@ -60,7 +60,7 @@ void CProjectSelectDlg::OnBnClickedOk()
 	CDialog::OnOK();
 }
 
-void CProjectSelectDlg::OnChangeProjectSearchEdit()
+void CCodeDlg::OnChangeProjectSearchEdit()
 {
 	CString strFilter;
 	m_search_edit.GetWindowText(strFilter);

@@ -6,9 +6,9 @@ IMPLEMENT_DYNAMIC(CRecentList, CListBox)
 
 CRecentList::CRecentList(CShellManager* pShellManager)
 	: m_event(NULL)
+	, m_hTagImage(NULL)
 	, m_hCodeImage(NULL)
 	, m_hBookImage(NULL)
-	, m_hLabelImage(NULL)
 	, m_pShellManager(pShellManager)
 {
 }
@@ -65,7 +65,7 @@ void CRecentList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			, 0, NULL, DI_NORMAL);
 	} else if (strType.CompareNoCase(_T("±êÇ©")) == 0) {
 		DrawIconEx(lpDrawItemStruct->hDC, rcIcon.left, rcIcon.top
-			, m_hLabelImage, rcIcon.Width(), rcIcon.Height()
+			, m_hTagImage, rcIcon.Width(), rcIcon.Height()
 			, 0, NULL, DI_NORMAL);
 	}
 

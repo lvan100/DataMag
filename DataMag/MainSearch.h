@@ -62,12 +62,12 @@ protected:
 	CStatic m_recent_group;
 	CRecentList m_recent_list;
 
+	CPrettyButton m_add_tag;
 	CPrettyButton m_add_book;
-	CPrettyButton m_add_label;
 	CPrettyButton m_add_project;
 
+	CSearchEdit m_tag_search;
 	CSearchEdit m_book_search;
-	CSearchEdit m_label_search;
 	CSearchEdit m_project_search;
 
 protected:
@@ -77,9 +77,9 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
+	afx_msg void OnBnClickedAddTag();
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnBnClickedAddBook();
-	afx_msg void OnBnClickedAddLabel();
 	afx_msg void OnBnClickedAddProject();
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

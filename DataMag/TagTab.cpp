@@ -1,21 +1,22 @@
 #include "stdafx.h"
+#include "DataMag.h"
+#include "TagTab.h"
 #include "FileOp.h"
 #include "DataMag.h"
 #include "NameDlg.h"
 #include "WndHelp.h"
-#include "LabelTab.h"
+#include "BookDlg.h"
 #include "MainSearch.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
-#include "BookSelectDlg.h"
-#include "ProjectSelectDlg.h"
+#include "CodeDlg.h"
 
-IMPLEMENT_DYNAMIC(CLabelTab, CDialogEx)
+IMPLEMENT_DYNAMIC(CTagTab, CDialogEx)
 
-CLabelTab::CLabelTab(CString strCommand, CWnd* pParent /*=NULL*/)
-	: CDialogEx(CLabelTab::IDD, pParent)
-	, m_label_list(&theShellManager)
-	, m_label_info(&theShellManager)
+CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=NULL*/)
+	: CDialogEx(CTagTab::IDD, pParent)
+	, m_tag_list(&theShellManager)
+	, m_tag_info(&theShellManager)
 	, m_pLastFocusWnd(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -28,94 +29,94 @@ CLabelTab::CLabelTab(CString strCommand, CWnd* pParent /*=NULL*/)
 		m_command.cmd = strCommand;
 	}
 
-	m_label_list.SetListEvent(&m_label_event);
-	m_label_info.SetListEvent(&m_label_info_event);
+	m_tag_list.SetListEvent(&m_tag_event);
+	m_tag_info.SetListEvent(&m_tag_info_event);
 
 	DirChangeListener listener;
-	listener = bind(&CLabelTab::OnLabelMagDirChange, this, std::placeholders::_1);
+	listener = bind(&CTagTab::OnTagDirChange, this, std::placeholders::_1);
 	theApp.AddTagDirChangeListener(listener);
 
 	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_SEARCH)
 		, IMAGE_ICON, 0, 0, 0);
 	m_info_search_edit.SetSearchIcon(hSearchIcon);
-	m_label_search_edit.SetSearchIcon(hSearchIcon);
+	m_tag_search_edit.SetSearchIcon(hSearchIcon);
 }
 
-CLabelTab::~CLabelTab()
+CTagTab::~CTagTab()
 {
 }
 
-void CLabelTab::DoDataExchange(CDataExchange* pDX)
+void CTagTab::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
-	MFC_DDX_Control(pDX, IDC_TAG_ADD, m_label_add);
-	MFC_DDX_Control(pDX, IDC_TAG_LIST, m_label_list);
-	MFC_DDX_Control(pDX, IDC_TAG_DELETE, m_label_delete);
+	MFC_DDX_Control(pDX, IDC_TAG_ADD, m_tag_add);
+	MFC_DDX_Control(pDX, IDC_TAG_LIST, m_tag_list);
+	MFC_DDX_Control(pDX, IDC_TAG_DELETE, m_tag_delete);
 	MFC_DDX_Control(pDX, IDC_TAG_ITEM_INFO, m_item_text);
-	MFC_DDX_Control(pDX, IDC_TAG_RENAME, m_label_rename);
-	MFC_DDX_Control(pDX, IDC_TAG_INFO_LIST, m_label_info);
+	MFC_DDX_Control(pDX, IDC_TAG_RENAME, m_tag_rename);
+	MFC_DDX_Control(pDX, IDC_TAG_INFO_LIST, m_tag_info);
 	MFC_DDX_Control(pDX, IDC_TAG_RELATE_BOOK, m_relate_book);
 	MFC_DDX_Control(pDX, IDC_TAG_RELATE_CODE, m_relate_project);
-	MFC_DDX_Control(pDX, IDC_TAG_SEARCH_EDIT, m_label_search_edit);
+	MFC_DDX_Control(pDX, IDC_TAG_SEARCH_EDIT, m_tag_search_edit);
 	MFC_DDX_Control(pDX, IDC_INFO_SEARCH_EDIT, m_info_search_edit);
 	MFC_DDX_Control(pDX, IDC_REMOVE_RELATIONSHIP, m_remove_relate);
 }
 
-BEGIN_MESSAGE_MAP(CLabelTab, CDialogEx)
+BEGIN_MESSAGE_MAP(CTagTab, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_SYSCOMMAND()
-	ON_BN_CLICKED(IDC_SETTING, &CLabelTab::OnBnClickedSetting)
-	ON_BN_CLICKED(IDC_TAG_ADD, &CLabelTab::OnBnClickedLabelAdd)
-	ON_BN_CLICKED(IDC_TAG_DELETE, &CLabelTab::OnBnClickedLabelDelete)
-	ON_BN_CLICKED(IDC_TAG_RENAME, &CLabelTab::OnBnClickedLabelRename)
-	ON_EN_CHANGE(IDC_INFO_SEARCH_EDIT, &CLabelTab::OnChangeInfoSearchEdit)
-	ON_EN_CHANGE(IDC_TAG_SEARCH_EDIT, &CLabelTab::OnChangeLabelSearchEdit)
-	ON_BN_CLICKED(IDC_TAG_RELATE_BOOK, &CLabelTab::OnBnClickedLabelRelateBook)
-	ON_BN_CLICKED(IDC_TAG_RELATE_CODE, &CLabelTab::OnBnClickedLabelRelateProject)
-	ON_BN_CLICKED(IDC_REMOVE_RELATIONSHIP, &CLabelTab::OnBnClickedRemoveRelationship)
+	ON_BN_CLICKED(IDC_SETTING, &CTagTab::OnBnClickedSetting)
+	ON_BN_CLICKED(IDC_TAG_ADD, &CTagTab::OnBnClickedTagAdd)
+	ON_BN_CLICKED(IDC_TAG_DELETE, &CTagTab::OnBnClickedTagDelete)
+	ON_BN_CLICKED(IDC_TAG_RENAME, &CTagTab::OnBnClickedTagRename)
+	ON_EN_CHANGE(IDC_INFO_SEARCH_EDIT, &CTagTab::OnChangeInfoSearchEdit)
+	ON_EN_CHANGE(IDC_TAG_SEARCH_EDIT, &CTagTab::OnChangeTagSearchEdit)
+	ON_BN_CLICKED(IDC_TAG_RELATE_BOOK, &CTagTab::OnBnClickedTagRelateBook)
+	ON_BN_CLICKED(IDC_TAG_RELATE_CODE, &CTagTab::OnBnClickedTagRelateProject)
+	ON_BN_CLICKED(IDC_REMOVE_RELATIONSHIP, &CTagTab::OnBnClickedRemoveRelationship)
 END_MESSAGE_MAP()
 
-void CLabelTab::LabelListEvent::InitListBox()
+void CTagTab::TagListEvent::InitListBox()
 {
-	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_event)));
+	auto pThis = ((CTagTab*)((BYTE*)this - offsetof(CTagTab, m_tag_event)));
 
 	CString strFolder = theApp.GetTagDir();
-	pThis->m_label_list.DisplayFolder(strFolder);
+	pThis->m_tag_list.DisplayFolder(strFolder);
 }
 
-void CLabelTab::LabelListEvent::OnSelectChanged()
+void CTagTab::TagListEvent::OnSelectChanged()
 {
-	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_event)));
+	auto pThis = ((CTagTab*)((BYTE*)this - offsetof(CTagTab, m_tag_event)));
 
-	int nItem = pThis->m_label_list.GetCurSel();
+	int nItem = pThis->m_tag_list.GetCurSel();
 	if (nItem >= 0)
 	{
-		CString strPath = pThis->m_label_list.GetItemPath(nItem);
-		pThis->m_label_info.DisplayFolder(strPath);
+		CString strPath = pThis->m_tag_list.GetItemPath(nItem);
+		pThis->m_tag_info.DisplayFolder(strPath);
 	}
 }
 
-void CLabelTab::LabelInfoEvent::InitListBox()
+void CTagTab::TagInfoEvent::InitListBox()
 {
-	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_info_event)));
-	pThis->m_label_info.ResetContent();
+	auto pThis = ((CTagTab*)((BYTE*)this - offsetof(CTagTab, m_tag_info_event)));
+	pThis->m_tag_info.ResetContent();
 }
 
-void CLabelTab::LabelInfoEvent::OnDoubleClick()
+void CTagTab::TagInfoEvent::OnDoubleClick()
 {
-	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_info_event)));
-	pThis->m_label_info.DoDefaultDClick(pThis->m_label_info.GetCurSel());
+	auto pThis = ((CTagTab*)((BYTE*)this - offsetof(CTagTab, m_tag_info_event)));
+	pThis->m_tag_info.DoDefaultDClick(pThis->m_tag_info.GetCurSel());
 }
 
-void CLabelTab::LabelInfoEvent::OnSelectChanged()
+void CTagTab::TagInfoEvent::OnSelectChanged()
 {
-	auto pThis = ((CLabelTab*)((BYTE*)this - offsetof(CLabelTab, m_label_info_event)));
-	int nItem = pThis->m_label_info.GetCurSel();
+	auto pThis = ((CTagTab*)((BYTE*)this - offsetof(CTagTab, m_tag_info_event)));
+	int nItem = pThis->m_tag_info.GetCurSel();
 	if (nItem >= 0)
 	{
-		CString strLink = pThis->m_label_info.GetItemPath(nItem);
+		CString strLink = pThis->m_tag_info.GetItemPath(nItem);
 
 		CString strPath;
 		GetLinkFilePath(strPath, strLink);
@@ -141,7 +142,7 @@ void CLabelTab::LabelInfoEvent::OnSelectChanged()
 	}
 }
 
-BOOL CLabelTab::OnInitDialog()
+BOOL CTagTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
@@ -149,7 +150,7 @@ BOOL CLabelTab::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);
 
 	m_info_search_edit.SetHintText(_T("搜索关联"));
-	m_label_search_edit.SetHintText(_T("搜索标签"));
+	m_tag_search_edit.SetHintText(_T("搜索标签"));
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
 
@@ -157,9 +158,9 @@ BOOL CLabelTab::OnInitDialog()
 
 	} else if (m_command.cmd.CompareNoCase(_T("search")) == 0) {
 		if (!m_command.arg.IsEmpty()) {
-			m_label_search_edit.SetWindowText(m_command.arg);
-			m_label_search_edit.SetSel(-1);
-			m_label_list.SetFilterString(m_command.arg);
+			m_tag_search_edit.SetWindowText(m_command.arg);
+			m_tag_search_edit.SetSel(-1);
+			m_tag_list.SetFilterString(m_command.arg);
 		}
 
 	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
@@ -169,7 +170,7 @@ BOOL CLabelTab::OnInitDialog()
 	return FALSE; /* 焦点设置 */
 }
 
-void CLabelTab::OnBnClickedLabelAdd()
+void CTagTab::OnBnClickedTagAdd()
 {
 	CNameDlg dlg(this);
 	dlg.m_title = _T("新建标签");
@@ -179,11 +180,11 @@ void CLabelTab::OnBnClickedLabelAdd()
 		strFolder += _T("\\") + dlg.m_name;
 
 		if (CreateDirectory(strFolder, nullptr)) {
-			m_label_list.Refresh();
-			m_label_info.DisplayFolder(strFolder);
+			m_tag_list.Refresh();
+			m_tag_info.DisplayFolder(strFolder);
 
-			m_label_list.SetFocus();
-			m_label_list.SelectString(0, dlg.m_name);
+			m_tag_list.SetFocus();
+			m_tag_list.SelectString(0, dlg.m_name);
 		} else {
 			CString strContent = _T("创建标签\"\"失败！");
 			strContent.Insert(5, strFolder);
@@ -192,29 +193,29 @@ void CLabelTab::OnBnClickedLabelAdd()
 	}
 }
 
-void CLabelTab::OnBnClickedLabelDelete()
+void CTagTab::OnBnClickedTagDelete()
 {
-	int nItem = m_label_list.GetCurSel();
+	int nItem = m_tag_list.GetCurSel();
 	if (nItem >= 0) {	
-		CString strFolder = m_label_list.GetItemPath(nItem);
+		CString strFolder = m_tag_list.GetItemPath(nItem);
 		DeleteDirectory(strFolder);
-		m_label_list.Refresh();
+		m_tag_list.Refresh();
 	} else {
 		MessageBox(_T("未选中任何标签!"), _T("提示"), MB_ICONINFORMATION);
 	}
 }
 
-void CLabelTab::OnBnClickedLabelRename()
+void CTagTab::OnBnClickedTagRename()
 {
-	int nItem = m_label_list.GetCurSel();
+	int nItem = m_tag_list.GetCurSel();
 	if (nItem >= 0) {
-		CString strOldFolder = m_label_list.GetItemPath(nItem);
+		CString strOldFolder = m_tag_list.GetItemPath(nItem);
 
 		int nFind = strOldFolder.ReverseFind('\\') + 1;
-		CString strLabel = strOldFolder.Mid(nFind);
+		CString strTag = strOldFolder.Mid(nFind);
 
 		CNameDlg dlg;
-		dlg.m_name = strLabel;
+		dlg.m_name = strTag;
 		dlg.m_title = _T("标签重命名");
 
 		if (dlg.DoModal() == IDOK)
@@ -223,11 +224,11 @@ void CLabelTab::OnBnClickedLabelRename()
 			strNewFolder += _T("\\") + dlg.m_name;
 			CFile::Rename(strOldFolder, strNewFolder);
 
-			m_label_list.Refresh();
-			m_label_info.DisplayFolder(strNewFolder);
+			m_tag_list.Refresh();
+			m_tag_info.DisplayFolder(strNewFolder);
 
-			m_label_list.SetFocus();
-			m_label_list.SelectString(0, dlg.m_name);
+			m_tag_list.SetFocus();
+			m_tag_list.SelectString(0, dlg.m_name);
 		}
 
 	} else {
@@ -235,22 +236,22 @@ void CLabelTab::OnBnClickedLabelRename()
 	}
 }
 
-void CLabelTab::OnBnClickedLabelRelateProject()
+void CTagTab::OnBnClickedTagRelateProject()
 {
-	int nItem = m_label_list.GetCurSel();
+	int nItem = m_tag_list.GetCurSel();
 	if (nItem >= 0) {
 
-		CProjectSelectDlg dlg;
+		CCodeDlg dlg;
 		if (dlg.DoModal() == IDOK)
 		{
 			for (int i = 0; i < dlg.arrProject.GetCount(); i++)
 			{
 				CString strFolder = dlg.arrProject.GetAt(i);
 				int nFind = strFolder.ReverseFind('\\') + 1;
-				CString strLabel = strFolder.Mid(nFind);
+				CString strTag = strFolder.Mid(nFind);
 
-				CString strLink = m_label_list.GetItemPath(nItem);
-				strLink += _T("\\") + strLabel + _T(".lnk");
+				CString strLink = m_tag_list.GetItemPath(nItem);
+				strLink += _T("\\") + strTag + _T(".lnk");
 				
 				if (FALSE == CreateFileLink(strFolder, strLink)) {
 					CString strContent = _T("关联项目\"\"失败！");
@@ -260,7 +261,7 @@ void CLabelTab::OnBnClickedLabelRelateProject()
 			}
 
 			if (dlg.arrProject.GetCount() > 0) {
-				m_label_info.Refresh();
+				m_tag_info.Refresh();
 			}
 		}
 
@@ -269,22 +270,22 @@ void CLabelTab::OnBnClickedLabelRelateProject()
 	}
 }
 
-void CLabelTab::OnBnClickedLabelRelateBook()
+void CTagTab::OnBnClickedTagRelateBook()
 {
-	int nItem = m_label_list.GetCurSel();
+	int nItem = m_tag_list.GetCurSel();
 	if (nItem >= 0)
 	{
-		CBookSelectDlg dlg;
+		CBookDlg dlg;
 		if (dlg.DoModal() == IDOK)
 		{
 			for (int i = 0; i < dlg.arrBook.GetCount(); i++)
 			{
 				CString strFolder = dlg.arrBook.GetAt(i);
 				int nFind = strFolder.ReverseFind('\\') + 1;
-				CString strLabel = strFolder.Mid(nFind);
+				CString strTag = strFolder.Mid(nFind);
 
-				CString strLink = m_label_list.GetItemPath(nItem);
-				strLink += _T("\\") + strLabel + _T(".lnk");
+				CString strLink = m_tag_list.GetItemPath(nItem);
+				strLink += _T("\\") + strTag + _T(".lnk");
 
 				if (FALSE == CreateFileLink(strFolder, strLink)) {
 					CString strContent = _T("关联项目\"\"失败！");
@@ -294,7 +295,7 @@ void CLabelTab::OnBnClickedLabelRelateBook()
 			}
 
 			if (dlg.arrBook.GetCount() > 0) {
-				m_label_info.Refresh();
+				m_tag_info.Refresh();
 			}
 		}
 
@@ -303,37 +304,37 @@ void CLabelTab::OnBnClickedLabelRelateBook()
 	}
 }
 
-void CLabelTab::OnBnClickedRemoveRelationship()
+void CTagTab::OnBnClickedRemoveRelationship()
 {
-	int nItem = m_label_info.GetCurSel();
+	int nItem = m_tag_info.GetCurSel();
 	if (nItem >= 0) {
-		DeleteFile(m_label_info.GetItemPath(nItem));
-		m_label_info.Refresh();
+		DeleteFile(m_tag_info.GetItemPath(nItem));
+		m_tag_info.Refresh();
 	} else {
 		MessageBox(_T("未选中任何标签!"), _T("提示"), MB_ICONINFORMATION);
 	}
 }
 
-void CLabelTab::OnBnClickedSetting()
+void CTagTab::OnBnClickedSetting()
 {
 	CSettingDlg().DoModal();
 }
 
-void CLabelTab::OnChangeLabelSearchEdit()
+void CTagTab::OnChangeTagSearchEdit()
 {
 	CString strFilter;
-	m_label_search_edit.GetWindowText(strFilter);
-	m_label_list.SetFilterString(strFilter);
+	m_tag_search_edit.GetWindowText(strFilter);
+	m_tag_list.SetFilterString(strFilter);
 }
 
-void CLabelTab::OnChangeInfoSearchEdit()
+void CTagTab::OnChangeInfoSearchEdit()
 {
 	CString strFilter;
 	m_info_search_edit.GetWindowText(strFilter);
-	m_label_info.SetFilterString(strFilter);
+	m_tag_info.SetFilterString(strFilter);
 }
 
-BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
+BOOL CTagTab::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN)
 	{
@@ -348,14 +349,14 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 			break;
 		case VK_DELETE:
 			{
-				if (pFocusWnd == &m_label_info)
+				if (pFocusWnd == &m_tag_info)
 				{
 					OnBnClickedRemoveRelationship();
 				}
 
-				if (pFocusWnd == &m_label_list)
+				if (pFocusWnd == &m_tag_list)
 				{
-					OnBnClickedLabelDelete();
+					OnBnClickedTagDelete();
 				}
 
 				return TRUE;
@@ -363,21 +364,21 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 			break;
 		case VK_F5:
 			{
-				m_label_list.Refresh();
+				m_tag_list.Refresh();
 				return TRUE;
 			}
 			break;
 		case VK_F3:
 			{
-				m_label_search_edit.SetFocus();
+				m_tag_search_edit.SetFocus();
 				return TRUE;
 			}
 			break;
 		case VK_F2:
 			{
-				if (pFocusWnd == &m_label_list)
+				if (pFocusWnd == &m_tag_list)
 				{
-					OnBnClickedLabelRename();
+					OnBnClickedTagRename();
 					return TRUE;
 				}
 			}
@@ -390,7 +391,7 @@ BOOL CLabelTab::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CLabelTab::OnSysCommand(UINT nID, LPARAM lParam)
+void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if (nID == SC_MINIMIZE) {
 		m_pLastFocusWnd = GetFocus();
@@ -399,7 +400,7 @@ void CLabelTab::OnSysCommand(UINT nID, LPARAM lParam)
 	CDialogEx::OnSysCommand(nID, lParam);
 }
 
-void CLabelTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+void CTagTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
@@ -411,7 +412,7 @@ void CLabelTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 		if (m_pLastFocusWnd != NULL) {
 			m_pLastFocusWnd->SetFocus();
 		} else {
-			m_label_search_edit.SetFocus();
+			m_tag_search_edit.SetFocus();
 		}
 	}
 }

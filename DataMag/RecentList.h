@@ -37,8 +37,8 @@ protected:
 	CShellManager* m_pShellManager;
 
 public:
-	void SetLabelImage(HICON hIcon)
-	{ m_hLabelImage = hIcon; }
+	void SetTagImage(HICON hIcon)
+	{ m_hTagImage = hIcon; }
 
 	void SetCodeImage(HICON hIcon)
 	{ m_hCodeImage = hIcon; }
@@ -47,9 +47,9 @@ public:
 	{ m_hBookImage = hIcon; }
 
 protected:
+	HICON m_hTagImage;
 	HICON m_hCodeImage;
 	HICON m_hBookImage;
-	HICON m_hLabelImage;
 
 protected:
 	/**

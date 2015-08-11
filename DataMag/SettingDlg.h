@@ -18,8 +18,8 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 public:
+	CMFCEditBrowseCtrl m_tag_browser;
 	CMFCEditBrowseCtrl m_book_browser;
-	CMFCEditBrowseCtrl m_label_browser;
 	CMFCEditBrowseCtrl m_project_browser;
 
 	DECLARE_MESSAGE_MAP()

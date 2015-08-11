@@ -7,31 +7,31 @@
 /**
  * 标签管理页
  */
-class CLabelTab : public CDialogEx
+class CTagTab : public CDialogEx
 {
-	DECLARE_DYNAMIC(CLabelTab)
+	DECLARE_DYNAMIC(CTagTab)
 
 public:
 	/**
 	 * 命令格式:"open","search:xx","add".
 	 */
-	CLabelTab(CString strCommand = _T(""), CWnd* pParent = NULL);
-	virtual ~CLabelTab();
+	CTagTab(CString strCommand = _T(""), CWnd* pParent = NULL);
+	virtual ~CTagTab();
 
 	enum { IDD = IDD_TAGTAB };
 
 	/**
 	 * 响应标签管理目录改变事件
 	 */
-	void OnLabelMagDirChange(CString dir){
-		m_label_list.DisplayFolder(dir);
+	void OnTagDirChange(CString dir){
+		m_tag_list.DisplayFolder(dir);
 	}
 	
 protected:
 	/**
 	 * 标签列表事件对象
 	 */
-	class LabelListEvent: public CListBoxEventAdapter
+	class TagListEvent: public CListBoxEventAdapter
 	{
 	public:
 		/**
@@ -44,12 +44,12 @@ protected:
 		 */
 		virtual void OnSelectChanged();
 
-	}m_label_event;
+	}m_tag_event;
 
 	/**
 	 * 关联列表事件对象
 	 */
-	class LabelInfoEvent: public CListBoxEventAdapter
+	class TagInfoEvent: public CListBoxEventAdapter
 	{
 	public:
 		/**
@@ -67,7 +67,7 @@ protected:
 		 */
 		virtual void OnSelectChanged();
 
-	}m_label_info_event;
+	}m_tag_info_event;
 
 	/**
 	 * 窗体图标
@@ -100,29 +100,29 @@ protected:
 
 protected:
 	CHilitButton m_setting;
-	CHilitButton m_label_add;
+	CHilitButton m_tag_add;
 	CHilitButton m_relate_book;
-	CHilitButton m_label_delete;
-	CHilitButton m_label_rename;
+	CHilitButton m_tag_delete;
+	CHilitButton m_tag_rename;
 	CHilitButton m_remove_relate;
 	CHilitButton m_relate_project;
 
-	CFileListBox m_label_list;
-	CFileListBox m_label_info;
+	CFileListBox m_tag_list;
+	CFileListBox m_tag_info;
 	CRichEditCtrl m_item_text;
 	CSearchEdit m_info_search_edit;
-	CSearchEdit m_label_search_edit;
+	CSearchEdit m_tag_search_edit;
 
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnBnClickedSetting();
-	afx_msg void OnBnClickedLabelAdd();
-	afx_msg void OnBnClickedLabelDelete();
-	afx_msg void OnBnClickedLabelRename();
+	afx_msg void OnBnClickedTagAdd();
+	afx_msg void OnBnClickedTagDelete();
+	afx_msg void OnBnClickedTagRename();
 	afx_msg void OnChangeInfoSearchEdit();
-	afx_msg void OnChangeLabelSearchEdit();
-	afx_msg void OnBnClickedLabelRelateBook();
-	afx_msg void OnBnClickedLabelRelateProject();
+	afx_msg void OnChangeTagSearchEdit();
+	afx_msg void OnBnClickedTagRelateBook();
+	afx_msg void OnBnClickedTagRelateProject();
 	afx_msg void OnBnClickedRemoveRelationship();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);

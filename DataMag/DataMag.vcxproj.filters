@@ -10,18 +10,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{7541c96c-da31-47c6-b995-270318e61250}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\BookSelectDlg">
-      <UniqueIdentifier>{c28d5e6f-bc10-458c-a18b-fabba33ee288}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Kernel\ProjectSelectDlg">
-      <UniqueIdentifier>{6636454a-bca3-40a4-9c3a-2ed2daf7707b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Kernel\LabelTab">
-      <UniqueIdentifier>{a98c5081-6aa9-4d80-8818-4e3e6e67ea0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Kernel\ProjectTab">
-      <UniqueIdentifier>{9ed6aa81-8c46-4cdf-9816-7c8cffba40fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Kernel\BookTab">
       <UniqueIdentifier>{6d8c0e41-cdb3-4b7a-b212-4914452a5cbc}</UniqueIdentifier>
     </Filter>
@@ -69,6 +57,18 @@
     </Filter>
     <Filter Include="Widget\ListBoxEvent">
       <UniqueIdentifier>{1207df87-c5cb-48ca-b91b-a3dada065821}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\BookDlg">
+      <UniqueIdentifier>{c28d5e6f-bc10-458c-a18b-fabba33ee288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\TagTab">
+      <UniqueIdentifier>{a98c5081-6aa9-4d80-8818-4e3e6e67ea0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\CodeDlg">
+      <UniqueIdentifier>{6636454a-bca3-40a4-9c3a-2ed2daf7707b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\CodeTab">
+      <UniqueIdentifier>{9ed6aa81-8c46-4cdf-9816-7c8cffba40fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -137,20 +137,8 @@
     <ClInclude Include="TabTemplate.h">
       <Filter>Widget\TabTemplate</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectTab.h">
-      <Filter>Kernel\ProjectTab</Filter>
-    </ClInclude>
     <ClInclude Include="BookTab.h">
       <Filter>Kernel\BookTab</Filter>
-    </ClInclude>
-    <ClInclude Include="LabelTab.h">
-      <Filter>Kernel\LabelTab</Filter>
-    </ClInclude>
-    <ClInclude Include="BookSelectDlg.h">
-      <Filter>Kernel\BookSelectDlg</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectSelectDlg.h">
-      <Filter>Kernel\ProjectSelectDlg</Filter>
     </ClInclude>
     <ClInclude Include="PrettyEdit.h">
       <Filter>Widget\PrettyEdit</Filter>
@@ -188,6 +176,18 @@
     <ClInclude Include="ListBoxEvent.h">
       <Filter>Widget\ListBoxEvent</Filter>
     </ClInclude>
+    <ClInclude Include="BookDlg.h">
+      <Filter>Kernel\BookDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="TagTab.h">
+      <Filter>Kernel\TagTab</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeDlg.h">
+      <Filter>Kernel\CodeDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeTab.h">
+      <Filter>Kernel\CodeTab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -205,20 +205,8 @@
     <ClCompile Include="TabTemplate.cpp">
       <Filter>Widget\TabTemplate</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectTab.cpp">
-      <Filter>Kernel\ProjectTab</Filter>
-    </ClCompile>
     <ClCompile Include="BookTab.cpp">
       <Filter>Kernel\BookTab</Filter>
-    </ClCompile>
-    <ClCompile Include="LabelTab.cpp">
-      <Filter>Kernel\LabelTab</Filter>
-    </ClCompile>
-    <ClCompile Include="BookSelectDlg.cpp">
-      <Filter>Kernel\BookSelectDlg</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectSelectDlg.cpp">
-      <Filter>Kernel\ProjectSelectDlg</Filter>
     </ClCompile>
     <ClCompile Include="PrettyEdit.cpp">
       <Filter>Widget\PrettyEdit</Filter>
@@ -252,6 +240,18 @@
     </ClCompile>
     <ClCompile Include="RecentList.cpp">
       <Filter>Widget\RecentList</Filter>
+    </ClCompile>
+    <ClCompile Include="BookDlg.cpp">
+      <Filter>Kernel\BookDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="TagTab.cpp">
+      <Filter>Kernel\TagTab</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeDlg.cpp">
+      <Filter>Kernel\CodeDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeTab.cpp">
+      <Filter>Kernel\CodeTab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

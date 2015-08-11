@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "BookTab.h"
-#include "LabelTab.h"
-#include "ProjectTab.h"
+#include "TagTab.h"
+#include "CodeTab.h"
 #include "MainSearch.h"
 #include "DDXControl.h"
 
@@ -28,8 +28,8 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_SEARCH)
 		, IMAGE_ICON, 0, 0, 0);
+	m_tag_search.SetSearchIcon(hSearchIcon);
 	m_book_search.SetSearchIcon(hSearchIcon);
-	m_label_search.SetSearchIcon(hSearchIcon);
 	m_project_search.SetSearchIcon(hSearchIcon);
 
 	m_recent_list.SetListEvent(&m_recent_list_event);
@@ -46,11 +46,11 @@ CMainSearch::~CMainSearch()
 void CMainSearch::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	MFC_DDX_Control(pDX, IDC_ADD_TAG, m_add_tag);
 	MFC_DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
-	MFC_DDX_Control(pDX, IDC_ADD_TAG, m_add_label);
 	DDX_Control(pDX, IDC_RECENT_LIST, m_recent_list);
 	MFC_DDX_Control(pDX, IDC_ADD_CODE, m_add_project);
-	MFC_DDX_Control(pDX, IDC_TAG_SEARCH, m_label_search);
+	MFC_DDX_Control(pDX, IDC_TAG_SEARCH, m_tag_search);
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
 	MFC_DDX_Control(pDX, IDC_RECENT_GROUP, m_recent_group);
 	MFC_DDX_Control(pDX, IDC_CODE_SEARCH, m_project_search);
@@ -58,8 +58,8 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
 	ON_BN_CLICKED(IDC_ADD_CODE, &CMainSearch::OnBnClickedAddProject)
-	ON_BN_CLICKED(IDC_ADD_TAG, &CMainSearch::OnBnClickedAddLabel)
 	ON_BN_CLICKED(IDC_ADD_BOOK, &CMainSearch::OnBnClickedAddBook)
+	ON_BN_CLICKED(IDC_ADD_TAG, &CMainSearch::OnBnClickedAddTag)
 	ON_WM_ACTIVATE()
 	ON_WM_MOVE()
 END_MESSAGE_MAP()
@@ -80,10 +80,10 @@ BOOL CMainSearch::OnInitDialog()
 	// 将焦点设置到项目搜索上
 	m_project_search.SetFocus();
 
-	HICON hLabelIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+	HICON hTagIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_TAG)
 		, IMAGE_ICON, 0, 0, 0);
-	m_add_label.SetImage(hLabelIcon, FALSE);
+	m_add_tag.SetImage(hTagIcon, FALSE);
 
 	HICON hProjectIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_CODE)
@@ -96,11 +96,11 @@ BOOL CMainSearch::OnInitDialog()
 	m_add_book.SetImage(hBookIcon, FALSE);
 
 	m_recent_list.SetBookImage(hBookIcon);
-	m_recent_list.SetLabelImage(hLabelIcon);
+	m_recent_list.SetTagImage(hTagIcon);
 	m_recent_list.SetCodeImage(hProjectIcon);
 	
+	m_tag_search.SetHintText(_T("搜索标签"));
 	m_book_search.SetHintText(_T("搜索图书"));
-	m_label_search.SetHintText(_T("搜索标签"));
 	m_project_search.SetHintText(_T("搜索项目"));
 
 	[&](){
@@ -132,21 +132,21 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 		case VK_RETURN:
 			{
 				CString strSearchText;
-				if (pFocus == &m_label_search) {
-					m_label_search.GetWindowText(strSearchText);
+				if (pFocus == &m_tag_search) {
+					m_tag_search.GetWindowText(strSearchText);
 
 					MoveToHideWindow(TRUE);
-					CLabelTab(_T("search:") + strSearchText).DoModal();
+					CTagTab(_T("search:") + strSearchText).DoModal();
 					MoveToHideWindow(FALSE);
 
-					m_label_search.SetWindowText(_T(""));
-					m_label_search.SetFocus();
+					m_tag_search.SetWindowText(_T(""));
+					m_tag_search.SetFocus();
 
 				} else if (pFocus == &m_project_search) {
 					m_project_search.GetWindowText(strSearchText);
 
 					MoveToHideWindow(TRUE);
-					CProjectTab(_T("search:") + strSearchText).DoModal();
+					CCodeTab(_T("search:") + strSearchText).DoModal();
 					MoveToHideWindow(FALSE);
 
 					m_project_search.SetWindowText(_T(""));
@@ -170,10 +170,10 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CMainSearch::OnBnClickedAddLabel()
+void CMainSearch::OnBnClickedAddTag()
 {
 	MoveToHideWindow(TRUE);
-	CLabelTab(_T("add")).DoModal();
+	CTagTab(_T("add")).DoModal();
 	MoveToHideWindow(FALSE);
 
 	m_project_search.SetFocus();
@@ -182,7 +182,7 @@ void CMainSearch::OnBnClickedAddLabel()
 void CMainSearch::OnBnClickedAddProject()
 {
 	MoveToHideWindow(TRUE);
-	CProjectTab(_T("add")).DoModal();
+	CCodeTab(_T("add")).DoModal();
 	MoveToHideWindow(FALSE);
 
 	m_project_search.SetFocus();
