@@ -3,18 +3,14 @@
 #include "BookDlg.h"
 #include "SettingDlg.h"
 
-IMPLEMENT_DYNAMIC(CBookDlg, CDialog)
+IMPLEMENT_DYNAMIC(CBookDlg, CDialogEx)
 
 CBookDlg::CBookDlg(CWnd* pParent /*=nullptr*/)
-	: CDialog(CBookDlg::IDD, pParent)
+	: CDialogEx(CBookDlg::IDD, pParent)
 	, m_book_list(&theShellManager)
 {
-	m_book_list.SetListEvent(this);
-
-	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_SEARCH)
-		, IMAGE_ICON, 0, 0, 0);
-	m_search_edit.SetSearchIcon(hSearchIcon);
+	m_book_list.SetListEvent(this);	
+	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 
 CBookDlg::~CBookDlg()
@@ -23,12 +19,12 @@ CBookDlg::~CBookDlg()
 
 void CBookDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
 	DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_search_edit);
 }
 
-BEGIN_MESSAGE_MAP(CBookDlg, CDialog)
+BEGIN_MESSAGE_MAP(CBookDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CBookDlg::OnBnClickedOk)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookDlg::OnChangeBookSearchEdit)
 END_MESSAGE_MAP()
@@ -57,7 +53,7 @@ void CBookDlg::OnBnClickedOk()
 		arrBook.Add(m_book_list.GetItemPath(nSel));
 	}
 
-	CDialog::OnOK();
+	CDialogEx::OnOK();
 }
 
 void CBookDlg::OnChangeBookSearchEdit()

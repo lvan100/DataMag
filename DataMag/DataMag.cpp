@@ -13,12 +13,24 @@ CDataMagApp theApp;
 CShellManager theShellManager;
 
 CDataMagApp::CDataMagApp()
+	: m_hSearchIcon(NULL)
 {
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
 	PathAppend(szDir, _T("\\DataMag.ini"));
 
 	m_pszProfileName = _tcsdup(szDir);
+}
+
+HICON CDataMagApp::GetSearchIcon()
+{
+	if (m_hSearchIcon == NULL)
+	{
+		m_hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+			, MAKEINTRESOURCE(IDI_SEARCH)
+			, IMAGE_ICON, 0, 0, 0);
+	}
+	return m_hSearchIcon;
 }
 
 BOOL CDataMagApp::InitInstance()
@@ -168,8 +180,20 @@ const vector<CString>& CDataMagApp::GetRecentFileList()
 
 void CDataMagApp::SetRecentFile(CString file)
 {
-	if (recentFileList.size() == MaxRecentFileCount) {
-		recentFileList.pop_back();
+	auto find_iter = recentFileList.begin();
+
+	for (;find_iter != recentFileList.end(); find_iter++) {
+		if ((*find_iter).CompareNoCase(file) == 0) {
+			break;
+		}
+	}
+	
+	if (find_iter == recentFileList.end()) {
+		if (recentFileList.size() == MaxRecentFileCount) {
+			recentFileList.pop_back();
+		}
+	} else {
+		recentFileList.erase(find_iter);
 	}
 
 	recentFileList.insert(recentFileList.begin(), file);
@@ -189,4 +213,3 @@ void CDataMagApp::SetRecentFile(CString file)
 		(*iter)();
 	}
 }
-

@@ -8,15 +8,13 @@
 #include "SettingDlg.h"
 #include "DDXControl.h"
 
-IMPLEMENT_DYNAMIC(CBookTab, CDialogEx)
+IMPLEMENT_DYNAMIC(CBookTab, CAppWnd)
 
 CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=NULL*/)
-	: CDialogEx(CBookTab::IDD, pParent)
+	: CAppWnd(CBookTab::IDD, pParent)
 	, m_book_list(&theShellManager)
 	, m_pLastFocusWnd(NULL)
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
 		m_command.cmd = strCommand.Left(colon);
@@ -31,10 +29,7 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	listener = bind(&CBookTab::OnBookMagDirChange, this, std::placeholders::_1);
 	theApp.AddBookDirChangeListener(listener);
 
-	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_SEARCH)
-		, IMAGE_ICON, 0, 0, 0);
-	m_search_edit.SetSearchIcon(hSearchIcon);
+	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 
 CBookTab::~CBookTab()
@@ -43,7 +38,7 @@ CBookTab::~CBookTab()
 
 void CBookTab::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CAppWnd::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
 	MFC_DDX_Control(pDX, IDC_BOOK_ADD, m_book_add);
 	MFC_DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
@@ -54,7 +49,7 @@ void CBookTab::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_search_edit);
 }
 
-BEGIN_MESSAGE_MAP(CBookTab, CDialogEx)
+BEGIN_MESSAGE_MAP(CBookTab, CAppWnd)
 	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
 	ON_WM_SYSCOMMAND()
@@ -110,10 +105,7 @@ void CBookTab::OnSelectChanged()
 
 BOOL CBookTab::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
-
-	SetIcon(m_hIcon, TRUE);
-	SetIcon(m_hIcon, FALSE);
+	CAppWnd::OnInitDialog();
 
 	m_search_edit.SetHintText(_T("ËÑË÷Í¼Êé"));
 
@@ -316,7 +308,7 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CDialogEx::PreTranslateMessage(pMsg);
+	return CAppWnd::PreTranslateMessage(pMsg);
 }
 
 void CBookTab::OnDropFiles(HDROP hDropInfo)
@@ -367,7 +359,7 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 
 	m_book_list.Refresh();
 
-	CDialogEx::OnDropFiles(hDropInfo);
+	CAppWnd::OnDropFiles(hDropInfo);
 }
 
 void CBookTab::OnSysCommand(UINT nID, LPARAM lParam)
@@ -376,12 +368,12 @@ void CBookTab::OnSysCommand(UINT nID, LPARAM lParam)
 		m_pLastFocusWnd = GetFocus();
 	}
 
-	CDialogEx::OnSysCommand(nID, lParam);
+	CAppWnd::OnSysCommand(nID, lParam);
 }
 
 void CBookTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
-	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+	CAppWnd::OnActivate(nState, pWndOther, bMinimized);
 
 	if (nState == WA_INACTIVE ) {
 		if (!bMinimized) {

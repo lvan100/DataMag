@@ -1,10 +1,12 @@
 #pragma once
 
+#include "AppWnd.h"
+
 #include "RecentList.h"
 #include "SearchEdit.h"
 #include "PrettyButton.h"
 
-class CMainSearch : public CDialogEx
+class CMainSearch : public CAppWnd
 {
 	DECLARE_DYNAMIC(CMainSearch)
 
@@ -33,12 +35,6 @@ public:
 	 * 响应最近访问列表变化
 	 */
 	void OnRecentListChange();
-
-protected:
-	/**
-	 * 窗体图标
-	 */
-	HICON m_hIcon;
 
 public:
 	/**

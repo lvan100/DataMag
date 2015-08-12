@@ -6,7 +6,7 @@
 /**
  * 项目选择对话框
  */
-class CCodeDlg : public CDialog, CListBoxEventAdapter
+class CCodeDlg : public CDialogEx, CListBoxEventAdapter
 {
 	DECLARE_DYNAMIC(CCodeDlg)
 
@@ -14,7 +14,7 @@ public:
 	CCodeDlg(CWnd* pParent = nullptr);
 	virtual ~CCodeDlg();
 
-	enum { IDD = IDD_CODESELECTDLG };
+	enum { IDD = IDD_CODEDLG };
 
 public:
 	/**

@@ -6,7 +6,7 @@
 /**
  * 图书选择对话框
  */
-class CBookDlg : public CDialog, CListBoxEventAdapter
+class CBookDlg : public CDialogEx, CListBoxEventAdapter
 {
 	DECLARE_DYNAMIC(CBookDlg)
 
@@ -14,7 +14,7 @@ public:
 	CBookDlg(CWnd* pParent = nullptr);
 	virtual ~CBookDlg();
 
-	enum { IDD = IDD_BOOKSELECTDLG };
+	enum { IDD = IDD_BOOKDLG };
 
 public:
 	/**

@@ -3,18 +3,14 @@
 #include "SettingDlg.h"
 #include "CodeDlg.h"
 
-IMPLEMENT_DYNAMIC(CCodeDlg, CDialog)
+IMPLEMENT_DYNAMIC(CCodeDlg, CDialogEx)
 
 CCodeDlg::CCodeDlg(CWnd* pParent /*=nullptr*/)
-	: CDialog(CCodeDlg::IDD, pParent)
+	: CDialogEx(CCodeDlg::IDD, pParent)
 	, m_project_list(&theShellManager)
 {
 	m_project_list.SetListEvent(this);
-
-	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_SEARCH)
-		, IMAGE_ICON, 0, 0, 0);
-	m_search_edit.SetSearchIcon(hSearchIcon);
+	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 
 CCodeDlg::~CCodeDlg()
@@ -23,12 +19,12 @@ CCodeDlg::~CCodeDlg()
 
 void CCodeDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_CODE_LIST, m_project_list);
 	DDX_Control(pDX, IDC_CODE_SEARCH_EDIT, m_search_edit);
 }
 
-BEGIN_MESSAGE_MAP(CCodeDlg, CDialog)
+BEGIN_MESSAGE_MAP(CCodeDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CCodeDlg::OnBnClickedOk)
 	ON_EN_CHANGE(IDC_CODE_SEARCH_EDIT, &CCodeDlg::OnChangeProjectSearchEdit)
 END_MESSAGE_MAP()
@@ -57,7 +53,7 @@ void CCodeDlg::OnBnClickedOk()
 		arrProject.Add(m_project_list.GetItemPath(nSel));
 	}
 
-	CDialog::OnOK();
+	CDialogEx::OnOK();
 }
 
 void CCodeDlg::OnChangeProjectSearchEdit()

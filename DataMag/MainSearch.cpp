@@ -11,10 +11,10 @@
  */
 CMainSearch* theMainSearch = NULL;
 
-IMPLEMENT_DYNAMIC(CMainSearch, CDialogEx)
+IMPLEMENT_DYNAMIC(CMainSearch, CAppWnd)
 
 CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CMainSearch::IDD, pParent)
+	: CAppWnd(CMainSearch::IDD, pParent)
 	, m_recent_list(&theShellManager)
 {
 	if (theMainSearch == NULL) {
@@ -23,11 +23,7 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 		ASSERT(FALSE);
 	}
 
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
-	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_SEARCH)
-		, IMAGE_ICON, 0, 0, 0);
+	HICON hSearchIcon = theApp.GetSearchIcon();
 	m_tag_search.SetSearchIcon(hSearchIcon);
 	m_book_search.SetSearchIcon(hSearchIcon);
 	m_project_search.SetSearchIcon(hSearchIcon);
@@ -45,7 +41,7 @@ CMainSearch::~CMainSearch()
 
 void CMainSearch::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CAppWnd::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_ADD_TAG, m_add_tag);
 	MFC_DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
 	DDX_Control(pDX, IDC_RECENT_LIST, m_recent_list);
@@ -56,7 +52,7 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_CODE_SEARCH, m_project_search);
 }
 
-BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
+BEGIN_MESSAGE_MAP(CMainSearch, CAppWnd)
 	ON_BN_CLICKED(IDC_ADD_CODE, &CMainSearch::OnBnClickedAddProject)
 	ON_BN_CLICKED(IDC_ADD_BOOK, &CMainSearch::OnBnClickedAddBook)
 	ON_BN_CLICKED(IDC_ADD_TAG, &CMainSearch::OnBnClickedAddTag)
@@ -72,10 +68,7 @@ void CMainSearch::RecentListEvent::OnDoubleClick()
 
 BOOL CMainSearch::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
-
-	SetIcon(m_hIcon, TRUE);
-	SetIcon(m_hIcon, FALSE);
+	CAppWnd::OnInitDialog();
 
 	// 将焦点设置到项目搜索上
 	m_project_search.SetFocus();
@@ -167,7 +160,7 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CDialogEx::PreTranslateMessage(pMsg);
+	return CAppWnd::PreTranslateMessage(pMsg);
 }
 
 void CMainSearch::OnBnClickedAddTag()
@@ -199,7 +192,7 @@ void CMainSearch::OnBnClickedAddBook()
 
 void CMainSearch::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
-	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+	CAppWnd::OnActivate(nState, pWndOther, bMinimized);
 
 	if (nState != WA_INACTIVE && GetFocus() != &m_project_search) {
 		m_project_search.SetFocus();
@@ -234,7 +227,7 @@ void CMainSearch::MoveToHideWindow(BOOL bHide)
 
 void CMainSearch::OnMove(int x, int y)
 {
-	CDialogEx::OnMove(x, y);
+	CAppWnd::OnMove(x, y);
 
 	if (x >= 0 && y >= 0) {
 		GetWindowRect(m_rect_if_visiable);

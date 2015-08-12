@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AppWnd.h"
+
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "HilitButton.h"
@@ -7,7 +9,7 @@
 /**
  * 项目标签页
  */
-class CCodeTab : public CDialogEx, CListBoxEventAdapter
+class CCodeTab : public CAppWnd, CListBoxEventAdapter
 {
 	DECLARE_DYNAMIC(CCodeTab)
 
@@ -44,11 +46,6 @@ public:
 	virtual void OnSelectChanged();
 
 protected:
-	/**
-	 * 窗体图标
-	 */
-	HICON m_hIcon;
-
 	/**
 	 * 描述文件的内容
 	 */

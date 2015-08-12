@@ -8,15 +8,13 @@
 #include "SettingDlg.h"
 #include "DDXControl.h"
 
-IMPLEMENT_DYNAMIC(CCodeTab, CDialogEx)
+IMPLEMENT_DYNAMIC(CCodeTab, CAppWnd)
 
 CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=NULL*/)
-	: CDialogEx(CCodeTab::IDD, pParent)
+	: CAppWnd(CCodeTab::IDD, pParent)
 	, m_project_list(&theShellManager)
 	, m_pLastFocusWnd(NULL)
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
 		m_command.cmd = strCommand.Left(colon);
@@ -31,10 +29,7 @@ CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	listener = bind(&CCodeTab::OnCodeMagDirChange, this, std::placeholders::_1);
 	theApp.AddCodeDirChangeListener(listener);
 
-	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_SEARCH)
-		, IMAGE_ICON, 0, 0, 0);
-	m_search_edit.SetSearchIcon(hSearchIcon);
+	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 
 CCodeTab::~CCodeTab()
@@ -43,7 +38,7 @@ CCodeTab::~CCodeTab()
 
 void CCodeTab::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CAppWnd::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
 	MFC_DDX_Control(pDX, IDC_CODE_ADD, m_project_add);
 	MFC_DDX_Control(pDX, IDC_CODE_LIST, m_project_list);
@@ -54,7 +49,7 @@ void CCodeTab::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_CODE_REFRESH, m_project_refresh);
 }
 
-BEGIN_MESSAGE_MAP(CCodeTab, CDialogEx)
+BEGIN_MESSAGE_MAP(CCodeTab, CAppWnd)
 	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
 	ON_WM_SYSCOMMAND()
@@ -110,10 +105,7 @@ void CCodeTab::OnSelectChanged()
 
 BOOL CCodeTab::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
-
-	SetIcon(m_hIcon, TRUE);
-	SetIcon(m_hIcon, FALSE);
+	CAppWnd::OnInitDialog();
 
 	m_search_edit.SetHintText(_T("ËÑË÷ÏîÄ¿"));
 
@@ -325,7 +317,7 @@ BOOL CCodeTab::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CDialogEx::PreTranslateMessage(pMsg);
+	return CAppWnd::PreTranslateMessage(pMsg);
 }
 
 void CCodeTab::OnDropFiles(HDROP hDropInfo)
@@ -404,7 +396,7 @@ void CCodeTab::OnDropFiles(HDROP hDropInfo)
 
 	m_project_list.Refresh();
 
-	CDialogEx::OnDropFiles(hDropInfo);
+	CAppWnd::OnDropFiles(hDropInfo);
 }
 
 void CCodeTab::OnSysCommand(UINT nID, LPARAM lParam)
@@ -413,12 +405,12 @@ void CCodeTab::OnSysCommand(UINT nID, LPARAM lParam)
 		m_pLastFocusWnd = GetFocus();
 	}
 
-	CDialogEx::OnSysCommand(nID, lParam);
+	CAppWnd::OnSysCommand(nID, lParam);
 }
 
 void CCodeTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
-	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+	CAppWnd::OnActivate(nState, pWndOther, bMinimized);
 
 	if (nState == WA_INACTIVE) {
 		if (!bMinimized) {

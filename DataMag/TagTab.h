@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AppWnd.h"
+
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "HilitButton.h"
@@ -7,7 +9,7 @@
 /**
  * 标签管理页
  */
-class CTagTab : public CDialogEx
+class CTagTab : public CAppWnd
 {
 	DECLARE_DYNAMIC(CTagTab)
 
@@ -68,11 +70,6 @@ protected:
 		virtual void OnSelectChanged();
 
 	}m_tag_info_event;
-
-	/**
-	 * 窗体图标
-	 */
-	HICON m_hIcon;
 
 	/**
 	 * 描述文件的内容

@@ -6,21 +6,19 @@
 #include "NameDlg.h"
 #include "WndHelp.h"
 #include "BookDlg.h"
+#include "CodeDlg.h"
 #include "MainSearch.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
-#include "CodeDlg.h"
 
 IMPLEMENT_DYNAMIC(CTagTab, CDialogEx)
 
 CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=NULL*/)
-	: CDialogEx(CTagTab::IDD, pParent)
+	: CAppWnd(CTagTab::IDD, pParent)
 	, m_tag_list(&theShellManager)
 	, m_tag_info(&theShellManager)
 	, m_pLastFocusWnd(NULL)
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
 		m_command.cmd = strCommand.Left(colon);
@@ -36,9 +34,7 @@ CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=NULL*/)
 	listener = bind(&CTagTab::OnTagDirChange, this, std::placeholders::_1);
 	theApp.AddTagDirChangeListener(listener);
 
-	HICON hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_SEARCH)
-		, IMAGE_ICON, 0, 0, 0);
+	HICON hSearchIcon = theApp.GetSearchIcon();
 	m_info_search_edit.SetSearchIcon(hSearchIcon);
 	m_tag_search_edit.SetSearchIcon(hSearchIcon);
 }
@@ -49,7 +45,7 @@ CTagTab::~CTagTab()
 
 void CTagTab::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CAppWnd::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
 	MFC_DDX_Control(pDX, IDC_TAG_ADD, m_tag_add);
 	MFC_DDX_Control(pDX, IDC_TAG_LIST, m_tag_list);
@@ -64,7 +60,7 @@ void CTagTab::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_REMOVE_RELATIONSHIP, m_remove_relate);
 }
 
-BEGIN_MESSAGE_MAP(CTagTab, CDialogEx)
+BEGIN_MESSAGE_MAP(CTagTab, CAppWnd)
 	ON_WM_ACTIVATE()
 	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CTagTab::OnBnClickedSetting)
@@ -144,10 +140,7 @@ void CTagTab::TagInfoEvent::OnSelectChanged()
 
 BOOL CTagTab::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
-
-	SetIcon(m_hIcon, TRUE);
-	SetIcon(m_hIcon, FALSE);
+	CAppWnd::OnInitDialog();
 
 	m_info_search_edit.SetHintText(_T("ËÑË÷¹ØÁª"));
 	m_tag_search_edit.SetHintText(_T("ËÑË÷±êÇ©"));
@@ -388,7 +381,7 @@ BOOL CTagTab::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CDialogEx::PreTranslateMessage(pMsg);
+	return CAppWnd::PreTranslateMessage(pMsg);
 }
 
 void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
@@ -397,12 +390,12 @@ void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
 		m_pLastFocusWnd = GetFocus();
 	}
 
-	CDialogEx::OnSysCommand(nID, lParam);
+	CAppWnd::OnSysCommand(nID, lParam);
 }
 
 void CTagTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
-	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+	CAppWnd::OnActivate(nState, pWndOther, bMinimized);
 
 	if (nState == WA_INACTIVE) {
 		if (!bMinimized) {

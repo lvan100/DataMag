@@ -3,7 +3,7 @@
 /**
  * 应用设置对话框
  */
-class CSettingDlg : public CDialog
+class CSettingDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CSettingDlg)
 

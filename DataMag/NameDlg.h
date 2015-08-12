@@ -5,7 +5,7 @@
 /**
  * ÃüÃû¶Ô»°¿ò
  */
-class CNameDlg : public CDialog
+class CNameDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CNameDlg)
 
