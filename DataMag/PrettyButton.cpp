@@ -38,7 +38,7 @@ void CPrettyButton::OnDrawText(CDC* pDC, const CRect& rect, const CString& strTe
 
 	static CFont titleFont, conFont;
 	
-	if (titleFont.GetSafeHandle() == NULL) {
+	if (titleFont.GetSafeHandle() == nullptr) {
 
 		LOGFONT logFont = { 0 };
 		afxGlobalData.fontBold.GetLogFont(&logFont);
@@ -47,7 +47,7 @@ void CPrettyButton::OnDrawText(CDC* pDC, const CRect& rect, const CString& strTe
 		titleFont.CreateFontIndirect(&logFont);
 	}
 
-	if (conFont.GetSafeHandle() == NULL) {
+	if (conFont.GetSafeHandle() == nullptr) {
 
 		LOGFONT logFont = { 0 };
 		afxGlobalData.fontRegular.GetLogFont(&logFont);
@@ -57,10 +57,10 @@ void CPrettyButton::OnDrawText(CDC* pDC, const CRect& rect, const CString& strTe
 	}
 
 	CFont* pOldFont = pDC->SelectObject(&titleFont);
-	pDC->DrawTextEx(strTitle, rectTextUp, DT_LEFT | DT_BOTTOM | DT_SINGLELINE, NULL);
+	pDC->DrawTextEx(strTitle, rectTextUp, DT_LEFT | DT_BOTTOM | DT_SINGLELINE, nullptr);
 
 	pOldFont = pDC->SelectObject(&conFont);
-	pDC->DrawTextEx(strContent, rectTextDown, DT_LEFT | DT_TOP | DT_SINGLELINE, NULL);
+	pDC->DrawTextEx(strContent, rectTextDown, DT_LEFT | DT_TOP | DT_SINGLELINE, nullptr);
 
 	pDC->SelectObject(&pOldFont);
 }

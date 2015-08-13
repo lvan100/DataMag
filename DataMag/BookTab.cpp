@@ -10,10 +10,9 @@
 
 IMPLEMENT_DYNAMIC(CBookTab, CAppWnd)
 
-CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=NULL*/)
+CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	: CAppWnd(CBookTab::IDD, pParent)
 	, m_book_list(&theShellManager)
-	, m_pLastFocusWnd(NULL)
 {
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
@@ -50,9 +49,7 @@ void CBookTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CBookTab, CAppWnd)
-	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
-	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CBookTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_BOOK_ADD, &CBookTab::OnBnClickedBookAdd)
 	ON_BN_CLICKED(IDC_BOOK_DELETE, &CBookTab::OnBnClickedBookDelete)
@@ -121,7 +118,7 @@ BOOL CBookTab::OnInitDialog()
 		}
 
 	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
-		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_BOOK_ADD, BN_CLICKED), NULL);
+		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_BOOK_ADD, BN_CLICKED), 0);
 	}
 
 	return FALSE; /* Ωπµ„…Ë÷√ */
@@ -138,7 +135,7 @@ void CBookTab::OnBnClickedBookAdd()
 
 		if (CreateDirectory(strFolder, nullptr)) {
 			CString strFile = strFolder + _T("\\√Ë ˆ.txt");
-			CloseHandle(CreateFile(strFile, 0, 0, NULL, CREATE_ALWAYS, 0, NULL));
+			CloseHandle(CreateFile(strFile, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
 
 			m_book_list.Refresh();
 
@@ -313,7 +310,7 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 
 void CBookTab::OnDropFiles(HDROP hDropInfo)
 {
-	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
+	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, nullptr, 0); i++)
 	{
 		TCHAR szOrgFilePath[MAX_PATH];
 		DragQueryFile(hDropInfo, i, szOrgFilePath, MAX_PATH);
@@ -348,7 +345,7 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 		PathRemoveFileSpec(strBookDir.GetBuffer());
 		PathAppend(strBookDir.GetBuffer(), _T("√Ë ˆ.txt"));
 		
-		CloseHandle(CreateFile(strBookDir, 0, 0, NULL, CREATE_ALWAYS, 0, NULL));
+		CloseHandle(CreateFile(strBookDir, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
 
 		RenameBook([&]()->CString{
 			return szFileName;
@@ -360,30 +357,4 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 	m_book_list.Refresh();
 
 	CAppWnd::OnDropFiles(hDropInfo);
-}
-
-void CBookTab::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if (nID == SC_MINIMIZE) {
-		m_pLastFocusWnd = GetFocus();
-	}
-
-	CAppWnd::OnSysCommand(nID, lParam);
-}
-
-void CBookTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
-{
-	CAppWnd::OnActivate(nState, pWndOther, bMinimized);
-
-	if (nState == WA_INACTIVE ) {
-		if (!bMinimized) {
-			m_pLastFocusWnd = GetFocus();
-		}
-	} else {
-		if (m_pLastFocusWnd != NULL) {
-			m_pLastFocusWnd->SetFocus();
-		} else {
-			m_search_edit.SetFocus();
-		}
-	}
 }

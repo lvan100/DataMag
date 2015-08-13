@@ -13,11 +13,10 @@
 
 IMPLEMENT_DYNAMIC(CTagTab, CDialogEx)
 
-CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=NULL*/)
+CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	: CAppWnd(CTagTab::IDD, pParent)
 	, m_tag_list(&theShellManager)
 	, m_tag_info(&theShellManager)
-	, m_pLastFocusWnd(NULL)
 {
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
@@ -61,8 +60,6 @@ void CTagTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CTagTab, CAppWnd)
-	ON_WM_ACTIVATE()
-	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CTagTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_TAG_ADD, &CTagTab::OnBnClickedTagAdd)
 	ON_BN_CLICKED(IDC_TAG_DELETE, &CTagTab::OnBnClickedTagDelete)
@@ -157,7 +154,7 @@ BOOL CTagTab::OnInitDialog()
 		}
 
 	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
-		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_TAG_ADD, BN_CLICKED), NULL);
+		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_TAG_ADD, BN_CLICKED), 0);
 	}
 
 	return FALSE; /* ½¹µãÉèÖÃ */
@@ -382,30 +379,4 @@ BOOL CTagTab::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CAppWnd::PreTranslateMessage(pMsg);
-}
-
-void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if (nID == SC_MINIMIZE) {
-		m_pLastFocusWnd = GetFocus();
-	}
-
-	CAppWnd::OnSysCommand(nID, lParam);
-}
-
-void CTagTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
-{
-	CAppWnd::OnActivate(nState, pWndOther, bMinimized);
-
-	if (nState == WA_INACTIVE) {
-		if (!bMinimized) {
-			m_pLastFocusWnd = GetFocus();
-		}
-	} else {
-		if (m_pLastFocusWnd != NULL) {
-			m_pLastFocusWnd->SetFocus();
-		} else {
-			m_tag_search_edit.SetFocus();
-		}
-	}
 }

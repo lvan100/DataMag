@@ -10,10 +10,9 @@
 
 IMPLEMENT_DYNAMIC(CCodeTab, CAppWnd)
 
-CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=NULL*/)
+CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	: CAppWnd(CCodeTab::IDD, pParent)
 	, m_project_list(&theShellManager)
-	, m_pLastFocusWnd(NULL)
 {
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
@@ -50,9 +49,7 @@ void CCodeTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CCodeTab, CAppWnd)
-	ON_WM_ACTIVATE()
 	ON_WM_DROPFILES()
-	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CCodeTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_CODE_ADD, &CCodeTab::OnBnClickedProjectAdd)
 	ON_BN_CLICKED(IDC_CODE_DELETE, &CCodeTab::OnBnClickedProjectDelete)
@@ -121,7 +118,7 @@ BOOL CCodeTab::OnInitDialog()
 		}
 
 	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
-		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_CODE_ADD, BN_CLICKED), NULL);
+		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_CODE_ADD, BN_CLICKED), 0);
 	}
 
 	return FALSE; /* 焦点设置 */
@@ -156,7 +153,7 @@ void CCodeTab::OnBnClickedProjectAdd()
 			}
 
 			CString strFile = strFolder + _T("\\描述.txt");
-			CloseHandle(CreateFile(strFile, 0, 0, NULL, CREATE_ALWAYS, 0, NULL));
+			CloseHandle(CreateFile(strFile, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
 
 			m_project_list.Refresh();
 
@@ -322,7 +319,7 @@ BOOL CCodeTab::PreTranslateMessage(MSG* pMsg)
 
 void CCodeTab::OnDropFiles(HDROP hDropInfo)
 {
-	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, NULL, 0); i++)
+	for (UINT i = 0; i < DragQueryFile(hDropInfo, -1, nullptr, 0); i++)
 	{
 		TCHAR szOrgFilePath[MAX_PATH];
 		DragQueryFile(hDropInfo, i, szOrgFilePath, MAX_PATH);
@@ -371,21 +368,21 @@ void CCodeTab::OnDropFiles(HDROP hDropInfo)
 		PathRemoveFileSpec(strBookDir.GetBuffer());
 		PathAppend(strBookDir.GetBuffer(), _T("描述.txt"));
 
-		CloseHandle(CreateFile(strBookDir, 0, 0, NULL, CREATE_ALWAYS, 0, NULL));
+		CloseHandle(CreateFile(strBookDir, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
 
 		PathRemoveFileSpec(strBookDir.GetBuffer());
 		PathAppend(strBookDir.GetBuffer(), _T("\\资料"));
 
-		CreateDirectory(strBookDir, NULL);
+		CreateDirectory(strBookDir, nullptr);
 		
 		PathAppend(strBookDir.GetBuffer(), _T("\\资料"));
 
-		CreateDirectory(strBookDir, NULL);
+		CreateDirectory(strBookDir, nullptr);
 
 		PathRemoveFileSpec(strBookDir.GetBuffer());
 		PathAppend(strBookDir.GetBuffer(), _T("\\官网"));
 
-		CreateDirectory(strBookDir, NULL);
+		CreateDirectory(strBookDir, nullptr);
 
 		RenameBook([&]()->CString{
 			return szFileName;
@@ -397,30 +394,4 @@ void CCodeTab::OnDropFiles(HDROP hDropInfo)
 	m_project_list.Refresh();
 
 	CAppWnd::OnDropFiles(hDropInfo);
-}
-
-void CCodeTab::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if (nID == SC_MINIMIZE) {
-		m_pLastFocusWnd = GetFocus();
-	}
-
-	CAppWnd::OnSysCommand(nID, lParam);
-}
-
-void CCodeTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
-{
-	CAppWnd::OnActivate(nState, pWndOther, bMinimized);
-
-	if (nState == WA_INACTIVE) {
-		if (!bMinimized) {
-			m_pLastFocusWnd = GetFocus();
-		}
-	} else {
-		if (m_pLastFocusWnd != NULL) {
-			m_pLastFocusWnd->SetFocus();
-		} else {
-			m_search_edit.SetFocus();
-		}
-	}
 }

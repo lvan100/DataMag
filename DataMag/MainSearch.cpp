@@ -9,15 +9,15 @@
 /**
  * 全局的主搜索对话框对象
  */
-CMainSearch* theMainSearch = NULL;
+CMainSearch* theMainSearch = nullptr;
 
 IMPLEMENT_DYNAMIC(CMainSearch, CAppWnd)
 
-CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
+CMainSearch::CMainSearch(CWnd* pParent /*=nullptr*/)
 	: CAppWnd(CMainSearch::IDD, pParent)
 	, m_recent_list(&theShellManager)
 {
-	if (theMainSearch == NULL) {
+	if (theMainSearch == nullptr) {
 		theMainSearch = this;
 	} else {
 		ASSERT(FALSE);
@@ -56,7 +56,6 @@ BEGIN_MESSAGE_MAP(CMainSearch, CAppWnd)
 	ON_BN_CLICKED(IDC_ADD_CODE, &CMainSearch::OnBnClickedAddProject)
 	ON_BN_CLICKED(IDC_ADD_BOOK, &CMainSearch::OnBnClickedAddBook)
 	ON_BN_CLICKED(IDC_ADD_TAG, &CMainSearch::OnBnClickedAddTag)
-	ON_WM_ACTIVATE()
 	ON_WM_MOVE()
 END_MESSAGE_MAP()
 
@@ -69,9 +68,6 @@ void CMainSearch::RecentListEvent::OnDoubleClick()
 BOOL CMainSearch::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
-
-	// 将焦点设置到项目搜索上
-	m_project_search.SetFocus();
 
 	HICON hTagIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_TAG)
@@ -188,15 +184,6 @@ void CMainSearch::OnBnClickedAddBook()
 	MoveToHideWindow(FALSE);
 
 	m_project_search.SetFocus();
-}
-
-void CMainSearch::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
-{
-	CAppWnd::OnActivate(nState, pWndOther, bMinimized);
-
-	if (nState != WA_INACTIVE && GetFocus() != &m_project_search) {
-		m_project_search.SetFocus();
-	}
 }
 
 void CMainSearch::MoveToHideWindow(BOOL bHide)

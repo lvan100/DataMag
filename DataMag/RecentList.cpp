@@ -5,10 +5,10 @@
 IMPLEMENT_DYNAMIC(CRecentList, CListBox)
 
 CRecentList::CRecentList(CShellManager* pShellManager)
-	: m_event(NULL)
-	, m_hTagImage(NULL)
-	, m_hCodeImage(NULL)
-	, m_hBookImage(NULL)
+	: m_event(nullptr)
+	, m_hTagImage(nullptr)
+	, m_hCodeImage(nullptr)
+	, m_hBookImage(nullptr)
 	, m_pShellManager(pShellManager)
 {
 }
@@ -58,15 +58,15 @@ void CRecentList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	if (strType.CompareNoCase(_T("Ô´Âë")) == 0) {
 		DrawIconEx(lpDrawItemStruct->hDC, rcIcon.left, rcIcon.top
 			, m_hCodeImage, rcIcon.Width(), rcIcon.Height()
-			, 0, NULL, DI_NORMAL);
+			, 0, nullptr, DI_NORMAL);
 	} else if (strType.CompareNoCase(_T("Í¼Êé")) == 0) {
 		DrawIconEx(lpDrawItemStruct->hDC, rcIcon.left, rcIcon.top
 			, m_hBookImage, rcIcon.Width(), rcIcon.Height()
-			, 0, NULL, DI_NORMAL);
+			, 0, nullptr, DI_NORMAL);
 	} else if (strType.CompareNoCase(_T("±êÇ©")) == 0) {
 		DrawIconEx(lpDrawItemStruct->hDC, rcIcon.left, rcIcon.top
 			, m_hTagImage, rcIcon.Width(), rcIcon.Height()
-			, 0, NULL, DI_NORMAL);
+			, 0, nullptr, DI_NORMAL);
 	}
 
 	CRect rcText(lpDrawItemStruct->rcItem);
@@ -161,7 +161,7 @@ void CRecentList::DoDefault(int iItem)
 
 void CRecentList::OnLbnDblclk()
 {
-	if (m_event != NULL) {
+	if (m_event != nullptr) {
 		m_event->OnDoubleClick();
 	}
 }

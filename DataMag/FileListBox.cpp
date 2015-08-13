@@ -4,10 +4,10 @@
 IMPLEMENT_DYNAMIC(CFileListBox, CWnd)
 
 CFileListBox::CFileListBox(CShellManager* pShellManager)
-	: m_event(NULL)
-	, m_pidlCurFQ(NULL)
+	: m_event(nullptr)
+	, m_pidlCurFQ(nullptr)
 	, m_bIsDesktop(FALSE)
-	, m_psfCurFolder(NULL)
+	, m_psfCurFolder(nullptr)
 	, m_pShellManager(pShellManager)
 {
 }
@@ -30,7 +30,7 @@ int CFileListBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CListBox::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (m_event != NULL) {
+	if (m_event != nullptr) {
 		m_event->InitListBox();
 	}
 
@@ -41,7 +41,7 @@ void CFileListBox::PreSubclassWindow()
 {
 	CListBox::PreSubclassWindow();
 
-	if (m_event != NULL) {
+	if (m_event != nullptr) {
 		m_event->InitListBox();
 	}
 }
@@ -53,7 +53,7 @@ BOOL CFileListBox::GetItemPath(CString& strPath, int iItem)
 	strPath.Empty();
 
 	LPAFX_SHELLITEMINFO pItem = (LPAFX_SHELLITEMINFO) GetItemData(iItem);
-	if (pItem == NULL || pItem->pidlFQ == NULL)
+	if (pItem == nullptr || pItem->pidlFQ == nullptr)
 	{
 		return FALSE;
 	}
@@ -74,7 +74,7 @@ BOOL CFileListBox::GetCurrentFolder(CString& strPath)
 
 	strPath.Empty();
 
-	if (m_pidlCurFQ == NULL)
+	if (m_pidlCurFQ == nullptr)
 	{
 		return FALSE;
 	}
@@ -95,7 +95,7 @@ BOOL CFileListBox::GetCurrentFolderName(CString& strName)
 
 	strName.Empty();
 
-	if (m_pidlCurFQ == NULL)
+	if (m_pidlCurFQ == nullptr)
 	{
 		return FALSE;
 	}
@@ -112,18 +112,18 @@ BOOL CFileListBox::GetCurrentFolderName(CString& strName)
 
 HRESULT CFileListBox::Refresh()
 {
-	return DisplayFolder((LPAFX_SHELLITEMINFO) NULL);
+	return DisplayFolder((LPAFX_SHELLITEMINFO) nullptr);
 }
 
 HRESULT CFileListBox::DisplayFolder(LPCTSTR lpszPath)
 {
-	if (m_pShellManager == NULL)
+	if (m_pShellManager == nullptr)
 	{
 		ASSERT(FALSE);
 		return E_FAIL;
 	}
 
-	ENSURE(lpszPath != NULL);
+	ENSURE(lpszPath != nullptr);
 	ASSERT_VALID(m_pShellManager);
 
 	AFX_SHELLITEMINFO info;
@@ -154,13 +154,13 @@ HRESULT CFileListBox::DisplayFolder(LPAFX_SHELLITEMINFO pItemInfo)
 {
 	HRESULT hr = E_FAIL;
 
-	if (m_pShellManager == NULL)
+	if (m_pShellManager == nullptr)
 	{
 		ASSERT(FALSE);
 		return hr;
 	}
 
-	if (pItemInfo != NULL)
+	if (pItemInfo != nullptr)
 	{
 		ReleaseCurrFolder();
 		hr = LockCurrentFolder(pItemInfo);
@@ -173,7 +173,7 @@ HRESULT CFileListBox::DisplayFolder(LPAFX_SHELLITEMINFO pItemInfo)
 
 	ResetContent();
 
-	if (m_psfCurFolder != NULL)
+	if (m_psfCurFolder != nullptr)
 	{
 		CWaitCursor wait;
 		SetRedraw(FALSE);
@@ -192,7 +192,7 @@ HRESULT CFileListBox::DisplayParentFolder()
 	ASSERT_VALID(m_pShellManager);
 
 	HRESULT hr = E_FAIL;
-	if (m_pidlCurFQ == NULL)
+	if (m_pidlCurFQ == nullptr)
 	{
 		return hr;
 	}
@@ -233,12 +233,12 @@ HRESULT CFileListBox::LockCurrentFolder(LPAFX_SHELLITEMINFO pItemInfo)
 	ASSERT_VALID(m_pShellManager);
 
 	HRESULT hr = E_FAIL;
-	m_pidlCurFQ = NULL;
+	m_pidlCurFQ = nullptr;
 
-	if (pItemInfo != NULL && pItemInfo->pParentFolder != NULL)
+	if (pItemInfo != nullptr && pItemInfo->pParentFolder != nullptr)
 	{
-		ENSURE(pItemInfo->pidlRel != NULL);
-		hr = pItemInfo->pParentFolder->BindToObject(pItemInfo->pidlRel, NULL, IID_IShellFolder, (LPVOID*)&m_psfCurFolder);
+		ENSURE(pItemInfo->pidlRel != nullptr);
+		hr = pItemInfo->pParentFolder->BindToObject(pItemInfo->pidlRel, nullptr, IID_IShellFolder, (LPVOID*)&m_psfCurFolder);
 
 		m_bIsDesktop = FALSE;
 	}
@@ -248,7 +248,7 @@ HRESULT CFileListBox::LockCurrentFolder(LPAFX_SHELLITEMINFO pItemInfo)
 		m_bIsDesktop = TRUE;
 	}
 
-	if (SUCCEEDED(hr) && pItemInfo != NULL)
+	if (SUCCEEDED(hr) && pItemInfo != nullptr)
 	{
 		m_pidlCurFQ = m_pShellManager->CopyItem(pItemInfo->pidlFQ);
 	}
@@ -260,20 +260,20 @@ void CFileListBox::ReleaseCurrFolder()
 {
 	ASSERT_VALID(m_pShellManager);
 
-	if (m_psfCurFolder != NULL)
+	if (m_psfCurFolder != nullptr)
 	{
 		m_psfCurFolder->Release();
-		m_psfCurFolder = NULL;
+		m_psfCurFolder = nullptr;
 
 		m_pShellManager->FreeItem(m_pidlCurFQ);
-		m_pidlCurFQ = NULL;
+		m_pidlCurFQ = nullptr;
 	}
 }
 
 CString CFileListBox::OnGetItemText(LPAFX_SHELLITEMINFO pItem)
 {
 	ASSERT_VALID(this);
-	ENSURE(pItem != NULL);
+	ENSURE(pItem != nullptr);
 
 	SHFILEINFO sfi;
 
@@ -290,10 +290,10 @@ HRESULT CFileListBox::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidl
 	ASSERT_VALID(this);
 	ASSERT_VALID(m_pShellManager);
 
-	LPENUMIDLIST pEnum = NULL;
-	HRESULT hRes = pParentFolder->EnumObjects(NULL, (SHCONTF)(SHCONTF_FOLDERS | SHCONTF_NONFOLDERS), &pEnum);
+	LPENUMIDLIST pEnum = nullptr;
+	HRESULT hRes = pParentFolder->EnumObjects(nullptr, (SHCONTF)(SHCONTF_FOLDERS | SHCONTF_NONFOLDERS), &pEnum);
 
-	if (SUCCEEDED(hRes) && pEnum != NULL)
+	if (SUCCEEDED(hRes) && pEnum != nullptr)
 	{
 		LPITEMIDLIST pidlTemp;
 		DWORD dwFetched = 1;
@@ -426,11 +426,11 @@ void CFileListBox::DeleteItem(LPDELETEITEMSTRUCT lpDeleteItemStruct)
 	m_pShellManager->FreeItem(pItem->pidlFQ);
 	m_pShellManager->FreeItem(pItem->pidlRel);
 
-	//this may be NULL if this is the root item
-	if (pItem->pParentFolder != NULL)
+	//this may be nullptr if this is the root item
+	if (pItem->pParentFolder != nullptr)
 	{
 		pItem->pParentFolder->Release();
-		pItem->pParentFolder = NULL;
+		pItem->pParentFolder = nullptr;
 	}
 
 	GlobalFree((HGLOBAL) pItem);
@@ -453,14 +453,14 @@ int CFileListBox::CompareItem(LPCOMPAREITEMSTRUCT lpCompareItemStruct)
 
 void CFileListBox::OnLbnDblclk()
 {
-	if (m_event != NULL) {
+	if (m_event != nullptr) {
 		m_event->OnDoubleClick();
 	}
 }
 
 void CFileListBox::OnLbnSelchange()
 {
-	if (m_event != NULL) {
+	if (m_event != nullptr) {
 		m_event->OnSelectChanged();
 	}
 }

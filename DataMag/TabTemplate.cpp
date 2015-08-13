@@ -5,7 +5,7 @@
 IMPLEMENT_DYNAMIC(CTabTemplate, CTabCtrl)
 
 CTabTemplate::CTabTemplate()
-	: m_adpter(NULL)
+	: m_adpter(nullptr)
 {
 }
 
@@ -93,7 +93,7 @@ CWnd* CTabTemplate::SelectTab(UINT nItem)
 		return pItem;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 BOOL CTabTemplate::DeleteTab(UINT nItem)

@@ -29,7 +29,7 @@ END_MESSAGE_MAP()
  */
 static CSize GetIconSize(HICON hIcon)
 {
-	if (hIcon == NULL)
+	if (hIcon == nullptr)
 	{
 		return CSize(0, 0);
 	}
@@ -76,7 +76,7 @@ BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 	DrawIconEx(pDC->GetSafeHdc()
 		, rcClient.right - size.cx - 2, (rcClient.Height() - size.cy + 1) / 2
 		, m_search_icon, size.cx, size.cy
-		, 0, NULL, DI_NORMAL);
+		, 0, nullptr, DI_NORMAL);
 
 	return TRUE;
 }

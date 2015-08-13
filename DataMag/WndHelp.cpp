@@ -19,5 +19,5 @@ void CenterWindowInRect(CWnd* pWnd, CRect rect, BOOL bShow)
 BOOL OpenFoler(LPCTSTR szDirectory)
 {
 	/* ShellExecute : If the function succeeds, it returns a value greater than 32. */
-	return (int(ShellExecute(NULL, L"open", szDirectory, NULL, NULL, SW_MAXIMIZE)) > 32);
+	return (int(ShellExecute(nullptr, L"open", szDirectory, nullptr, nullptr, SW_MAXIMIZE)) > 32);
 }

@@ -11,7 +11,7 @@ class CMainSearch : public CAppWnd
 	DECLARE_DYNAMIC(CMainSearch)
 
 public:
-	CMainSearch(CWnd* pParent = NULL);
+	CMainSearch(CWnd* pParent = nullptr);
 	virtual ~CMainSearch();
 
 	enum { IDD = IDD_MAINSEARCH };
@@ -55,6 +55,13 @@ protected:
 	void MoveToHideWindow(BOOL bHide);
 
 protected:
+	/**
+	 * 获取默认焦点控件
+	 */
+	virtual CWnd* GetDefaultFocusWnd()
+	{ return &m_project_search; }
+
+protected:
 	CStatic m_recent_group;
 	CRecentList m_recent_list;
 
@@ -77,7 +84,6 @@ protected:
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnBnClickedAddBook();
 	afx_msg void OnBnClickedAddProject();
-	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };
 
 /**

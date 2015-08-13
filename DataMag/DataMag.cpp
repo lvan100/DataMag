@@ -13,7 +13,7 @@ CDataMagApp theApp;
 CShellManager theShellManager;
 
 CDataMagApp::CDataMagApp()
-	: m_hSearchIcon(NULL)
+	: m_hSearchIcon(nullptr)
 {
 	TCHAR szDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, szDir);
@@ -24,7 +24,7 @@ CDataMagApp::CDataMagApp()
 
 HICON CDataMagApp::GetSearchIcon()
 {
-	if (m_hSearchIcon == NULL)
+	if (m_hSearchIcon == nullptr)
 	{
 		m_hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 			, MAKEINTRESOURCE(IDI_SEARCH)
@@ -74,7 +74,7 @@ CString CDataMagApp::GetCodeDir()
 
 	if (!PathFileExists(strPath))
 	{
-		CreateDirectory(strPath, NULL);
+		CreateDirectory(strPath, nullptr);
 	}
 
 	return strPath;
@@ -106,7 +106,7 @@ CString CDataMagApp::GetBookDir()
 
 	if (!PathFileExists(strPath))
 	{
-		CreateDirectory(strPath, NULL);
+		CreateDirectory(strPath, nullptr);
 	}
 
 	return strPath;
@@ -138,7 +138,7 @@ CString CDataMagApp::GetTagDir()
 
 	if (!PathFileExists(strPath))
 	{
-		CreateDirectory(strPath, NULL);
+		CreateDirectory(strPath, nullptr);
 	}
 
 	return strPath;
@@ -168,7 +168,7 @@ const vector<CString>& CDataMagApp::GetRecentFileList()
 			CString recentFileIndex;
 			recentFileIndex.Format(_T("File%d"), i);
 
-			CString strFile = theApp.GetProfileString(_T("RecentFile"), recentFileIndex, NULL);
+			CString strFile = theApp.GetProfileString(_T("RecentFile"), recentFileIndex, nullptr);
 			if (strFile.GetLength() > 0) {
 				recentFileList.push_back(strFile);
 			}

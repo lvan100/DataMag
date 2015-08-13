@@ -3,7 +3,7 @@
 
 void MFC_DDX_Control(CDataExchange* pDX, int nIDC, CWnd& rControl)
 {
-	HWND hWndCtrl = NULL;
+	HWND hWndCtrl = nullptr;
 	pDX->m_pDlgWnd->GetDlgItem(nIDC, &hWndCtrl);   
 
 	TCHAR lpszClassName [MAX_CLASS_NAME + 1];
@@ -13,7 +13,7 @@ void MFC_DDX_Control(CDataExchange* pDX, int nIDC, CWnd& rControl)
 	{
 		CMFCButton *pMFCButton = (CMFCButton *)pDX->m_pDlgWnd->GetDlgItem(nIDC);
 		CToolTipCtrl& pToolTipCtrl = pMFCButton->GetToolTipCtrl();
-		if (pToolTipCtrl.m_hWnd != NULL) {
+		if (pToolTipCtrl.m_hWnd != nullptr) {
 			CToolTipCtrl* pCtrl = &pToolTipCtrl;
 			CTooltipManager::DeleteToolTip(pCtrl);
 		}

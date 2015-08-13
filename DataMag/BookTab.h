@@ -17,7 +17,7 @@ public:
 	/**
 	 * 命令格式:"open","search:xx","add".
 	 */
-	CBookTab(CString strCommand = _T(""), CWnd* pParent = NULL);
+	CBookTab(CString strCommand = _T(""), CWnd* pParent = nullptr);
 	virtual ~CBookTab();
 
 	enum { IDD = IDD_BOOKTAB };
@@ -59,17 +59,18 @@ protected:
 		CString arg;
 	}m_command;
 
-	/**
-	 * 最后获得焦点的控件，不记录焦点在切换过程
-	 * 中的变化，只用于窗口失去激活状态前的焦点
-	 */
-	CWnd* m_pLastFocusWnd;
-
 protected:
 	/**
 	 * 执行重命名操作
 	 */
 	CString RenameBook(function<CString()> getSelName, function<CString()> getSelPath);
+
+protected:
+	/**
+	 * 获取默认焦点控件
+	 */
+	virtual CWnd* GetDefaultFocusWnd()
+	{ return &m_search_edit; }
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -96,6 +97,4 @@ protected:
 	afx_msg void OnBnClickedBookRefresh();
 	afx_msg void OnChangeBookSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

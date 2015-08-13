@@ -17,7 +17,7 @@ public:
 	/**
 	 * 命令格式:"open","search:xx","add".
 	 */
-	CTagTab(CString strCommand = _T(""), CWnd* pParent = NULL);
+	CTagTab(CString strCommand = _T(""), CWnd* pParent = nullptr);
 	virtual ~CTagTab();
 
 	enum { IDD = IDD_TAGTAB };
@@ -84,11 +84,12 @@ protected:
 		CString arg;
 	}m_command;
 
+protected:
 	/**
-	 * 最后获得焦点的控件，不记录焦点在切换过程
-	 * 中的变化，只用于窗口失去激活状态前的焦点
+	 * 获取默认焦点控件
 	 */
-	CWnd* m_pLastFocusWnd;
+	virtual CWnd* GetDefaultFocusWnd()
+	{ return &m_tag_search_edit; }
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -98,17 +99,17 @@ protected:
 protected:
 	CHilitButton m_setting;
 	CHilitButton m_tag_add;
-	CHilitButton m_relate_book;
 	CHilitButton m_tag_delete;
 	CHilitButton m_tag_rename;
+	CHilitButton m_relate_book;
 	CHilitButton m_remove_relate;
 	CHilitButton m_relate_project;
 
 	CFileListBox m_tag_list;
 	CFileListBox m_tag_info;
 	CRichEditCtrl m_item_text;
-	CSearchEdit m_info_search_edit;
 	CSearchEdit m_tag_search_edit;
+	CSearchEdit m_info_search_edit;
 
 	DECLARE_MESSAGE_MAP()
 protected:
@@ -121,6 +122,4 @@ protected:
 	afx_msg void OnBnClickedTagRelateBook();
 	afx_msg void OnBnClickedTagRelateProject();
 	afx_msg void OnBnClickedRemoveRelationship();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };
