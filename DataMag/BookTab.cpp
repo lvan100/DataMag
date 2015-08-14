@@ -26,13 +26,14 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 
 	DirChangeListener listener;
 	listener = bind(&CBookTab::OnBookMagDirChange, this, std::placeholders::_1);
-	theApp.AddBookDirChangeListener(listener);
+	theApp.AddBookDirChangeListener(this, listener);
 
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 
 CBookTab::~CBookTab()
 {
+	theApp.DeleteBookDirChangeListener(this);
 }
 
 void CBookTab::DoDataExchange(CDataExchange* pDX)

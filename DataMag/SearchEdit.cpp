@@ -225,11 +225,15 @@ void CSearchEdit::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 
 	CPrettyEdit::OnLButtonDown(nFlags, point);
-	CPrettyEdit::OnLButtonUp(nFlags, point);
 
-	if (HitSearchButton()) {
-		if (!m_click_event._Empty()) {
-			m_click_event.operator()();
+	if (m_bEnableSearchBtn)
+	{
+		CPrettyEdit::OnLButtonUp(nFlags, point);
+
+		if (HitSearchButton()) {
+			if (!m_click_event._Empty()) {
+				m_click_event.operator()();
+			}
 		}
 	}
 }
@@ -242,11 +246,15 @@ void CSearchEdit::OnLButtonDblClk(UINT nFlags, CPoint point)
 	}
 
 	CPrettyEdit::OnLButtonDblClk(nFlags, point);
-	CPrettyEdit::OnLButtonUp(nFlags, point);
 
-	if (HitSearchButton()) {
-		if (!m_dclick_event._Empty()) {
-			m_dclick_event.operator()();
+	if (m_bEnableSearchBtn)
+	{
+		CPrettyEdit::OnLButtonUp(nFlags, point);
+
+		if (HitSearchButton()) {
+			if (!m_dclick_event._Empty()) {
+				m_dclick_event.operator()();
+			}
 		}
 	}
 }

@@ -26,13 +26,14 @@ CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 
 	DirChangeListener listener;
 	listener = bind(&CCodeTab::OnCodeMagDirChange, this, std::placeholders::_1);
-	theApp.AddCodeDirChangeListener(listener);
+	theApp.AddCodeDirChangeListener(this, listener);
 
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 
 CCodeTab::~CCodeTab()
 {
+	theApp.DeleteCodeDirChangeListener(this);
 }
 
 void CCodeTab::DoDataExchange(CDataExchange* pDX)

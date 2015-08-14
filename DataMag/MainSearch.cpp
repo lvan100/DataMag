@@ -32,11 +32,12 @@ CMainSearch::CMainSearch(CWnd* pParent /*=nullptr*/)
 
 	RecentListChangeListener listener;
 	listener = bind(&CMainSearch::OnRecentListChange, this);
-	theApp.AddRecentListChangeListener(listener);
+	theApp.AddRecentListChangeListener(this, listener);
 }
 
 CMainSearch::~CMainSearch()
 {
+	theApp.DeleteRecentListChangeListener(this);
 }
 
 void CMainSearch::DoDataExchange(CDataExchange* pDX)

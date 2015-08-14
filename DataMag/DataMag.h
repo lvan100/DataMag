@@ -2,6 +2,7 @@
 
 #include "resource.h"
 
+#include <map>
 #include <vector>
 #include <functional>
 using namespace std;
@@ -53,15 +54,22 @@ public:
 	/**
 	 * 添加源码目录监听器
 	 */
-	void AddCodeDirChangeListener(DirChangeListener listener) {
-		codeDirChangeListener.push_back(listener);
+	void AddCodeDirChangeListener(CWnd* pWnd, DirChangeListener listener) {
+		codeDirChangeListener.insert(make_pair(pWnd, listener));
+	}
+
+	/**
+	 * 删除源码目录监听器
+	 */
+	void DeleteCodeDirChangeListener(CWnd* pWnd){
+		codeDirChangeListener.erase(pWnd);
 	}
 
 protected:
 	/**
 	 * 源码目录监听器列表
 	 */
-	vector<DirChangeListener> codeDirChangeListener;
+	map<CWnd*, DirChangeListener> codeDirChangeListener;
 
 public:
 	/**
@@ -77,15 +85,22 @@ public:
 	/**
 	 * 设置图书目录监听器
 	 */
-	void AddBookDirChangeListener(DirChangeListener listener){
-		bookDirChangeListener.push_back(listener);
+	void AddBookDirChangeListener(CWnd* pWnd, DirChangeListener listener){
+		bookDirChangeListener.insert(make_pair(pWnd, listener));
+	}
+
+	/**
+	 * 删除图书目录监听器
+	 */
+	void DeleteBookDirChangeListener(CWnd* pWnd){
+		bookDirChangeListener.erase(pWnd);
 	}
 
 protected:
 	/**
 	 * 图书目录监听器列表
 	 */
-	vector<DirChangeListener> bookDirChangeListener;
+	map<CWnd*, DirChangeListener> bookDirChangeListener;
 
 public:
 	/**
@@ -101,15 +116,22 @@ public:
 	/**
 	 * 设置标签目录监听器
 	 */
-	void AddTagDirChangeListener(DirChangeListener listener){
-		tagDirChangeListener.push_back(listener);
+	void AddTagDirChangeListener(CWnd* pWnd, DirChangeListener listener){
+		tagDirChangeListener.insert(make_pair(pWnd, listener));
+	}
+
+	/**
+	 * 删除标签目录监听器
+	 */
+	void DeleteTagDirChangeListener(CWnd* pWnd){
+		tagDirChangeListener.erase(pWnd);
 	}
 
 protected:
 	/**
 	 * 标签目录监听器列表
 	 */
-	vector<DirChangeListener> tagDirChangeListener;
+	map<CWnd*, DirChangeListener> tagDirChangeListener;
 
 public:
 	/**
@@ -130,8 +152,15 @@ public:
 	/**
 	 * 设置最近访问列表监听器
 	 */
-	void AddRecentListChangeListener(RecentListChangeListener listener){
-		recentListChangeListener.push_back(listener);
+	void AddRecentListChangeListener(CWnd* pWnd, RecentListChangeListener listener){
+		recentListChangeListener.insert(make_pair(pWnd, listener));
+	}
+
+	/**
+	 * 删除最近访问列表监听器
+	 */
+	void DeleteRecentListChangeListener(CWnd* pWnd) {
+		recentListChangeListener.erase(pWnd);
 	}
 
 protected:
@@ -143,7 +172,7 @@ protected:
 	/**
 	 * 最近访问列表监听器列表
 	 */
-	vector<RecentListChangeListener> recentListChangeListener;
+	map<CWnd*, RecentListChangeListener> recentListChangeListener;
 };
 
 /**

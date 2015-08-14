@@ -31,7 +31,7 @@ CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 
 	DirChangeListener listener;
 	listener = bind(&CTagTab::OnTagDirChange, this, std::placeholders::_1);
-	theApp.AddTagDirChangeListener(listener);
+	theApp.AddTagDirChangeListener(this, listener);
 
 	HICON hSearchIcon = theApp.GetSearchIcon();
 	m_info_search_edit.SetSearchIcon(hSearchIcon);
@@ -40,6 +40,7 @@ CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 
 CTagTab::~CTagTab()
 {
+	theApp.DeleteTagDirChangeListener(this);
 }
 
 void CTagTab::DoDataExchange(CDataExchange* pDX)

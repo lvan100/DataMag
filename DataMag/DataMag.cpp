@@ -90,7 +90,7 @@ void CDataMagApp::SetCodeDir(CString dir)
 				; iter != codeDirChangeListener.end()
 				; iter++)
 		{
-			(*iter)(dir);
+			(*iter).second(dir);
 		}
 	}
 }
@@ -122,7 +122,7 @@ void CDataMagApp::SetBookDir(CString dir)
 			; iter != bookDirChangeListener.end()
 			; iter++)
 		{
-			(*iter)(dir);
+			(*iter).second(dir);
 		}
 	}
 }
@@ -154,7 +154,7 @@ void CDataMagApp::SetTagDir(CString dir)
 			; iter != tagDirChangeListener.end()
 			; iter++)
 		{
-			(*iter)(dir);
+			(*iter).second(dir);
 		}
 	}
 }
@@ -210,6 +210,6 @@ void CDataMagApp::SetRecentFile(CString file)
 		; iter != recentListChangeListener.end()
 		; iter++)
 	{
-		(*iter)();
+		(*iter).second();
 	}
 }
