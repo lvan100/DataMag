@@ -63,6 +63,7 @@ protected:
 
 protected:
 	CStatic m_recent_group;
+	CStatic m_recommand_group;
 	CRecentList m_recent_list;
 
 	CPrettyButton m_add_tag;

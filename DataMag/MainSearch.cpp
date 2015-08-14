@@ -50,6 +50,7 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
 	MFC_DDX_Control(pDX, IDC_RECENT_GROUP, m_recent_group);
 	MFC_DDX_Control(pDX, IDC_CODE_SEARCH, m_project_search);
+	MFC_DDX_Control(pDX, IDC_RECOMMEND_GROUP, m_recommand_group);
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CAppWnd)
@@ -100,6 +101,7 @@ BOOL CMainSearch::OnInitDialog()
 
 		HFONT hFont = CreateFontIndirect(&logFont);
 		m_recent_group.SetFont(CFont::FromHandle(hFont));
+		m_recommand_group.SetFont(CFont::FromHandle(hFont));
 	}();
 
 	auto& list = theApp.GetRecentFileList();

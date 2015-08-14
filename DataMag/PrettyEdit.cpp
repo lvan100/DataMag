@@ -47,6 +47,7 @@ void CPrettyEdit::Init()
 	int nFontHeight = tm.tmHeight + tm.tmExternalLeading;
 	int offY = (rc.Height() - nFontHeight) / 2 + 1;
 	rc.OffsetRect(5,offY);
+	rc.right -= 11;
 	SetRectNP(&rc);
 
 	ReleaseDC(pDC);
