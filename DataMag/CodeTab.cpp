@@ -104,6 +104,7 @@ BOOL CCodeTab::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
 
+	m_search_edit.EnableSearchButton(FALSE);
 	m_search_edit.SetHintText(_T("ËÑË÷ÏîÄ¿"));
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());

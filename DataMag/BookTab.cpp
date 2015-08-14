@@ -104,6 +104,7 @@ BOOL CBookTab::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
 
+	m_search_edit.EnableSearchButton(FALSE);
 	m_search_edit.SetHintText(_T("ËÑË÷Í¼Êé"));
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());

@@ -26,7 +26,7 @@ CMainSearch::CMainSearch(CWnd* pParent /*=nullptr*/)
 	HICON hSearchIcon = theApp.GetSearchIcon();
 	m_tag_search.SetSearchIcon(hSearchIcon);
 	m_book_search.SetSearchIcon(hSearchIcon);
-	m_project_search.SetSearchIcon(hSearchIcon);
+	m_code_search.SetSearchIcon(hSearchIcon);
 
 	m_recent_list.SetListEvent(&m_recent_list_event);
 
@@ -47,9 +47,9 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RECENT_LIST, m_recent_list);
 	MFC_DDX_Control(pDX, IDC_ADD_CODE, m_add_project);
 	MFC_DDX_Control(pDX, IDC_TAG_SEARCH, m_tag_search);
+	MFC_DDX_Control(pDX, IDC_CODE_SEARCH, m_code_search);
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
 	MFC_DDX_Control(pDX, IDC_RECENT_GROUP, m_recent_group);
-	MFC_DDX_Control(pDX, IDC_CODE_SEARCH, m_project_search);
 	MFC_DDX_Control(pDX, IDC_RECOMMEND_GROUP, m_recommand_group);
 }
 
@@ -89,9 +89,16 @@ BOOL CMainSearch::OnInitDialog()
 	m_recent_list.SetTagImage(hTagIcon);
 	m_recent_list.SetCodeImage(hProjectIcon);
 	
+	auto event = bind(&CMainSearch::DoSearch, this);
+
+	m_tag_search.SetClickEvent(event);
 	m_tag_search.SetHintText(_T("ËÑË÷±êÇ©"));
+
+	m_book_search.SetClickEvent(event);
 	m_book_search.SetHintText(_T("ËÑË÷Í¼Êé"));
-	m_project_search.SetHintText(_T("ËÑË÷ÏîÄ¿"));
+
+	m_code_search.SetClickEvent(event);
+	m_code_search.SetHintText(_T("ËÑË÷ÏîÄ¿"));
 
 	[&](){
 		LOGFONT logFont = { 0 };
@@ -112,49 +119,60 @@ BOOL CMainSearch::OnInitDialog()
 	return FALSE;
 }
 
+void CMainSearch::DoSearch()
+{
+	CString strSearchText;
+
+	CWnd* pFocus = GetFocus();
+	if (pFocus == &m_tag_search)
+	{
+		m_tag_search.GetWindowText(strSearchText);
+
+		MoveToHideWindow(TRUE);
+		CTagTab(_T("search:") + strSearchText).DoModal();
+		MoveToHideWindow(FALSE);
+
+		m_tag_search.SetWindowText(_T(""));
+		m_tag_search.SetFocus();
+
+	} 
+	else if (pFocus == &m_code_search)
+	{
+		m_code_search.GetWindowText(strSearchText);
+
+		MoveToHideWindow(TRUE);
+		CCodeTab(_T("search:") + strSearchText).DoModal();
+		MoveToHideWindow(FALSE);
+
+		m_code_search.SetWindowText(_T(""));
+		m_code_search.SetFocus();
+
+	}
+	else if (pFocus == &m_book_search)
+	{
+		m_book_search.GetWindowText(strSearchText);
+
+		MoveToHideWindow(TRUE);
+		CBookTab(_T("search:") + strSearchText).DoModal();
+		MoveToHideWindow(FALSE);
+
+		m_book_search.SetWindowText(_T(""));
+		m_book_search.SetFocus();
+	}
+}
+
 BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN)
 	{
-		CWnd* pFocus = GetFocus();
-
 		switch((UINT)pMsg->wParam)
 		{
-		case VK_RETURN:
-			{
-				CString strSearchText;
-				if (pFocus == &m_tag_search) {
-					m_tag_search.GetWindowText(strSearchText);
-
-					MoveToHideWindow(TRUE);
-					CTagTab(_T("search:") + strSearchText).DoModal();
-					MoveToHideWindow(FALSE);
-
-					m_tag_search.SetWindowText(_T(""));
-					m_tag_search.SetFocus();
-
-				} else if (pFocus == &m_project_search) {
-					m_project_search.GetWindowText(strSearchText);
-
-					MoveToHideWindow(TRUE);
-					CCodeTab(_T("search:") + strSearchText).DoModal();
-					MoveToHideWindow(FALSE);
-
-					m_project_search.SetWindowText(_T(""));
-					m_project_search.SetFocus();
-
-				} else if (pFocus == &m_book_search) {
-					m_book_search.GetWindowText(strSearchText);
-
-					MoveToHideWindow(TRUE);
-					CBookTab(_T("search:") + strSearchText).DoModal();
-					MoveToHideWindow(FALSE);
-
-					m_book_search.SetWindowText(_T(""));
-					m_book_search.SetFocus();
-				}
+		case VK_RETURN: {
+				DoSearch();
 			}
 			return TRUE;
+		default:
+			break;
 		}
 	}
 
@@ -167,7 +185,7 @@ void CMainSearch::OnBnClickedAddTag()
 	CTagTab(_T("add")).DoModal();
 	MoveToHideWindow(FALSE);
 
-	m_project_search.SetFocus();
+	m_code_search.SetFocus();
 }
 
 void CMainSearch::OnBnClickedAddProject()
@@ -176,7 +194,7 @@ void CMainSearch::OnBnClickedAddProject()
 	CCodeTab(_T("add")).DoModal();
 	MoveToHideWindow(FALSE);
 
-	m_project_search.SetFocus();
+	m_code_search.SetFocus();
 }
 
 void CMainSearch::OnBnClickedAddBook()
@@ -185,7 +203,7 @@ void CMainSearch::OnBnClickedAddBook()
 	CBookTab(_T("add")).DoModal();
 	MoveToHideWindow(FALSE);
 
-	m_project_search.SetFocus();
+	m_code_search.SetFocus();
 }
 
 void CMainSearch::MoveToHideWindow(BOOL bHide)

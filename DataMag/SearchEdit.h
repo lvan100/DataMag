@@ -2,6 +2,9 @@
 
 #include "PrettyEdit.h"
 
+#include <functional>
+using namespace std;
+
 /**
  * 搜索编辑框
  */
@@ -41,6 +44,20 @@ public:
 		m_bEnableSearchBtn = enable;
 	}
 
+	/**
+	 * 设置搜索按钮单击事件响应
+	 */
+	void SetClickEvent(function<void()> event) {
+		m_click_event = event;
+	}
+
+	/**
+	 * 设置搜索按钮双击事件响应
+	 */
+	void SetDClickEvent(function<void()> event){
+		m_dclick_event = event;
+	}
+
 protected:
 	/**
 	 * 搜索图标
@@ -72,6 +89,16 @@ protected:
 	 */
 	BOOL m_bEnableSearchBtn;
 
+	/**
+	 * 搜索按钮单击事件响应
+	 */
+	function<void()> m_click_event;
+
+	/**
+	 * 搜索按钮双击事件响应
+	 */
+	function<void()> m_dclick_event;
+
 protected:
 	/**
 	 * 刷新 Hint 字符串
@@ -82,6 +109,11 @@ protected:
 	 * 获取搜索按钮区域
 	 */
 	CRect GetSearchBtnRect();
+
+	/**
+	 * 是否击中搜索按钮
+	 */
+	BOOL HitSearchButton();
 
 protected:
 	virtual void Init();

@@ -63,6 +63,14 @@ CRect CSearchEdit::GetSearchBtnRect()
 	return rcClient;
 }
 
+BOOL CSearchEdit::HitSearchButton()
+{
+	CPoint prCurPos;
+	GetCursorPos(&prCurPos);
+	ScreenToClient(&prCurPos);
+	return GetSearchBtnRect().PtInRect(prCurPos);
+}
+
 void CSearchEdit::Init()
 {
 	CPrettyEdit::Init();
@@ -176,12 +184,7 @@ HBRUSH CSearchEdit::CtlColor(CDC* pDC, UINT nCtlColor)
 BOOL CSearchEdit::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	if (m_bEnableSearchBtn) {
-
-		CPoint prCurPos;
-		GetCursorPos(&prCurPos);
-		ScreenToClient(&prCurPos);
-
-		if (GetSearchBtnRect().PtInRect(prCurPos)) {
+		if (HitSearchButton()) {
 			SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
 			return TRUE;
 		}
@@ -216,22 +219,34 @@ void CSearchEdit::OnMouseMove(UINT nFlags, CPoint point)
 
 void CSearchEdit::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	if (m_bEnableSearchBtn)
-	{
+	if (m_bEnableSearchBtn) {
 		ReleaseCapture();
 		m_bMouseHover = FALSE;
 	}
 
 	CPrettyEdit::OnLButtonDown(nFlags, point);
+	CPrettyEdit::OnLButtonUp(nFlags, point);
+
+	if (HitSearchButton()) {
+		if (!m_click_event._Empty()) {
+			m_click_event.operator()();
+		}
+	}
 }
 
 void CSearchEdit::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	if (m_bEnableSearchBtn)
-	{
+	if (m_bEnableSearchBtn) {
 		ReleaseCapture();
 		m_bMouseHover = FALSE;
 	}
 
 	CPrettyEdit::OnLButtonDblClk(nFlags, point);
+	CPrettyEdit::OnLButtonUp(nFlags, point);
+
+	if (HitSearchButton()) {
+		if (!m_dclick_event._Empty()) {
+			m_dclick_event.operator()();
+		}
+	}
 }

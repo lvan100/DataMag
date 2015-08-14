@@ -32,6 +32,11 @@ protected:
 
 public:
 	/**
+	 * 开始搜索
+	 */
+	void DoSearch();
+
+	/**
 	 * 响应最近访问列表变化
 	 */
 	void OnRecentListChange();
@@ -59,7 +64,7 @@ protected:
 	 * 获取默认焦点控件
 	 */
 	virtual CWnd* GetDefaultFocusWnd()
-	{ return &m_project_search; }
+	{ return &m_code_search; }
 
 protected:
 	CStatic m_recent_group;
@@ -72,7 +77,7 @@ protected:
 
 	CSearchEdit m_tag_search;
 	CSearchEdit m_book_search;
-	CSearchEdit m_project_search;
+	CSearchEdit m_code_search;
 
 protected:
 	virtual BOOL OnInitDialog();

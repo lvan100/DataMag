@@ -139,7 +139,10 @@ BOOL CTagTab::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
 
+	m_info_search_edit.EnableSearchButton(FALSE);
 	m_info_search_edit.SetHintText(_T("ËÑË÷¹ØÁª"));
+
+	m_tag_search_edit.EnableSearchButton(FALSE);
 	m_tag_search_edit.SetHintText(_T("ËÑË÷±êÇ©"));
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
