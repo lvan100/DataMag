@@ -118,6 +118,7 @@
     <ClInclude Include="FileListBox.h" />
     <ClInclude Include="FileOp.h" />
     <ClInclude Include="HilitButton.h" />
+    <ClInclude Include="ItemInfoEdit.h" />
     <ClInclude Include="TagTab.h" />
     <ClInclude Include="ListBoxEvent.h" />
     <ClInclude Include="MainSearch.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="FileListBox.cpp" />
     <ClCompile Include="FileOp.cpp" />
     <ClCompile Include="HilitButton.cpp" />
+    <ClCompile Include="ItemInfoEdit.cpp" />
     <ClCompile Include="MainSearch.cpp" />
     <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="TagTab.cpp" />

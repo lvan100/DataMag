@@ -5,6 +5,7 @@
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "HilitButton.h"
+#include "ItemInfoEdit.h"
 
 /**
  * ±Í«©π‹¿Ì“≥
@@ -107,7 +108,7 @@ protected:
 
 	CFileListBox m_tag_list;
 	CFileListBox m_tag_info;
-	CRichEditCtrl m_item_text;
+	CItemInfoEdit m_item_text;
 	CSearchEdit m_tag_search_edit;
 	CSearchEdit m_info_search_edit;
 

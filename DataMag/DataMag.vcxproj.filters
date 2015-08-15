@@ -70,6 +70,9 @@
     <Filter Include="Kernel\CodeTab">
       <UniqueIdentifier>{9ed6aa81-8c46-4cdf-9816-7c8cffba40fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\ItemInfoEdit">
+      <UniqueIdentifier>{742ff97e-6bd0-4878-b7c5-9031e95190c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -191,6 +194,9 @@
     <ClInclude Include="AppWnd.h">
       <Filter>Application</Filter>
     </ClInclude>
+    <ClInclude Include="ItemInfoEdit.h">
+      <Filter>Widget\ItemInfoEdit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -258,6 +264,9 @@
     </ClCompile>
     <ClCompile Include="AppWnd.cpp">
       <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemInfoEdit.cpp">
+      <Filter>Widget\ItemInfoEdit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

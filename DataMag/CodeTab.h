@@ -5,6 +5,7 @@
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "HilitButton.h"
+#include "ItemInfoEdit.h"
 
 /**
  * ÏîÄ¿±êÇ©Ò³
@@ -85,7 +86,7 @@ protected:
 	CHilitButton m_project_refresh;
 
 	CSearchEdit m_search_edit;
-	CRichEditCtrl m_item_text;
+	CItemInfoEdit m_item_text;
 	CFileListBox m_project_list;
 
 	DECLARE_MESSAGE_MAP()
