@@ -5,6 +5,7 @@ IMPLEMENT_DYNAMIC(CHilitButton, CMFCButton)
 
 CHilitButton::CHilitButton()
 {
+	m_bDrawFocus = FALSE;
 }
 
 CHilitButton::~CHilitButton()
@@ -18,8 +19,7 @@ void CHilitButton::OnFillBackground(CDC* pDC, const CRect& rectClient)
 {
 	CMFCButton::OnFillBackground(pDC, rectClient);
 
-	if (m_bHighlighted) {
-		CDrawingManager(*pDC).HighlightRect(rectClient);
+	if (m_bHighlighted || (GetFocus() == this)) {
 		pDC->FrameRect(rectClient, &afxGlobalData.brHilite);
 	}
 }

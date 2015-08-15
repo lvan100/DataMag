@@ -26,7 +26,7 @@ END_MESSAGE_MAP()
 
 HBRUSH CRecentList::CtlColor(CDC* pDC, UINT nCtlColor)
 {
-	return (HBRUSH)afxGlobalData.brBtnFace.GetSafeHandle();
+	return afxGlobalData.brBtnFace;
 }
 
 void CRecentList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
