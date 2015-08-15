@@ -8,6 +8,7 @@ CFileListBox::CFileListBox(CShellManager* pShellManager)
 	, m_pidlCurFQ(nullptr)
 	, m_bIsDesktop(FALSE)
 	, m_psfCurFolder(nullptr)
+	, m_pHiliteBorder(nullptr)
 	, m_pShellManager(pShellManager)
 {
 }
@@ -19,6 +20,8 @@ CFileListBox::~CFileListBox()
 BEGIN_MESSAGE_MAP(CFileListBox, CWnd)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
+	ON_WM_SETFOCUS()
+	ON_WM_KILLFOCUS()
 	ON_WM_DELETEITEM_REFLECT()
 	ON_WM_COMPAREITEM_REFLECT()
 	ON_CONTROL_REFLECT(LBN_DBLCLK, &CFileListBox::OnLbnDblclk)
@@ -34,6 +37,10 @@ int CFileListBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_event->InitListBox();
 	}
 
+	if (!InitBorder()) {
+		return -1;
+	}
+
 	return 0;
 }
 
@@ -44,6 +51,31 @@ void CFileListBox::PreSubclassWindow()
 	if (m_event != nullptr) {
 		m_event->InitListBox();
 	}
+
+	if (!InitBorder()) {
+		ASSERT(FALSE);
+	}
+}
+
+BOOL CFileListBox::InitBorder() 
+{
+	ASSERT(m_pHiliteBorder == nullptr);
+
+	CRect rcBorder;
+	GetWindowRect(rcBorder);
+	GetParent()->ScreenToClient(rcBorder);
+
+	m_pHiliteBorder = new CHiliteBorder();
+
+	DWORD dwStyle = WS_VISIBLE | WS_CHILD | SS_OWNERDRAW;
+	if (!m_pHiliteBorder->Create(NULL, dwStyle, rcBorder, GetParent())) {
+		return FALSE;
+	}
+
+	rcBorder.DeflateRect(1,1,1,1);
+	MoveWindow(rcBorder);
+
+	return TRUE;
 }
 
 BOOL CFileListBox::GetItemPath(CString& strPath, int iItem)
@@ -413,6 +445,11 @@ void CFileListBox::OnDestroy()
 {
 	ReleaseCurrFolder();
 
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->DestroyWindow();
+		delete m_pHiliteBorder;
+	}
+
 	CListBox::OnDestroy();
 }
 
@@ -462,5 +499,23 @@ void CFileListBox::OnLbnSelchange()
 {
 	if (m_event != nullptr) {
 		m_event->OnSelectChanged();
+	}
+}
+
+void CFileListBox::OnSetFocus(CWnd* pOldWnd)
+{
+	CListBox::OnSetFocus(pOldWnd);
+
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->Hilite(TRUE);
+	}
+}
+
+void CFileListBox::OnKillFocus(CWnd* pNewWnd)
+{
+	CListBox::OnKillFocus(pNewWnd);
+
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->Hilite(FALSE);
 	}
 }

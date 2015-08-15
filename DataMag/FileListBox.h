@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ListBoxEvent.h"
+#include "HiliteBorder.h"
 
 /**
  * 文件列表框
@@ -195,6 +196,18 @@ protected:
 
 protected:
 	/**
+	 * 初始化边框控件
+	 */
+	BOOL InitBorder();
+
+protected:
+	/**
+	 * 边框
+	 */
+	CHiliteBorder* m_pHiliteBorder;
+
+protected:
+	/**
 	 * 执行默认动作
 	 */
 	virtual void DoDefault(int iItem);
@@ -220,6 +233,8 @@ protected:
 	afx_msg void OnDestroy();
 	afx_msg void OnLbnDblclk();
 	afx_msg void OnLbnSelchange();
+	afx_msg void OnSetFocus(CWnd* pOldWnd);
+	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void DeleteItem(LPDELETEITEMSTRUCT lpDeleteItemStruct);
 	afx_msg int CompareItem(LPCOMPAREITEMSTRUCT lpCompareItemStruct);

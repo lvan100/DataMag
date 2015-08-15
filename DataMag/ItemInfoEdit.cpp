@@ -4,6 +4,7 @@
 IMPLEMENT_DYNAMIC(CItemInfoEdit, CRichEditCtrl)
 
 CItemInfoEdit::CItemInfoEdit()
+	: m_pHiliteBorder(nullptr)
 {
 }
 
@@ -13,6 +14,9 @@ CItemInfoEdit::~CItemInfoEdit()
 
 BEGIN_MESSAGE_MAP(CItemInfoEdit, CRichEditCtrl)
 	ON_WM_CREATE()
+	ON_WM_DESTROY()
+	ON_WM_SETFOCUS()
+	ON_WM_KILLFOCUS()
 	ON_NOTIFY_REFLECT(EN_LINK, &CItemInfoEdit::OnEnLink)
 END_MESSAGE_MAP()
 
@@ -21,7 +25,11 @@ int CItemInfoEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CRichEditCtrl::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	Init();
+	if (!InitBorder()) {
+		return -1;
+	}
+
+	InitCtrl();
 
 	return 0;
 }
@@ -30,10 +38,35 @@ void CItemInfoEdit::PreSubclassWindow()
 {
 	CRichEditCtrl::PreSubclassWindow();
 
-	Init();
+	if (!InitBorder()) {
+		ASSERT(FALSE);
+	}
+
+	InitCtrl();
 }
 
-void CItemInfoEdit::Init()
+BOOL CItemInfoEdit::InitBorder() 
+{
+	ASSERT(m_pHiliteBorder == nullptr);
+
+	CRect rcBorder;
+	GetWindowRect(rcBorder);
+	GetParent()->ScreenToClient(rcBorder);
+
+	m_pHiliteBorder = new CHiliteBorder();
+
+	DWORD dwStyle = WS_VISIBLE | WS_CHILD | SS_OWNERDRAW;
+	if (!m_pHiliteBorder->Create(NULL, dwStyle, rcBorder, GetParent())) {
+		return FALSE;
+	}
+
+	rcBorder.DeflateRect(1,1,1,1);
+	MoveWindow(rcBorder);
+
+	return TRUE;
+}
+
+void CItemInfoEdit::InitCtrl()
 {
 	// ÏÞÖÆ×ÖÊý
 	LimitText(1000);
@@ -70,4 +103,32 @@ void CItemInfoEdit::OnEnLink(NMHDR *pNMHDR, LRESULT *pResult)
 	}
 
 	*pResult = 0;
+}
+
+void CItemInfoEdit::OnSetFocus(CWnd* pOldWnd)
+{
+	CRichEditCtrl::OnSetFocus(pOldWnd);
+
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->Hilite(TRUE);
+	}
+}
+
+void CItemInfoEdit::OnKillFocus(CWnd* pNewWnd)
+{
+	CRichEditCtrl::OnKillFocus(pNewWnd);
+
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->Hilite(FALSE);
+	}
+}
+
+void CItemInfoEdit::OnDestroy()
+{
+	CRichEditCtrl::OnDestroy();
+
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->DestroyWindow();
+		delete m_pHiliteBorder;
+	}
 }
