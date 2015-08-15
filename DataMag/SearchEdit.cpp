@@ -94,7 +94,7 @@ BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 	CBrush whiteBrush(RGB(255,255,255));
 	pDC->FillRect(rcClient, &whiteBrush);
 
-	if (GetFocus() == this) {
+	if (m_bFocused) {
 		pDC->FrameRect(rcClient, &afxGlobalData.brHilite);
 	}
 

@@ -121,6 +121,7 @@
     <ClInclude Include="FileOp.h" />
     <ClInclude Include="HilitButton.h" />
     <ClInclude Include="ItemInfoEdit.h" />
+    <ClInclude Include="TagItemEdit.h" />
     <ClInclude Include="TagTab.h" />
     <ClInclude Include="ListBoxEvent.h" />
     <ClInclude Include="MainSearch.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="ItemInfoEdit.cpp" />
     <ClCompile Include="MainSearch.cpp" />
     <ClCompile Include="NameDlg.cpp" />
+    <ClCompile Include="TagItemEdit.cpp" />
     <ClCompile Include="TagTab.cpp" />
     <ClCompile Include="PrettyButton.cpp" />
     <ClCompile Include="PrettyEdit.cpp" />

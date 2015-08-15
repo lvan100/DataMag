@@ -34,9 +34,6 @@ void CPrettyEdit::PreSubclassWindow()
 
 void CPrettyEdit::Init()
 {
-	// 修改编辑框样式为多行(有必要)
-	ModifyStyle(0, ES_MULTILINE, 0);
-
 	CRect rc; 
 	GetClientRect(&rc);
 

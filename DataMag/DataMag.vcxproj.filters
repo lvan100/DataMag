@@ -73,6 +73,9 @@
     <Filter Include="Widget\ItemInfoEdit">
       <UniqueIdentifier>{742ff97e-6bd0-4878-b7c5-9031e95190c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\TagItemEdit">
+      <UniqueIdentifier>{be465ef9-f847-4d7f-82f9-56a73efefe52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -203,6 +206,9 @@
     <ClInclude Include="ItemInfoEdit.h">
       <Filter>Widget\ItemInfoEdit</Filter>
     </ClInclude>
+    <ClInclude Include="TagItemEdit.h">
+      <Filter>Widget\TagItemEdit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -273,6 +279,9 @@
     </ClCompile>
     <ClCompile Include="ItemInfoEdit.cpp">
       <Filter>Widget\ItemInfoEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="TagItemEdit.cpp">
+      <Filter>Widget\TagItemEdit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

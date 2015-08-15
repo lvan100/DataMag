@@ -5,6 +5,7 @@
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "HilitButton.h"
+#include "TagItemEdit.h"
 #include "ItemInfoEdit.h"
 
 /**
@@ -101,8 +102,8 @@ protected:
 	CSearchEdit m_search_edit;
 	CItemInfoEdit m_item_text;
 
-	CEdit m_tag_group;
 	CStatic m_more_input;
+	CTagItemEdit m_tag_group;
 	CStatic m_tag_group_title;
 
 	DECLARE_MESSAGE_MAP()
