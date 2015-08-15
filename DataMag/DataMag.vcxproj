@@ -102,7 +102,9 @@
     <None Include="res\DataMag.ico" />
     <None Include="res\DataMag.rc2" />
     <None Include="res\delete.ico" />
+    <None Include="res\edit_tag.ico" />
     <None Include="res\label.ico" />
+    <None Include="res\not_edit.ico" />
     <None Include="res\refresh.ico" />
     <None Include="res\remove_link.ico" />
     <None Include="res\rename.ico" />

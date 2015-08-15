@@ -117,6 +117,12 @@
     <None Include="res\remove_link.ico">
       <Filter>Application\Resource</Filter>
     </None>
+    <None Include="res\edit_tag.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
+    <None Include="res\not_edit.ico">
+      <Filter>Application\Resource</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataMag.h">

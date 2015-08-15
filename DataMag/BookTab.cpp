@@ -14,6 +14,9 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	: CAppWnd(CBookTab::IDD, pParent)
 	, m_book_list(&theShellManager)
 {
+	m_hCanEditIcon = AfxGetApp()->LoadIcon(IDI_EDIT_TAG);
+	m_hNotEditIcon = AfxGetApp()->LoadIcon(IDI_NOT_EDIT);
+
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
 		m_command.cmd = strCommand.Left(colon);
@@ -39,13 +42,17 @@ CBookTab::~CBookTab()
 void CBookTab::DoDataExchange(CDataExchange* pDX)
 {
 	CAppWnd::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_TAG_GROUP, m_tag_group);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
 	MFC_DDX_Control(pDX, IDC_BOOK_ADD, m_book_add);
+	DDX_Control(pDX, IDC_MORE_INPUT, m_more_input);
 	MFC_DDX_Control(pDX, IDC_BOOK_LIST, m_book_list);
 	MFC_DDX_Control(pDX, IDC_BOOK_DELETE, m_book_delete);
 	MFC_DDX_Control(pDX, IDC_BOOK_RENAME, m_book_rename);
 	MFC_DDX_Control(pDX, IDC_TAG_ITEM_INFO, m_item_text);
+	MFC_DDX_Control(pDX, IDC_MODIFY_INFO, m_modify_info);
 	MFC_DDX_Control(pDX, IDC_BOOK_REFRESH, m_refresh_list);
+	DDX_Control(pDX, IDC_TAG_GROUP_TITLE, m_tag_group_title);
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH_EDIT, m_search_edit);
 }
 
@@ -55,6 +62,7 @@ BEGIN_MESSAGE_MAP(CBookTab, CAppWnd)
 	ON_BN_CLICKED(IDC_BOOK_ADD, &CBookTab::OnBnClickedBookAdd)
 	ON_BN_CLICKED(IDC_BOOK_DELETE, &CBookTab::OnBnClickedBookDelete)
 	ON_BN_CLICKED(IDC_BOOK_RENAME, &CBookTab::OnBnClickedBookRename)
+	ON_BN_CLICKED(IDC_MODIFY_INFO, &CBookTab::OnBnClickedModifyInfo)
 	ON_BN_CLICKED(IDC_BOOK_REFRESH, &CBookTab::OnBnClickedBookRefresh)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookTab::OnChangeBookSearchEdit)
 END_MESSAGE_MAP()
@@ -105,10 +113,23 @@ BOOL CBookTab::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
 
+	// 不允许对信息进行编辑
+	EnableInfoEidt(FALSE);
+
 	m_search_edit.EnableSearchButton(FALSE);
 	m_search_edit.SetHintText(_T("搜索图书"));
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
+
+	[&](){
+		LOGFONT logFont = { 0 };
+		afxGlobalData.fontRegular.GetLogFont(&logFont);
+
+		logFont.lfHeight = -16;
+
+		HFONT hFont = CreateFontIndirect(&logFont);
+		m_tag_group_title.SetFont(CFont::FromHandle(hFont));
+	}();
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
@@ -359,4 +380,27 @@ void CBookTab::OnDropFiles(HDROP hDropInfo)
 	m_book_list.Refresh();
 
 	CAppWnd::OnDropFiles(hDropInfo);
+}
+
+void CBookTab::EnableInfoEidt(BOOL enable)
+{
+	if (enable) {
+		m_item_text.SetReadOnly(FALSE);
+		m_modify_info.SetIcon(m_hNotEditIcon);
+		m_modify_info.SetWindowText(_T("禁止编辑"));
+	} else {
+		m_item_text.SetReadOnly(TRUE);
+		m_modify_info.SetIcon(m_hCanEditIcon);
+		m_modify_info.SetWindowText(_T("编辑信息"));
+	}
+}
+
+void CBookTab::OnBnClickedModifyInfo()
+{
+	DWORD dwStyle = m_item_text.GetStyle();
+	if (dwStyle & ES_READONLY) {
+		EnableInfoEidt(TRUE);
+	} else {
+		EnableInfoEidt(FALSE);
+	}
 }

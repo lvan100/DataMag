@@ -60,11 +60,22 @@ protected:
 		CString arg;
 	}m_command;
 
+	/**
+	 * 编辑和禁止编辑图标
+	 */
+	HICON m_hCanEditIcon;
+	HICON m_hNotEditIcon;
+
 protected:
 	/**
 	 * 执行重命名操作
 	 */
 	CString RenameBook(function<CString()> getSelName, function<CString()> getSelPath);
+
+	/**
+	 * 是否允许信息可以编辑
+	 */
+	void EnableInfoEidt(BOOL enable);
 
 protected:
 	/**
@@ -83,11 +94,16 @@ protected:
 	CHilitButton m_book_add;
 	CHilitButton m_book_delete;
 	CHilitButton m_book_rename;
+	CHilitButton m_modify_info;
 	CHilitButton m_refresh_list;
 
 	CFileListBox m_book_list;
 	CSearchEdit m_search_edit;
 	CItemInfoEdit m_item_text;
+
+	CEdit m_tag_group;
+	CStatic m_more_input;
+	CStatic m_tag_group_title;
 
 	DECLARE_MESSAGE_MAP()
 protected:
@@ -95,6 +111,7 @@ protected:
 	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedBookDelete();
 	afx_msg void OnBnClickedBookRename();
+	afx_msg void OnBnClickedModifyInfo();
 	afx_msg void OnBnClickedBookRefresh();
 	afx_msg void OnChangeBookSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
