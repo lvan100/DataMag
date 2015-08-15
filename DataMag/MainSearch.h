@@ -30,6 +30,19 @@ protected:
 
 	}m_recent_list_event;
 
+	/**
+	 * 最近访问列表事件对象
+	 */
+	class RecommandListEvent: public CListBoxEventAdapter
+	{
+	public:
+		/**
+		 * 列表项双击事件
+		 */
+		virtual void OnDoubleClick();
+
+	}m_recommand_list_event;
+
 public:
 	/**
 	 * 开始搜索
@@ -70,6 +83,7 @@ protected:
 	CStatic m_recent_group;
 	CStatic m_recommand_group;
 	CRecentList m_recent_list;
+	CRecentList m_recommand_list;
 
 	CPrettyButton m_add_tag;
 	CPrettyButton m_add_book;

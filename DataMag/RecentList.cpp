@@ -177,3 +177,13 @@ BOOL CRecentList::OnEraseBkgnd(CDC* pDC)
 {
 	return TRUE;
 }
+
+BOOL CRecentList::GetItemPath(CString& strPath, int iItem)
+{
+	if (iItem < GetCount()) {
+		strPath = (LPCTSTR)GetItemData(iItem);
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}

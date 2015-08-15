@@ -15,6 +15,7 @@ IMPLEMENT_DYNAMIC(CMainSearch, CAppWnd)
 
 CMainSearch::CMainSearch(CWnd* pParent /*=nullptr*/)
 	: CAppWnd(CMainSearch::IDD, pParent)
+	, m_recommand_list(&theShellManager)
 	, m_recent_list(&theShellManager)
 {
 	if (theMainSearch == nullptr) {
@@ -29,6 +30,7 @@ CMainSearch::CMainSearch(CWnd* pParent /*=nullptr*/)
 	m_code_search.SetSearchIcon(hSearchIcon);
 
 	m_recent_list.SetListEvent(&m_recent_list_event);
+	m_recommand_list.SetListEvent(&m_recommand_list_event);
 
 	RecentListChangeListener listener;
 	listener = bind(&CMainSearch::OnRecentListChange, this);
@@ -51,6 +53,7 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_CODE_SEARCH, m_code_search);
 	MFC_DDX_Control(pDX, IDC_BOOK_SEARCH, m_book_search);
 	MFC_DDX_Control(pDX, IDC_RECENT_GROUP, m_recent_group);
+	DDX_Control(pDX, IDC_RECOMMEND_LIST, m_recommand_list);
 	MFC_DDX_Control(pDX, IDC_RECOMMEND_GROUP, m_recommand_group);
 }
 
@@ -64,7 +67,23 @@ END_MESSAGE_MAP()
 void CMainSearch::RecentListEvent::OnDoubleClick()
 {
 	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recent_list_event)));
-	pThis->m_recent_list.DoDefaultDClick(pThis->m_recent_list.GetCurSel());
+
+	int nItem = pThis->m_recent_list.GetCurSel();
+	pThis->m_recent_list.DoDefaultDClick(nItem);
+
+	CString strPath = pThis->m_recent_list.GetItemPath(nItem);
+	theApp.SetRecentFile(strPath);
+}
+
+void CMainSearch::RecommandListEvent::OnDoubleClick()
+{
+	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recommand_list_event)));
+
+	int nItem = pThis->m_recommand_list.GetCurSel();
+	pThis->m_recommand_list.DoDefaultDClick(nItem);
+
+	CString strPath = pThis->m_recommand_list.GetItemPath(nItem);
+	theApp.SetRecentFile(strPath);
 }
 
 BOOL CMainSearch::OnInitDialog()
@@ -86,9 +105,13 @@ BOOL CMainSearch::OnInitDialog()
 		, IMAGE_ICON, 0, 0, 0);
 	m_add_book.SetImage(hBookIcon, FALSE);
 
-	m_recent_list.SetBookImage(hBookIcon);
 	m_recent_list.SetTagImage(hTagIcon);
+	m_recent_list.SetBookImage(hBookIcon);
 	m_recent_list.SetCodeImage(hProjectIcon);
+
+	m_recommand_list.SetTagImage(hTagIcon);
+	m_recommand_list.SetBookImage(hBookIcon);
+	m_recommand_list.SetCodeImage(hProjectIcon);
 	
 	auto event = bind(&CMainSearch::DoSearch, this);
 

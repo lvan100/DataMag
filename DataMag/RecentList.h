@@ -25,6 +25,31 @@ public:
 		DoDefault(iItem);
 	}
 
+public:
+	/**
+	 * 获取列表项的地址
+	 *
+	 * @param iItem
+	 *        列表项的索引
+	 * @return 列表项的地址
+	 */
+	CString GetItemPath(int iItem){
+		CString strPath;
+		GetItemPath(strPath, iItem);
+		return strPath;
+	}
+
+	/**
+	 * 获取列表项的地址
+	 *
+	 * @param strPath
+	 *        列表项的地址
+	 * @param iItem
+	 *        列表项的索引
+	 * @return 成功返回 TRUE，失败返回 FALSE.
+	 */
+	BOOL GetItemPath(CString& strPath, int iItem);
+
 protected:
 	/**
 	 * 客户端实现的事件对象
