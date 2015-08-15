@@ -4,6 +4,7 @@
 
 #include "SearchEdit.h"
 #include "FileListBox.h"
+#include "TagItemEdit.h"
 #include "HilitButton.h"
 #include "ItemInfoEdit.h"
 
@@ -60,11 +61,22 @@ protected:
 		CString arg;
 	}m_command;
 
+	/**
+	 * 编辑和禁止编辑图标
+	 */
+	HICON m_hCanEditIcon;
+	HICON m_hNotEditIcon;
+
 protected:
 	/**
 	 * 执行重命名操作
 	 */
 	CString RenameBook(function<CString()> getSelName, function<CString()> getSelPath);
+
+	/**
+	 * 是否允许信息可以编辑
+	 */
+	void EnableInfoEidt(BOOL enable);
 
 protected:
 	/**
@@ -81,6 +93,7 @@ protected:
 protected:
 	CHilitButton m_setting;
 	CHilitButton m_project_add;
+	CHilitButton m_modify_info;
 	CHilitButton m_project_delete;
 	CHilitButton m_project_rename;
 	CHilitButton m_project_refresh;
@@ -89,10 +102,15 @@ protected:
 	CItemInfoEdit m_item_text;
 	CFileListBox m_project_list;
 
+	CStatic m_more_input;
+	CTagItemEdit m_tag_group;
+	CStatic m_tag_group_title;
+
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedProjectAdd();
+	afx_msg void OnBnClickedModifyInfo();
 	afx_msg void OnBnClickedProjectDelete();
 	afx_msg void OnBnClickedProjectRename();
 	afx_msg void OnBnClickedProjectRefresh();

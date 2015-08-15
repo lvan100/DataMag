@@ -14,6 +14,9 @@ CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	: CAppWnd(CCodeTab::IDD, pParent)
 	, m_project_list(&theShellManager)
 {
+	m_hCanEditIcon = AfxGetApp()->LoadIcon(IDI_EDIT_TAG);
+	m_hNotEditIcon = AfxGetApp()->LoadIcon(IDI_NOT_EDIT);
+
 	int colon = strCommand.Find(':');
 	if (colon > 0) {
 		m_command.cmd = strCommand.Left(colon);
@@ -39,12 +42,16 @@ CCodeTab::~CCodeTab()
 void CCodeTab::DoDataExchange(CDataExchange* pDX)
 {
 	CAppWnd::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_TAG_GROUP, m_tag_group);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
+	DDX_Control(pDX, IDC_MORE_INPUT, m_more_input);
 	MFC_DDX_Control(pDX, IDC_CODE_ADD, m_project_add);
 	MFC_DDX_Control(pDX, IDC_CODE_LIST, m_project_list);
 	MFC_DDX_Control(pDX, IDC_TAG_ITEM_INFO, m_item_text);
+	MFC_DDX_Control(pDX, IDC_MODIFY_INFO, m_modify_info);
 	MFC_DDX_Control(pDX, IDC_CODE_DELETE, m_project_delete);
 	MFC_DDX_Control(pDX, IDC_CODE_RENAME, m_project_rename);
+	DDX_Control(pDX, IDC_TAG_GROUP_TITLE, m_tag_group_title);
 	MFC_DDX_Control(pDX, IDC_CODE_SEARCH_EDIT, m_search_edit);
 	MFC_DDX_Control(pDX, IDC_CODE_REFRESH, m_project_refresh);
 }
@@ -53,6 +60,7 @@ BEGIN_MESSAGE_MAP(CCodeTab, CAppWnd)
 	ON_WM_DROPFILES()
 	ON_BN_CLICKED(IDC_SETTING, &CCodeTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_CODE_ADD, &CCodeTab::OnBnClickedProjectAdd)
+	ON_BN_CLICKED(IDC_MODIFY_INFO, &CCodeTab::OnBnClickedModifyInfo)
 	ON_BN_CLICKED(IDC_CODE_DELETE, &CCodeTab::OnBnClickedProjectDelete)
 	ON_BN_CLICKED(IDC_CODE_RENAME, &CCodeTab::OnBnClickedProjectRename)
 	ON_BN_CLICKED(IDC_CODE_REFRESH, &CCodeTab::OnBnClickedProjectRefresh)
@@ -105,10 +113,23 @@ BOOL CCodeTab::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
 
+	// 不允许对信息进行编辑
+	EnableInfoEidt(FALSE);
+
 	m_search_edit.EnableSearchButton(FALSE);
 	m_search_edit.SetHintText(_T("搜索项目"));
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
+
+	[&](){
+		LOGFONT logFont = { 0 };
+		afxGlobalData.fontRegular.GetLogFont(&logFont);
+
+		logFont.lfHeight = -16;
+
+		HFONT hFont = CreateFontIndirect(&logFont);
+		m_tag_group_title.SetFont(CFont::FromHandle(hFont));
+	}();
 
 	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
 
@@ -396,4 +417,29 @@ void CCodeTab::OnDropFiles(HDROP hDropInfo)
 	m_project_list.Refresh();
 
 	CAppWnd::OnDropFiles(hDropInfo);
+}
+
+void CCodeTab::EnableInfoEidt(BOOL enable)
+{
+	if (enable) {
+		m_item_text.SetReadOnly(FALSE);
+		m_modify_info.SetIcon(m_hNotEditIcon);
+		m_modify_info.SetWindowText(_T("禁止编辑"));
+		m_item_text.SetBackgroundColor(TRUE, RGB(0,0,0));
+	} else {
+		m_item_text.SetReadOnly(TRUE);
+		m_modify_info.SetIcon(m_hCanEditIcon);
+		m_modify_info.SetWindowText(_T("编辑信息"));
+		m_item_text.SetBackgroundColor(FALSE, RGB(226,226,226));
+	}
+}
+
+void CCodeTab::OnBnClickedModifyInfo()
+{
+	DWORD dwStyle = m_item_text.GetStyle();
+	if (dwStyle & ES_READONLY) {
+		EnableInfoEidt(TRUE);
+	} else {
+		EnableInfoEidt(FALSE);
+	}
 }

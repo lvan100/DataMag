@@ -140,6 +140,9 @@ BOOL CTagTab::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
 
+	// 不允许对信息进行编辑
+	EnableInfoEidt(FALSE);
+
 	m_info_search_edit.EnableSearchButton(FALSE);
 	m_info_search_edit.SetHintText(_T("搜索关联"));
 
@@ -383,4 +386,15 @@ BOOL CTagTab::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CAppWnd::PreTranslateMessage(pMsg);
+}
+
+void CTagTab::EnableInfoEidt(BOOL enable)
+{
+	if (enable) {
+		m_item_text.SetReadOnly(FALSE);
+		m_item_text.SetBackgroundColor(TRUE, RGB(0,0,0));
+	} else {
+		m_item_text.SetReadOnly(TRUE);
+		m_item_text.SetBackgroundColor(FALSE, RGB(226,226,226));
+	}
 }

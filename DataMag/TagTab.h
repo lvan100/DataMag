@@ -87,6 +87,12 @@ protected:
 
 protected:
 	/**
+	 * 是否允许信息可以编辑
+	 */
+	void EnableInfoEidt(BOOL enable);
+
+protected:
+	/**
 	 * 获取默认焦点控件
 	 */
 	virtual CWnd* GetDefaultFocusWnd()

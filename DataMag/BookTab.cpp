@@ -388,10 +388,12 @@ void CBookTab::EnableInfoEidt(BOOL enable)
 		m_item_text.SetReadOnly(FALSE);
 		m_modify_info.SetIcon(m_hNotEditIcon);
 		m_modify_info.SetWindowText(_T("½ûÖ¹±à¼­"));
+		m_item_text.SetBackgroundColor(TRUE, RGB(0,0,0));
 	} else {
 		m_item_text.SetReadOnly(TRUE);
 		m_modify_info.SetIcon(m_hCanEditIcon);
 		m_modify_info.SetWindowText(_T("±à¼­ÐÅÏ¢"));
+		m_item_text.SetBackgroundColor(FALSE, RGB(226,226,226));
 	}
 }
 
