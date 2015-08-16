@@ -1,12 +1,13 @@
 #pragma once
 
+#include "FolderEnum.h"
 #include "ListBoxEvent.h"
 #include "HiliteBorder.h"
 
 /**
  * 文件列表框
  */
-class CFileListBox : public CListBox
+class CFileListBox : public CListBox, public CFolderEnum
 {
 	DECLARE_DYNAMIC(CFileListBox)
 
@@ -34,36 +35,7 @@ protected:
 public:
 	CFileListBox(CShellManager* pShellManager);
 	virtual ~CFileListBox();
-	
-	/**
-	 * 当前目录是否是桌面
-	 *
-	 * @return TRUE 表示当前目录是桌面，否则为 FALSE.
-	 */
-	BOOL IsDesktop() const { return m_bIsDesktop; }
 
-protected:
-	/**
-	 * 当前目录是否是桌面
-	 */
-	BOOL m_bIsDesktop;
-
-	/*
-	 * 当前目录 IDLIST
-	 */
-	LPITEMIDLIST  m_pidlCurFQ;
-
-	/**
-	 * 当前目录 Shell 接口
-	 */
-	IShellFolder* m_psfCurFolder;
-
-	/**
-	 * 关联的 Shell 管理器接口
-	 */
-	CShellManager* m_pShellManager;
-
-public:
 	/**
 	 * 获取列表项的地址
 	 *
@@ -89,46 +61,6 @@ public:
 	BOOL GetItemPath(CString& strPath, int iItem);
 
 	/**
-	 * 获取当前目录地址
-	 *
-	 * @return 获取当前目录地址
-	 */
-	CString GetCurrentFolder(){
-		CString strPath;
-		GetCurrentFolder(strPath);
-		return strPath;
-	}
-
-	/**
-	 * 获取当前目录地址
-	 *
-	 * @param strPath
-	 *        目录地址
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	BOOL GetCurrentFolder(CString& strPath);
-
-	/**
-	 * 获取当前目录的名称
-	 *
-	 * @return 获取当前目录的名称
-	 */
-	CString GetCurrentFolderName(){
-		CString strName;
-		GetCurrentFolderName(strName);
-		return strName;
-	}
-
-	/**
-	 * 获取当前目录的名称
-	 *
-	 * @param strName
-	 *        当前目录的名称
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	BOOL GetCurrentFolderName(CString& strName);
-
-	/**
 	 * 设置过滤字符串
 	 *
 	 * @param str
@@ -143,56 +75,12 @@ public:
 			DisplayFolder(GetCurrentFolder());
 		}
 	}
-	
+
 protected:
 	/**
 	 * 过滤字符串
 	 */
 	CString m_filter;
-
-public:
-	/**
-	 * 刷新当前目录
-	 *
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	virtual HRESULT Refresh();
-	
-	/**
-	 * 显示当前目录的父目录
-	 *
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	virtual HRESULT DisplayParentFolder();
-
-	/**
-	 * 显示目录内容
-	 *
-	 * @param lpszPath
-	 *        目录路径
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	virtual HRESULT DisplayFolder(LPCTSTR lpszPath);
-
-	/**
-	 * 显示目录内容
-	 *
-	 * @param lpItemInfo
-	 *        目录 SHELLITEMINFO
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	virtual HRESULT DisplayFolder(LPAFX_SHELLITEMINFO lpItemInfo);
-
-protected:
-	/**
-	 * 释放当前目录接口
-	 */
-	void ReleaseCurrFolder();
-
-	/**
-	 * 锁定当前目录接口
-	 */
-	HRESULT LockCurrentFolder(LPAFX_SHELLITEMINFO pItemInfo);
 
 protected:
 	/**
@@ -210,17 +98,27 @@ protected:
 	/**
 	 * 执行默认动作
 	 */
-	virtual void DoDefault(int iItem);
+	virtual BOOL DoDefault(int iItem);
 
 	/**
-	 * 获取列表项的文字
+	 * 浏览目录初始化事件
 	 */
-	virtual CString OnGetItemText(LPAFX_SHELLITEMINFO pItem);
+	virtual void OnDisplayFolderInit();
 
 	/**
-	 * 枚举当前目录下的文件
+	 * 浏览目录开始事件
 	 */
-	virtual HRESULT EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent);
+	virtual void OnDisplayFolderBefore();
+	
+	/**
+	 * 浏览目录结束事件
+	 */
+	virtual void OnDisplayFolderAfter();
+	
+	/**
+	 * 枚举到有效内容
+	 */
+	virtual BOOL OnEnumObject(LPAFX_SHELLITEMINFO pItem);
 
 protected:
 	/**

@@ -25,6 +25,7 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 		m_command.cmd = strCommand;
 	}
 
+	m_book_list.EnumFile(FALSE);
 	m_book_list.SetListEvent(this);
 
 	DirChangeListener listener;

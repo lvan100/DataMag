@@ -79,6 +79,9 @@
     <Filter Include="Widget\HiliteBorder">
       <UniqueIdentifier>{132cd8b5-3fe3-4956-8c93-b1f89a7ecdac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\FolderEnum">
+      <UniqueIdentifier>{f8753b09-c294-4dc6-947c-d74a87ee1223}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -215,6 +218,9 @@
     <ClInclude Include="HiliteBorder.h">
       <Filter>Widget\HiliteBorder</Filter>
     </ClInclude>
+    <ClInclude Include="FolderEnum.h">
+      <Filter>Widget\FolderEnum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -291,6 +297,9 @@
     </ClCompile>
     <ClCompile Include="HiliteBorder.cpp">
       <Filter>Widget\HiliteBorder</Filter>
+    </ClCompile>
+    <ClCompile Include="FolderEnum.cpp">
+      <Filter>Widget\FolderEnum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

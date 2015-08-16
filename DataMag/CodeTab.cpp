@@ -25,6 +25,7 @@ CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 		m_command.cmd = strCommand;
 	}
 
+	m_project_list.EnumFile(FALSE);
 	m_project_list.SetListEvent(this);
 
 	DirChangeListener listener;

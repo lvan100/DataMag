@@ -26,7 +26,10 @@ CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 		m_command.cmd = strCommand;
 	}
 
+	m_tag_list.EnumFile(FALSE);
 	m_tag_list.SetListEvent(&m_tag_event);
+
+	m_tag_info.EnumFolder(FALSE);
 	m_tag_info.SetListEvent(&m_tag_info_event);
 
 	DirChangeListener listener;
