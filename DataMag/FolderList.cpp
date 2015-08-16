@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "DataMag.h"
-#include "RecentList.h"
+#include "FolderList.h"
 
-IMPLEMENT_DYNAMIC(CRecentList, CListBox)
+IMPLEMENT_DYNAMIC(CFolderList, CListBox)
 
-CRecentList::CRecentList(CShellManager* pShellManager)
+CFolderList::CFolderList(CShellManager* pShellManager)
 	: m_event(nullptr)
 	, m_hTagImage(nullptr)
 	, m_hCodeImage(nullptr)
@@ -13,23 +13,23 @@ CRecentList::CRecentList(CShellManager* pShellManager)
 {
 }
 
-CRecentList::~CRecentList()
+CFolderList::~CFolderList()
 {
 }
 
-BEGIN_MESSAGE_MAP(CRecentList, CListBox)
+BEGIN_MESSAGE_MAP(CFolderList, CListBox)
 	ON_WM_KILLFOCUS()
 	ON_WM_ERASEBKGND()
 	ON_WM_CTLCOLOR_REFLECT()
-	ON_CONTROL_REFLECT(LBN_DBLCLK, &CRecentList::OnLbnDblclk)
+	ON_CONTROL_REFLECT(LBN_DBLCLK, &CFolderList::OnLbnDblclk)
 END_MESSAGE_MAP()
 
-HBRUSH CRecentList::CtlColor(CDC* pDC, UINT nCtlColor)
+HBRUSH CFolderList::CtlColor(CDC* pDC, UINT nCtlColor)
 {
 	return afxGlobalData.brBtnFace;
 }
 
-void CRecentList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
+void CFolderList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	LPCTSTR str = (LPCTSTR)lpDrawItemStruct->itemData;
 
@@ -76,64 +76,48 @@ void CRecentList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	pDC->DrawText(strName, rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 }
 
-void CRecentList::MeasureItem(LPMEASUREITEMSTRUCT /*lpMeasureItemStruct*/)
+void CFolderList::MeasureItem(LPMEASUREITEMSTRUCT /*lpMeasureItemStruct*/)
 {
 	// Do default.
 }
 
-void CRecentList::DoDefault(int iItem)
+BOOL CFolderList::DoDefault(int iItem)
 {
 	AFX_SHELLITEMINFO info;
 
 	LPCTSTR szPath = (LPCTSTR)GetItemData(iItem);
 	HRESULT hr = m_pShellManager->ItemFromPath(szPath, info.pidlRel);
-
-	if (FAILED(hr))
-	{
-		return;
+	if (FAILED(hr)) {
+		return FALSE;
 	}
 	
 	IShellFolder *psfFolder = info.pParentFolder;
-	if (psfFolder == nullptr)
-	{
+	if (psfFolder == nullptr) {
 		HRESULT hr = SHGetDesktopFolder(&psfFolder);
-		if (FAILED(hr))
-		{
+		if (FAILED(hr)) {
 			ASSERT(FALSE);
-			return;
+			return FALSE;
 		}
-	}
-	else
-	{
+	} else {
 		psfFolder->AddRef();
 	}
 
-	if (psfFolder == nullptr)
-	{
-		return;
-	}
-
-	// If specified element is a folder, try to display it:
 	ULONG ulAttrs = SFGAO_FOLDER;
-	psfFolder->GetAttributesOf(1, (const struct _ITEMIDLIST **) &info.pidlRel, &ulAttrs);
+	psfFolder->GetAttributesOf(1, (LPCITEMIDLIST*) &info.pidlRel, &ulAttrs);
 
-	// Invoke a default menu command:
 	IContextMenu *pcm;
 	hr = psfFolder->GetUIObjectOf(GetSafeHwnd(), 1, (LPCITEMIDLIST*)&info.pidlRel, IID_IContextMenu, nullptr, (LPVOID*)&pcm);
+	if (SUCCEEDED(hr)) {
 
-	if (SUCCEEDED(hr))
-	{
 		HMENU hPopup = CreatePopupMenu();
+		if (hPopup != nullptr) {
 
-		if (hPopup != nullptr)
-		{
 			hr = pcm->QueryContextMenu(hPopup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
+			if (SUCCEEDED(hr)) {
 
-			if (SUCCEEDED(hr))
-			{
 				UINT idCmd = ::GetMenuDefaultItem(hPopup, FALSE, 0);
-				if (idCmd != 0 && idCmd != (UINT)-1)
-				{
+				if (idCmd != 0 && idCmd != (UINT)-1) {
+
 					CMINVOKECOMMANDINFO cmi;
 					cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
 					cmi.fMask = 0;
@@ -145,7 +129,7 @@ void CRecentList::DoDefault(int iItem)
 					cmi.dwHotKey = 0;
 					cmi.hIcon = nullptr;
 
-					pcm->InvokeCommand(&cmi);
+					hr = pcm->InvokeCommand(&cmi);
 				}
 			}
 		}
@@ -155,30 +139,30 @@ void CRecentList::DoDefault(int iItem)
 
 	psfFolder->Release();
 
-	// 释放内核资源
 	m_pShellManager->FreeItem(info.pidlRel);
+	return SUCCEEDED(hr);
 }
 
-void CRecentList::OnLbnDblclk()
+void CFolderList::OnLbnDblclk()
 {
 	if (m_event != nullptr) {
 		m_event->OnDoubleClick();
 	}
 }
 
-void CRecentList::OnKillFocus(CWnd* pNewWnd)
+void CFolderList::OnKillFocus(CWnd* pNewWnd)
 {
 	CListBox::OnKillFocus(pNewWnd);
 
 	Invalidate();
 }
 
-BOOL CRecentList::OnEraseBkgnd(CDC* pDC)
+BOOL CFolderList::OnEraseBkgnd(CDC* pDC)
 {
 	return TRUE;
 }
 
-BOOL CRecentList::GetItemPath(CString& strPath, int iItem)
+BOOL CFolderList::GetItemPath(CString& strPath, int iItem)
 {
 	if (iItem < GetCount()) {
 		strPath = (LPCTSTR)GetItemData(iItem);

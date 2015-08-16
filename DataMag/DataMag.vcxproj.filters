@@ -52,9 +52,6 @@
     <Filter Include="WndHelp">
       <UniqueIdentifier>{0cdb1e75-f2ac-46b3-a37b-3dfd13742c9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widget\RecentList">
-      <UniqueIdentifier>{125f1da9-6a50-4c60-bf06-5fe19e0e496f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widget\ListBoxEvent">
       <UniqueIdentifier>{1207df87-c5cb-48ca-b91b-a3dada065821}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </Filter>
     <Filter Include="Widget\FolderEnum">
       <UniqueIdentifier>{f8753b09-c294-4dc6-947c-d74a87ee1223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\FolderList">
+      <UniqueIdentifier>{125f1da9-6a50-4c60-bf06-5fe19e0e496f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -188,9 +188,6 @@
     <ClInclude Include="WndHelp.h">
       <Filter>WndHelp</Filter>
     </ClInclude>
-    <ClInclude Include="RecentList.h">
-      <Filter>Widget\RecentList</Filter>
-    </ClInclude>
     <ClInclude Include="ListBoxEvent.h">
       <Filter>Widget\ListBoxEvent</Filter>
     </ClInclude>
@@ -220,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="FolderEnum.h">
       <Filter>Widget\FolderEnum</Filter>
+    </ClInclude>
+    <ClInclude Include="FolderList.h">
+      <Filter>Widget\FolderList</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -271,9 +271,6 @@
     <ClCompile Include="WndHelp.cpp">
       <Filter>WndHelp</Filter>
     </ClCompile>
-    <ClCompile Include="RecentList.cpp">
-      <Filter>Widget\RecentList</Filter>
-    </ClCompile>
     <ClCompile Include="BookDlg.cpp">
       <Filter>Kernel\BookDlg</Filter>
     </ClCompile>
@@ -300,6 +297,9 @@
     </ClCompile>
     <ClCompile Include="FolderEnum.cpp">
       <Filter>Widget\FolderEnum</Filter>
+    </ClCompile>
+    <ClCompile Include="FolderList.cpp">
+      <Filter>Widget\FolderList</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

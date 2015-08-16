@@ -2,13 +2,13 @@
 
 #include "ListBoxEvent.h"
 
-class CRecentList : public CListBox
+class CFolderList : public CListBox
 {
-	DECLARE_DYNAMIC(CRecentList)
+	DECLARE_DYNAMIC(CFolderList)
 
 public:
-	CRecentList(CShellManager* pShellManager);
-	virtual ~CRecentList();
+	CFolderList(CShellManager* pShellManager);
+	virtual ~CFolderList();
 
 public:
 	/**
@@ -77,12 +77,7 @@ protected:
 	HICON m_hBookImage;
 
 protected:
-	/**
-	 * 执行默认动作
-	 */
-	virtual void DoDefault(int iItem);
-
-protected:
+	virtual BOOL DoDefault(int iItem);
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 	virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 

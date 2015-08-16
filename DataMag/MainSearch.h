@@ -2,7 +2,7 @@
 
 #include "AppWnd.h"
 
-#include "RecentList.h"
+#include "FolderList.h"
 #include "SearchEdit.h"
 #include "PrettyButton.h"
 
@@ -50,6 +50,11 @@ public:
 	void DoSearch();
 
 	/**
+	 * 完成推荐
+	 */
+	void DoRecommand();
+
+	/**
 	 * 响应最近访问列表变化
 	 */
 	void OnRecentListChange();
@@ -74,6 +79,12 @@ protected:
 
 protected:
 	/**
+	 * 随机推荐列表
+	 */
+	vector<CString> m_recommand_values;
+
+protected:
+	/**
 	 * 获取默认焦点控件
 	 */
 	virtual CWnd* GetDefaultFocusWnd()
@@ -82,8 +93,8 @@ protected:
 protected:
 	CStatic m_recent_group;
 	CStatic m_recommand_group;
-	CRecentList m_recent_list;
-	CRecentList m_recommand_list;
+	CFolderList m_recent_list;
+	CFolderList m_recommand_list;
 
 	CPrettyButton m_add_tag;
 	CPrettyButton m_add_book;

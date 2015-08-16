@@ -132,7 +132,7 @@
     <ClInclude Include="PrettyEdit.h" />
     <ClInclude Include="CodeDlg.h" />
     <ClInclude Include="CodeTab.h" />
-    <ClInclude Include="RecentList.h" />
+    <ClInclude Include="FolderList.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SearchEdit.h" />
     <ClInclude Include="SettingDlg.h" />
@@ -162,7 +162,7 @@
     <ClCompile Include="PrettyEdit.cpp" />
     <ClCompile Include="CodeDlg.cpp" />
     <ClCompile Include="CodeTab.cpp" />
-    <ClCompile Include="RecentList.cpp" />
+    <ClCompile Include="FolderList.cpp" />
     <ClCompile Include="SearchEdit.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="ShellListCtrl.cpp" />

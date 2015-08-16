@@ -6,6 +6,12 @@
 #include "MainSearch.h"
 #include "DDXControl.h"
 
+#include <set>
+#include <map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
 /**
  * 全局的主搜索对话框对象
  */
@@ -140,6 +146,9 @@ BOOL CMainSearch::OnInitDialog()
 		m_recent_list.AddString(list.at(i));
 	}
 
+	// 进行推荐
+	DoRecommand();
+
 	return FALSE;
 }
 
@@ -272,5 +281,130 @@ void CMainSearch::OnRecentListChange()
 	auto& list = theApp.GetRecentFileList();
 	for (size_t i = 0; i < list.size(); i++) {
 		m_recent_list.AddString(list.at(i));
+	}
+}
+
+/**
+ * 简单的枚举文件夹内容，返回内容数量
+ */
+int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
+	, CShellManager* pShellManager			// Shell管理器
+	, function<void(LPITEMIDLIST)> filter)	// 过滤器函数
+{
+	ENSURE(lpszPath != nullptr);
+	ASSERT_VALID(pShellManager);
+
+	AFX_SHELLITEMINFO info;
+	HRESULT hr = pShellManager->ItemFromPath(lpszPath, info.pidlRel);
+	if (FAILED(hr))	{
+		return 0;
+	}
+
+	int nFolderCount = 0;
+
+	LPSHELLFOLDER pDesktopFolder;
+	hr = SHGetDesktopFolder(&pDesktopFolder);
+
+	if (SUCCEEDED(hr)) {
+
+		IShellFolder* psfCurFolder = nullptr;
+		hr = pDesktopFolder->BindToObject(info.pidlRel, nullptr, IID_IShellFolder, (LPVOID*)&psfCurFolder);
+
+		LPENUMIDLIST pEnum = nullptr;
+		HRESULT hRes = psfCurFolder->EnumObjects(nullptr, (SHCONTF)(SHCONTF_FOLDERS), &pEnum);
+		if (SUCCEEDED(hRes) && pEnum != nullptr) {
+
+			DWORD dwFetched = 1;
+			LPITEMIDLIST pidlTemp;
+			while (pEnum->Next(1, &pidlTemp, &dwFetched) == S_OK && dwFetched) {
+
+				if (!filter._Empty()) {
+					LPITEMIDLIST itemID = pShellManager->ConcatenateItem(info.pidlRel, pidlTemp);
+					filter(itemID);
+					pShellManager->FreeItem(itemID);
+				}
+
+				pShellManager->FreeItem(pidlTemp);
+
+				nFolderCount++;
+				dwFetched = 0;
+			}
+
+			pEnum->Release();
+		}
+
+		psfCurFolder->Release();
+		pDesktopFolder->Release();
+	}
+
+	pShellManager->FreeItem(info.pidlRel);
+	return nFolderCount;
+}
+
+void CMainSearch::DoRecommand()
+{
+	m_recommand_values.clear();
+	m_recommand_list.ResetContent();
+
+	int nCodeCount = SimpleEnumFolder(theApp.GetCodeDir(), &theShellManager, function<void(LPITEMIDLIST)>());
+	int nBookCount = SimpleEnumFolder(theApp.GetBookDir(), &theShellManager, function<void(LPITEMIDLIST)>());
+
+	int nCount = nCodeCount + nBookCount;
+
+	srand((unsigned int)time(nullptr));
+
+	set<int> codeBookSet;
+
+	do {
+		int nRander = rand() % nCount;
+		codeBookSet.insert(nRander);
+	} while(codeBookSet.size() < CDataMagApp::MaxRecentFileCount);
+
+	vector<int> codeSet, bookSet;
+
+	for_each (codeBookSet.begin(), codeBookSet.end(), [&](int n){
+		if (n < nCodeCount) {
+			codeSet.push_back(n);
+		} else {
+			bookSet.push_back(n - nCodeCount);
+		}
+	});
+
+	unsigned int nItemIndex = 0, nSetIndex = 0;
+
+	SimpleEnumFolder(theApp.GetCodeDir(), &theShellManager, [&](LPITEMIDLIST itemID){
+		if (nSetIndex < codeSet.size() && codeSet.at(nSetIndex) == nItemIndex) {
+			TCHAR szPath [MAX_PATH] = { 0 };
+			if (SHGetPathFromIDList(itemID, szPath)) {
+				m_recommand_values.push_back(szPath);
+			}
+			nSetIndex++;
+		}
+		nItemIndex++;
+	});
+
+	nItemIndex = 0, nSetIndex = 0;
+
+	SimpleEnumFolder(theApp.GetBookDir(), &theShellManager, [&](LPITEMIDLIST itemID){
+		if (nSetIndex < bookSet.size() && bookSet.at(nSetIndex) == nItemIndex) {
+			TCHAR szPath [MAX_PATH] = { 0 };
+			if (SHGetPathFromIDList(itemID, szPath)) {
+				m_recommand_values.push_back(szPath);
+			}
+			nSetIndex++;
+		}
+		nItemIndex++;
+	});
+
+	int displaySet[CDataMagApp::MaxRecentFileCount] = { 0 };
+
+	for (size_t iTag = 0; iTag < m_recommand_values.size();) {
+		int nRander = rand() % m_recommand_values.size();
+		if (displaySet[nRander] == 0) {
+			CString strPath = m_recommand_values.at(nRander);
+			m_recommand_list.AddString(strPath);
+			displaySet[nRander] = 1;
+			iTag++;
+		}
 	}
 }

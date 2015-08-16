@@ -120,7 +120,7 @@ HRESULT CFolderEnum::DisplayFolder(LPCTSTR lpszPath)
 		pDesktopFolder->Release();
 	}
 
-	m_pShellManager->FreeItem(info.pidlFQ);
+	m_pShellManager->FreeItem(info.pidlRel);
 	return hr;
 }
 
@@ -233,6 +233,8 @@ HRESULT CFolderEnum::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlP
 
 			if (!OnEnumObject(pItem)) {
 				pParentFolder->Release();
+				m_pShellManager->FreeItem(pItem->pidlFQ);
+				m_pShellManager->FreeItem(pItem->pidlRel);
 			}
 	
 			dwFetched = 0;
