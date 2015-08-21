@@ -82,6 +82,9 @@
     <Filter Include="Widget\FolderList">
       <UniqueIdentifier>{125f1da9-6a50-4c60-bf06-5fe19e0e496f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\MoreInput">
+      <UniqueIdentifier>{7af71332-edfb-4eb4-8240-a53d3f323882}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -221,6 +224,9 @@
     <ClInclude Include="FolderList.h">
       <Filter>Widget\FolderList</Filter>
     </ClInclude>
+    <ClInclude Include="MoreInput.h">
+      <Filter>Widget\MoreInput</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -300,6 +306,9 @@
     </ClCompile>
     <ClCompile Include="FolderList.cpp">
       <Filter>Widget\FolderList</Filter>
+    </ClCompile>
+    <ClCompile Include="MoreInput.cpp">
+      <Filter>Widget\MoreInput</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

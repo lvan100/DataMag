@@ -2,6 +2,7 @@
 
 #include "AppWnd.h"
 
+#include "MoreInput.h"
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "TagItemEdit.h"
@@ -30,6 +31,11 @@ public:
 	void OnCodeMagDirChange(CString dir){
 		m_project_list.DisplayFolder(dir);
 	}
+
+	/**
+	 * 响应内容输入框变化事件
+	 */
+	void OnItemEditChange();
 
 public:
 	/**
@@ -102,7 +108,7 @@ protected:
 	CItemInfoEdit m_item_text;
 	CFileListBox m_project_list;
 
-	CStatic m_more_input;
+	CMoreInput m_more_input;
 	CTagItemEdit m_tag_group;
 	CStatic m_tag_group_title;
 

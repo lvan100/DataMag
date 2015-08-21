@@ -32,6 +32,10 @@ CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	listener = bind(&CCodeTab::OnCodeMagDirChange, this, std::placeholders::_1);
 	theApp.AddCodeDirChangeListener(this, listener);
 
+	EditChangeListener editListener;
+	editListener = bind(&CCodeTab::OnItemEditChange, this);
+	m_item_text.SetChangeListener(editListener);
+
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 
@@ -119,6 +123,10 @@ BOOL CCodeTab::OnInitDialog()
 
 	m_search_edit.EnableSearchButton(FALSE);
 	m_search_edit.SetHintText(_T("ËÑË÷ÏîÄ¿"));
+
+	int limit = m_item_text.GetLimitText();
+	m_more_input.SetMaxInputCount(limit);
+	m_more_input.SetMoreInputCount(limit);
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
 
@@ -443,4 +451,11 @@ void CCodeTab::OnBnClickedModifyInfo()
 	} else {
 		EnableInfoEidt(FALSE);
 	}
+}
+
+void CCodeTab::OnItemEditChange()
+{
+	int limit = m_item_text.GetLimitText();
+	int length = m_item_text.GetTextLength();
+	m_more_input.SetMoreInputCount(limit - length);
 }

@@ -24,13 +24,17 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	} else {
 		m_command.cmd = strCommand;
 	}
-
+	
 	m_book_list.EnumFile(FALSE);
 	m_book_list.SetListEvent(this);
 
 	DirChangeListener listener;
 	listener = bind(&CBookTab::OnBookMagDirChange, this, std::placeholders::_1);
 	theApp.AddBookDirChangeListener(this, listener);
+
+	EditChangeListener editListener;
+	editListener = bind(&CBookTab::OnItemEditChange, this);
+	m_item_text.SetChangeListener(editListener);
 
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
@@ -119,6 +123,10 @@ BOOL CBookTab::OnInitDialog()
 
 	m_search_edit.EnableSearchButton(FALSE);
 	m_search_edit.SetHintText(_T("ËÑË÷Í¼Êé"));
+
+	int limit = m_item_text.GetLimitText();
+	m_more_input.SetMaxInputCount(limit);
+	m_more_input.SetMoreInputCount(limit);
 
 	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
 
@@ -406,4 +414,11 @@ void CBookTab::OnBnClickedModifyInfo()
 	} else {
 		EnableInfoEidt(FALSE);
 	}
+}
+
+void CBookTab::OnItemEditChange()
+{
+	int limit = m_item_text.GetLimitText();
+	int length = m_item_text.GetTextLength();
+	m_more_input.SetMoreInputCount(limit - length);
 }

@@ -18,6 +18,7 @@ BEGIN_MESSAGE_MAP(CItemInfoEdit, CRichEditCtrl)
 	ON_WM_SETFOCUS()
 	ON_WM_KILLFOCUS()
 	ON_NOTIFY_REFLECT(EN_LINK, &CItemInfoEdit::OnEnLink)
+	ON_CONTROL_REFLECT(EN_CHANGE, &CItemInfoEdit::OnEnChange)
 END_MESSAGE_MAP()
 
 int CItemInfoEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -85,7 +86,7 @@ void CItemInfoEdit::InitCtrl()
 	SetWordWrapMode(WBF_WORDWRAP | WBF_WORDBREAK);
 
 	// 设置事件响应
-	SetEventMask(GetEventMask() | ENM_LINK);
+	SetEventMask(GetEventMask() | ENM_LINK | ENM_CHANGE);
 }
 
 void CItemInfoEdit::OnEnLink(NMHDR *pNMHDR, LRESULT *pResult)
@@ -130,5 +131,12 @@ void CItemInfoEdit::OnDestroy()
 	if (m_pHiliteBorder != nullptr) {
 		m_pHiliteBorder->DestroyWindow();
 		delete m_pHiliteBorder;
+	}
+}
+
+void CItemInfoEdit::OnEnChange()
+{
+	if (!m_change_listener._Empty()) {
+		m_change_listener();
 	}
 }

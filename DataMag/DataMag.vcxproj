@@ -123,6 +123,7 @@
     <ClInclude Include="HilitButton.h" />
     <ClInclude Include="HiliteBorder.h" />
     <ClInclude Include="ItemInfoEdit.h" />
+    <ClInclude Include="MoreInput.h" />
     <ClInclude Include="TagItemEdit.h" />
     <ClInclude Include="TagTab.h" />
     <ClInclude Include="ListBoxEvent.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="HiliteBorder.cpp" />
     <ClCompile Include="ItemInfoEdit.cpp" />
     <ClCompile Include="MainSearch.cpp" />
+    <ClCompile Include="MoreInput.cpp" />
     <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="TagItemEdit.cpp" />
     <ClCompile Include="TagTab.cpp" />
