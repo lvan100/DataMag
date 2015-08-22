@@ -62,6 +62,7 @@ void CBookTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CBookTab, CAppWnd)
+	ON_WM_MOVE()
 	ON_WM_DESTROY()
 	ON_WM_DROPFILES()
 	ON_BN_CLICKED(IDC_SETTING, &CBookTab::OnBnClickedSetting)
@@ -456,4 +457,16 @@ void CBookTab::OnDestroy()
 	CAppWnd::OnDestroy();
 
 	EnableInfoEidt(FALSE);
+}
+
+void CBookTab::OnMove(int x, int y)
+{
+	CAppWnd::OnMove(x, y);
+
+	if (IsWindowVisible()) {
+		CRect rcWindow;
+		GetWindowRect(rcWindow);
+
+		theMainSearch->SetIfVisiableRect(rcWindow);
+	}
 }

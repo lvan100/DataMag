@@ -62,6 +62,7 @@ void CCodeTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CCodeTab, CAppWnd)
+	ON_WM_MOVE()
 	ON_WM_DESTROY()
 	ON_WM_DROPFILES()
 	ON_BN_CLICKED(IDC_SETTING, &CCodeTab::OnBnClickedSetting)
@@ -493,4 +494,16 @@ void CCodeTab::OnDestroy()
 	CAppWnd::OnDestroy();
 
 	EnableInfoEidt(FALSE);
+}
+
+void CCodeTab::OnMove(int x, int y)
+{
+	CAppWnd::OnMove(x, y);
+
+	if (IsWindowVisible()) {
+		CRect rcWindow;
+		GetWindowRect(rcWindow);
+
+		theMainSearch->SetIfVisiableRect(rcWindow);
+	}
 }

@@ -120,12 +120,13 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
-	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedTagAdd();
+	afx_msg void OnMove(int x, int y);
+	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedTagDelete();
 	afx_msg void OnBnClickedTagRename();
-	afx_msg void OnChangeInfoSearchEdit();
 	afx_msg void OnChangeTagSearchEdit();
+	afx_msg void OnChangeInfoSearchEdit();
 	afx_msg void OnBnClickedTagRelateBook();
 	afx_msg void OnBnClickedTagRelateProject();
 	afx_msg void OnBnClickedRemoveRelationship();

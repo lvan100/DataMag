@@ -241,8 +241,7 @@ void CMainSearch::OnBnClickedAddBook()
 
 void CMainSearch::MoveToHideWindow(BOOL bHide)
 {
-	CRect rcWnd;
-	GetWindowRect(rcWnd);
+	CRect rcWnd(m_rect_if_visiable);
 	
 	int top = rcWnd.top;
 	int bottom = rcWnd.bottom;

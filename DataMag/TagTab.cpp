@@ -64,6 +64,7 @@ void CTagTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CTagTab, CAppWnd)
+	ON_WM_MOVE()
 	ON_BN_CLICKED(IDC_SETTING, &CTagTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_TAG_ADD, &CTagTab::OnBnClickedTagAdd)
 	ON_BN_CLICKED(IDC_TAG_DELETE, &CTagTab::OnBnClickedTagDelete)
@@ -401,5 +402,17 @@ void CTagTab::EnableInfoEidt(BOOL enable)
 	} else {
 		m_item_text.SetReadOnly(TRUE);
 		m_item_text.SetBackgroundColor(FALSE, RGB(226,226,226));
+	}
+}
+
+void CTagTab::OnMove(int x, int y)
+{
+	CAppWnd::OnMove(x, y);
+
+	if (IsWindowVisible()) {
+		CRect rcWindow;
+		GetWindowRect(rcWindow);
+
+		theMainSearch->SetIfVisiableRect(rcWindow);
 	}
 }

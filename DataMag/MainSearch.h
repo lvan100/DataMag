@@ -66,6 +66,12 @@ public:
 	CRect GetIfVisiableRect() const
 	{ return m_rect_if_visiable; }
 
+	/**
+	 * 设置如果可见区域
+	 */
+	void SetIfVisiableRect(CRect rc)
+	{ m_rect_if_visiable = rc; }
+
 protected:
 	/**
 	 * 如果可视化的区域
