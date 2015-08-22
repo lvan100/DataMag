@@ -37,6 +37,13 @@ public:
 	virtual ~CFileListBox();
 
 	/**
+	 * 获取上一次选择的列表项
+	 */
+	int GetLastSelItem() {
+		return m_nLastSelItem;
+	}
+
+	/**
 	 * 获取列表项的地址
 	 *
 	 * @param iItem
@@ -81,6 +88,11 @@ protected:
 	 * 过滤字符串
 	 */
 	CString m_filter;
+
+	/**
+	 * 上一次选择的列表项
+	 */
+	int m_nLastSelItem;
 
 protected:
 	/**

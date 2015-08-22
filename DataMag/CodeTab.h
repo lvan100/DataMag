@@ -114,6 +114,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
+	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedSetting();
 	afx_msg void OnBnClickedProjectAdd();
 	afx_msg void OnBnClickedModifyInfo();

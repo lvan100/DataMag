@@ -62,6 +62,7 @@ void CBookTab::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CBookTab, CAppWnd)
+	ON_WM_DESTROY()
 	ON_WM_DROPFILES()
 	ON_BN_CLICKED(IDC_SETTING, &CBookTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_BOOK_ADD, &CBookTab::OnBnClickedBookAdd)
@@ -90,11 +91,13 @@ void CBookTab::OnDoubleClick()
 void CBookTab::OnSelectChanged()
 {
 	int nItem = m_book_list.GetCurSel();
-	if (nItem >= 0)
-	{
+	if (nItem >= 0) {
+
+		EnableInfoEidt(FALSE); // 禁用编辑功能
+
 		CString strPath = m_book_list.GetItemPath(nItem);
-		if (PathIsDirectory(strPath))
-		{
+		if (PathIsDirectory(strPath)) {
+
 			CString strFile = strPath + _T("\\描述.txt");
 			CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
 
@@ -109,8 +112,12 @@ void CBookTab::OnSelectChanged()
 			memset(szText, 0, nSize);
 			file.Read(szText, nSize);
 
+			file.Close();
+
 			SetWindowTextA(m_item_text.GetSafeHwnd(), szText);
 		}
+	} else {
+		SetWindowTextA(m_item_text.GetSafeHwnd(), NULL);
 	}
 }
 
@@ -118,8 +125,7 @@ BOOL CBookTab::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
 
-	// 不允许对信息进行编辑
-	EnableInfoEidt(FALSE);
+	EnableInfoEidt(FALSE); // 禁用编辑功能
 
 	m_search_edit.EnableSearchButton(FALSE);
 	m_search_edit.SetHintText(_T("搜索图书"));
@@ -395,14 +401,36 @@ void CBookTab::EnableInfoEidt(BOOL enable)
 {
 	if (enable) {
 		m_item_text.SetReadOnly(FALSE);
+		m_more_input.ShowWindow(SW_SHOW);
 		m_modify_info.SetIcon(m_hNotEditIcon);
 		m_modify_info.SetWindowText(_T("禁止编辑"));
 		m_item_text.SetBackgroundColor(TRUE, RGB(0,0,0));
 	} else {
-		m_item_text.SetReadOnly(TRUE);
-		m_modify_info.SetIcon(m_hCanEditIcon);
-		m_modify_info.SetWindowText(_T("编辑信息"));
-		m_item_text.SetBackgroundColor(FALSE, RGB(226,226,226));
+		DWORD dwStyle = m_item_text.GetStyle();
+		if (dwStyle & ES_READONLY) {
+		} else {
+
+			m_item_text.SetReadOnly(TRUE);
+			m_more_input.ShowWindow(SW_HIDE);
+			m_modify_info.SetIcon(m_hCanEditIcon);
+			m_modify_info.SetWindowText(_T("编辑信息"));
+			m_item_text.SetBackgroundColor(FALSE, RGB(226,226,226));
+
+			int nItem = m_book_list.GetLastSelItem();
+			if (nItem >= 0) {
+				CString strPath = m_book_list.GetItemPath(nItem);
+				CString strFile = strPath + _T("\\描述.txt");
+				CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
+
+				CString strText;
+				m_item_text.GetWindowText(strText);
+
+				CStringA szText(strText);
+				file.Write(szText, szText.GetLength());
+
+				file.Close();
+			}
+		}
 	}
 }
 
@@ -419,6 +447,13 @@ void CBookTab::OnBnClickedModifyInfo()
 void CBookTab::OnItemEditChange()
 {
 	int limit = m_item_text.GetLimitText();
-	int length = m_item_text.GetTextLength();
+	int length = m_item_text.GetTextLengthEx(GTL_NUMCHARS);
 	m_more_input.SetMoreInputCount(limit - length);
+}
+
+void CBookTab::OnDestroy()
+{
+	CAppWnd::OnDestroy();
+
+	EnableInfoEidt(FALSE);
 }

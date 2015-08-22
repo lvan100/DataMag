@@ -134,6 +134,8 @@ void CTagTab::TagInfoEvent::OnSelectChanged()
 			memset(szText, 0, nSize);
 			file.Read(szText, nSize);
 
+			file.Close();
+
 			SetWindowTextA(pThis->m_item_text.GetSafeHwnd(), szText);
 		}
 	}

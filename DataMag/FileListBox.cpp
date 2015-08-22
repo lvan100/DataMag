@@ -6,6 +6,7 @@ IMPLEMENT_DYNAMIC(CFileListBox, CWnd)
 CFileListBox::CFileListBox(CShellManager* pShellManager)
 	: CFolderEnum(pShellManager)
 	, m_pHiliteBorder(nullptr)
+	, m_nLastSelItem(-1)
 	, m_event(nullptr)
 {
 }
@@ -97,7 +98,17 @@ BOOL CFileListBox::GetItemPath(CString& strPath, int iItem)
 
 void CFileListBox::OnDisplayFolderInit()
 {
+	if (m_event != nullptr) {
+		m_event->OnSelectChanged();
+	}
+
 	ResetContent();
+
+	m_nLastSelItem = -1;
+
+	if (m_event != nullptr) {
+		m_event->OnSelectChanged();
+	}
 }
 
 void CFileListBox::OnDisplayFolderBefore()
@@ -237,6 +248,8 @@ void CFileListBox::OnLbnSelchange()
 	if (m_event != nullptr) {
 		m_event->OnSelectChanged();
 	}
+
+	m_nLastSelItem = GetCurSel();
 }
 
 void CFileListBox::OnSetFocus(CWnd* pOldWnd)
