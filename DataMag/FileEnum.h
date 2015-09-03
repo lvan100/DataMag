@@ -1,25 +1,28 @@
 #pragma once
 
 /**
- * 枚举文件夹内容
+ * 文件枚举器
  */
-class CFolderEnum
+class CFileEnum
 {
 public:
-	CFolderEnum(CShellManager* pShellManager);
-	virtual ~CFolderEnum(void);
+	CFileEnum(CShellManager* pShellManager);
+	virtual ~CFileEnum(void);
 
 	/**
-	 * 当前目录是否是桌面
+	 * 当前目录是否是桌面（指的是根节点的那个“桌面”）
 	 *
-	 * @return TRUE 表示当前目录是桌面，否则为 FALSE.
+	 * @return TRUE 表示当前目录是桌面，否则为 FALSE .
 	 */
 	BOOL IsDesktop() const { 
 		return m_bIsDesktop;
 	}
 
 	/**
-	 * 是否允许枚举文件夹
+	 * 是否允许枚举内容包含文件夹
+	 *
+	 * @param enable
+	 *        TRUE 表示包含文件夹，FALSE 表示不包含.
 	 */
 	void EnumFolder(BOOL enable) {
 		if (enable) {
@@ -30,7 +33,10 @@ public:
 	}
 		
 	/**
-	 * 是否允许枚举非文件夹内容
+	 * 是否允许枚举包含非文件夹内容
+	 *
+	 * @param enable
+	 *        TRUE 表示包含非文件夹，FALSE 表示不包含.
 	 */
 	void EnumFile(BOOL enable) {
 		if (enable) {
@@ -45,73 +51,47 @@ public:
 	 *
 	 * @return 获取当前目录地址
 	 */
-	CString GetCurrentFolder(){
-		CString strPath;
-		GetCurrentFolder(strPath);
-		return strPath;
-	}
-
-	/**
-	 * 获取当前目录地址
-	 *
-	 * @param strPath
-	 *        目录地址
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	BOOL GetCurrentFolder(CString& strPath);
+	CString GetCurrentFolder();
 
 	/**
 	 * 获取当前目录的名称
 	 *
 	 * @return 获取当前目录的名称
 	 */
-	CString GetCurrentFolderName(){
-		CString strName;
-		GetCurrentFolderName(strName);
-		return strName;
-	}
-
-	/**
-	 * 获取当前目录的名称
-	 *
-	 * @param strName
-	 *        当前目录的名称
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	BOOL GetCurrentFolderName(CString& strName);
+	CString GetCurrentFolderName();
 
 public:
 	/**
 	 * 刷新当前目录
 	 *
-	 * @return 成功返回 TRUE，失败返回 FALSE.
+	 * @return 成功返回 TRUE，失败返回 FALSE .
 	 */
-	virtual HRESULT Refresh();
+	virtual BOOL Refresh();
 
 	/**
 	 * 显示当前目录的父目录
 	 *
-	 * @return 成功返回 TRUE，失败返回 FALSE.
+	 * @return 成功返回 TRUE，失败返回 FALSE .
 	 */
-	virtual HRESULT DisplayParentFolder();
+	virtual BOOL DisplayParentFolder();
 
 	/**
 	 * 显示目录内容
 	 *
 	 * @param lpszPath
 	 *        目录路径
-	 * @return 成功返回 TRUE，失败返回 FALSE.
+	 * @return 成功返回 TRUE，失败返回 FALSE .
 	 */
-	virtual HRESULT DisplayFolder(LPCTSTR lpszPath);
+	virtual BOOL DisplayFolder(LPCTSTR lpszPath);
 
 	/**
 	 * 显示目录内容
 	 *
 	 * @param lpItemInfo
 	 *        目录 SHELLITEMINFO
-	 * @return 成功返回 TRUE，失败返回 FALSE.
+	 * @return 成功返回 TRUE，失败返回 FALSE .
 	 */
-	virtual HRESULT DisplayFolder(LPAFX_SHELLITEMINFO lpItemInfo);
+	virtual BOOL DisplayFolder(LPAFX_SHELLITEMINFO lpItemInfo);
 
 protected:
 	/**

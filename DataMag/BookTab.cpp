@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "FileOp.h"
+#include "Common.h"
 #include "DataMag.h"
 #include "NameDlg.h"
 #include "BookTab.h"
-#include "WndHelp.h"
 #include "MainSearch.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
@@ -26,7 +26,7 @@ CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	}
 	
 	m_book_list.EnumFile(FALSE);
-	m_book_list.SetListEvent(this);
+	m_book_list.SetListBoxEvent(this);
 
 	DirChangeListener listener;
 	listener = bind(&CBookTab::OnBookMagDirChange, this, std::placeholders::_1);
@@ -182,7 +182,7 @@ void CBookTab::OnBnClickedBookAdd()
 			m_book_list.SelectString(0, dlg.m_name);
 
 			// 立即打开文件夹以方便后续操作
-			OpenFoler(strFolder);
+			OpenFolerInShell(strFolder);
 
 		} else {
 			CString strContent = _T("创建图书目录\"\"失败！");

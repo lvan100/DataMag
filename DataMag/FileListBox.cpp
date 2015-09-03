@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "FileListBox.h"
 
-IMPLEMENT_DYNAMIC(CFileListBox, CWnd)
+IMPLEMENT_DYNAMIC(CFileListBox, CListBox)
 
 CFileListBox::CFileListBox(CShellManager* pShellManager)
-	: CFolderEnum(pShellManager)
+	: CFileEnum(pShellManager)
 	, m_pHiliteBorder(nullptr)
 	, m_nLastSelItem(-1)
 	, m_event(nullptr)
@@ -15,7 +15,7 @@ CFileListBox::~CFileListBox()
 {
 }
 
-BEGIN_MESSAGE_MAP(CFileListBox, CWnd)
+BEGIN_MESSAGE_MAP(CFileListBox, CListBox)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
 	ON_WM_SETFOCUS()
@@ -28,8 +28,9 @@ END_MESSAGE_MAP()
 
 int CFileListBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CListBox::OnCreate(lpCreateStruct) == -1)
+	if (CListBox::OnCreate(lpCreateStruct) == -1) {
 		return -1;
+	}
 
 	if (m_event != nullptr) {
 		m_event->InitListBox();
@@ -76,24 +77,20 @@ BOOL CFileListBox::InitBorder()
 	return TRUE;
 }
 
-BOOL CFileListBox::GetItemPath(CString& strPath, int iItem)
+CString CFileListBox::GetItemPath(int iItem)
 {
 	ASSERT_VALID(this);
 
-	strPath.Empty();
-
 	LPAFX_SHELLITEMINFO pItem = (LPAFX_SHELLITEMINFO) GetItemData(iItem);
 	if (pItem == nullptr || pItem->pidlFQ == nullptr) {
-		return FALSE;
+		return _T("");
 	}
 
-	TCHAR szPath [MAX_PATH];
-	if (!SHGetPathFromIDList(pItem->pidlFQ, szPath)) {
-		return FALSE;
+	TCHAR szPath [MAX_PATH + 1] = { 0 };
+	if (SHGetPathFromIDList(pItem->pidlFQ, szPath)) {
+		return szPath;
 	}
-
-	strPath = szPath;
-	return TRUE;
+	return _T("");
 }
 
 void CFileListBox::OnDisplayFolderInit()
@@ -105,14 +102,11 @@ void CFileListBox::OnDisplayFolderInit()
 	ResetContent();
 
 	m_nLastSelItem = -1;
-
-	if (m_event != nullptr) {
-		m_event->OnSelectChanged();
-	}
 }
 
 void CFileListBox::OnDisplayFolderBefore()
 {
+	CWaitCursor wait;
 	SetRedraw(FALSE);
 }
 
@@ -120,6 +114,10 @@ void CFileListBox::OnDisplayFolderAfter()
 {
 	SetRedraw(TRUE);
 	RedrawWindow();
+
+	if (m_event != nullptr) {
+		m_event->OnSelectChanged();
+	}
 }
 
 BOOL CFileListBox::OnEnumObject(LPAFX_SHELLITEMINFO pItem)
@@ -157,7 +155,7 @@ BOOL CFileListBox::DoDefault(int iItem)
 	ULONG ulAttrs = SFGAO_FOLDER;
 	psfFolder->GetAttributesOf(1, (LPCITEMIDLIST*) &pInfo->pidlRel, &ulAttrs);
 
-	IContextMenu *pcm;
+	IContextMenu *pcm = nullptr;
 	HRESULT hr = psfFolder->GetUIObjectOf(GetSafeHwnd(), 1
 		, (LPCITEMIDLIST*)&pInfo->pidlRel
 		, IID_IContextMenu, nullptr, (LPVOID*)&pcm);
@@ -226,14 +224,14 @@ void CFileListBox::DeleteItem(LPDELETEITEMSTRUCT lpDeleteItemStruct)
 int CFileListBox::CompareItem(LPCOMPAREITEMSTRUCT lpCompareItemStruct)
 {
 	LPAFX_SHELLITEMINFO pItem1 = (LPAFX_SHELLITEMINFO)lpCompareItemStruct->itemData1;
-	LPAFX_SHELLITEMINFO pItem2 = (LPAFX_SHELLITEMINFO)lpCompareItemStruct->itemID2;
+	LPAFX_SHELLITEMINFO pItem2 = (LPAFX_SHELLITEMINFO)lpCompareItemStruct->itemData2;
 
 	HRESULT hr = pItem1->pParentFolder->CompareIDs(0, pItem1->pidlRel, pItem2->pidlRel);
 	if (FAILED(hr)) {
 		return 0;
 	}
 
-	return (short) SCODE_CODE(GetScode(hr));
+	return (short)SCODE_CODE(GetScode(hr));
 }
 
 void CFileListBox::OnLbnDblclk()

@@ -5,6 +5,9 @@
 #include <functional>
 using namespace std;
 
+/**
+ * ¶¨Òå±à¼­ĞŞ¸Ä¼àÌıÆ÷
+ */
 typedef function<void()> EditChangeListener;
 
 /**

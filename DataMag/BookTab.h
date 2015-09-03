@@ -3,10 +3,10 @@
 #include "AppWnd.h"
 
 #include "MoreInput.h"
+#include "PrettyEdit.h"
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "HilitButton.h"
-#include "TagItemEdit.h"
 #include "ItemInfoEdit.h"
 
 /**
@@ -109,7 +109,7 @@ protected:
 	CItemInfoEdit m_item_text;
 
 	CMoreInput m_more_input;
-	CTagItemEdit m_tag_group;
+	CPrettyEdit m_tag_group;
 	CStatic m_tag_group_title;
 
 	DECLARE_MESSAGE_MAP()

@@ -2,19 +2,21 @@
 
 #include "ListBoxEvent.h"
 
-class CFolderList : public CListBox
+/**
+ * 文件夹列表控件，显示用户输入的文件夹
+ */
+class CFolderListCtrl : public CListBox
 {
-	DECLARE_DYNAMIC(CFolderList)
+	DECLARE_DYNAMIC(CFolderListCtrl)
 
 public:
-	CFolderList(CShellManager* pShellManager);
-	virtual ~CFolderList();
+	CFolderListCtrl(CShellManager* pShellManager);
+	virtual ~CFolderListCtrl();
 
-public:
 	/**
 	 * 设置列表框事件实现接口
 	 */
-	void SetListEvent(ListBoxEvent* event){
+	void SetListBoxEvent(ListBoxEvent* event){
 		m_event = event;
 	}
 
@@ -27,28 +29,13 @@ public:
 
 public:
 	/**
-	 * 获取列表项的地址
+	 * 获取列表项的文件地址
 	 *
 	 * @param iItem
 	 *        列表项的索引
 	 * @return 列表项的地址
 	 */
-	CString GetItemPath(int iItem){
-		CString strPath;
-		GetItemPath(strPath, iItem);
-		return strPath;
-	}
-
-	/**
-	 * 获取列表项的地址
-	 *
-	 * @param strPath
-	 *        列表项的地址
-	 * @param iItem
-	 *        列表项的索引
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	BOOL GetItemPath(CString& strPath, int iItem);
+	CString GetItemPath(int iItem);
 
 protected:
 	/**

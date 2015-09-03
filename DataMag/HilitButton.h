@@ -1,5 +1,8 @@
 #pragma once
 
+/**
+ * 带高亮边框效果的按钮控件
+ */
 class CHilitButton : public CMFCButton
 {
 	DECLARE_DYNAMIC(CHilitButton)

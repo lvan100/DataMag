@@ -1,26 +1,26 @@
 #pragma once
 
-#include "FolderEnum.h"
+#include "FileEnum.h"
 #include "ListBoxEvent.h"
 #include "HiliteBorder.h"
 
 /**
  * 文件列表框
  */
-class CFileListBox : public CListBox, public CFolderEnum
+class CFileListBox : public CListBox, public CFileEnum
 {
 	DECLARE_DYNAMIC(CFileListBox)
 
 public:
 	/**
-	 * 设置列表框事件实现接口
+	 * 设置列表框控件事件实现接口
 	 */
-	void SetListEvent(ListBoxEvent* event){
+	void SetListBoxEvent(ListBoxEvent* event){
 		m_event = event;
 	}
 
 	/**
-	 * 执行默认的双击操作
+	 * 执行默认的列表项双击操作
 	 */
 	void DoDefaultDClick(int iItem) {
 		DoDefault(iItem);
@@ -50,22 +50,7 @@ public:
 	 *        列表项的索引
 	 * @return 列表项的地址
 	 */
-	CString GetItemPath(int iItem){
-		CString strPath;
-		GetItemPath(strPath, iItem);
-		return strPath;
-	}
-
-	/**
-	 * 获取列表项的地址
-	 *
-	 * @param strPath
-	 *        列表项的地址
-	 * @param iItem
-	 *        列表项的索引
-	 * @return 成功返回 TRUE，失败返回 FALSE.
-	 */
-	BOOL GetItemPath(CString& strPath, int iItem);
+	CString GetItemPath(int iItem);
 
 	/**
 	 * 设置过滤字符串
@@ -73,13 +58,10 @@ public:
 	 * @param str
 	 *        过滤字符串
 	 */
-	void SetFilterString(CString str){
-		if (m_filter.CompareNoCase(str) != 0) {
-
+	void SetFilterString(CString str) {
+		if (m_filter.Compare(str) != 0) {
 			m_filter = str;
-			m_filter.MakeLower();
-
-			DisplayFolder(GetCurrentFolder());
+			Refresh();
 		}
 	}
 

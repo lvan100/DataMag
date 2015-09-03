@@ -4,8 +4,7 @@
 IMPLEMENT_DYNAMIC(CSearchEdit, CEdit)
 
 CSearchEdit::CSearchEdit()
-	: m_bFocused(FALSE)
-	, m_bMouseHover(FALSE)
+	: m_bMouseHover(FALSE)
 	, m_bTextIsHint(FALSE)
 	, m_bEnableSearchBtn(TRUE)
 {
@@ -35,8 +34,7 @@ END_MESSAGE_MAP()
  */
 static CSize GetIconSize(HICON hIcon)
 {
-	if (hIcon == nullptr)
-	{
+	if (hIcon == nullptr) {
 		return CSize(0, 0);
 	}
 
@@ -134,16 +132,14 @@ BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 void CSearchEdit::OnSetFocus(CWnd* pOldWnd)
 {
 	CPrettyEdit::OnSetFocus(pOldWnd);
-
-	m_bFocused = TRUE;
+		
 	InvalidateWithHint();
 }
 
 void CSearchEdit::OnKillFocus(CWnd* pNewWnd)
 {
 	CPrettyEdit::OnKillFocus(pNewWnd);
-
-	m_bFocused = FALSE;
+		
 	InvalidateWithHint();
 }
 

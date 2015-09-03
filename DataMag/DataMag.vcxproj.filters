@@ -19,20 +19,8 @@
     <Filter Include="Widget">
       <UniqueIdentifier>{b986d6fd-d3e0-4da5-9437-59a7ca910887}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widget\TabTemplate">
-      <UniqueIdentifier>{543b19e7-e1c7-4bc9-b817-2e61f0f80d3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widget\PrettyEdit">
-      <UniqueIdentifier>{9035da42-b5e2-4502-859e-7abcf608e4b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widget\SearchEdit">
       <UniqueIdentifier>{cbb2d6f9-d552-4c91-9655-8be1dfdfde01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FileOp">
-      <UniqueIdentifier>{1279bef9-55a6-4545-a098-3f11b460cf29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widget\ShellListCtrl">
-      <UniqueIdentifier>{84f56f35-e203-4623-bd96-3c69b5f4c8b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Widget\FileListBox">
       <UniqueIdentifier>{a0195ea2-385f-4302-8a07-7b1fc8f3957d}</UniqueIdentifier>
@@ -48,9 +36,6 @@
     </Filter>
     <Filter Include="Widget\DDXControl">
       <UniqueIdentifier>{cd6c29ad-3cca-4f08-9124-6c12bc6d7425}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="WndHelp">
-      <UniqueIdentifier>{0cdb1e75-f2ac-46b3-a37b-3dfd13742c9c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Widget\ListBoxEvent">
       <UniqueIdentifier>{1207df87-c5cb-48ca-b91b-a3dada065821}</UniqueIdentifier>
@@ -70,20 +55,26 @@
     <Filter Include="Widget\ItemInfoEdit">
       <UniqueIdentifier>{742ff97e-6bd0-4878-b7c5-9031e95190c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widget\TagItemEdit">
-      <UniqueIdentifier>{be465ef9-f847-4d7f-82f9-56a73efefe52}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widget\HiliteBorder">
       <UniqueIdentifier>{132cd8b5-3fe3-4956-8c93-b1f89a7ecdac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widget\FolderEnum">
-      <UniqueIdentifier>{f8753b09-c294-4dc6-947c-d74a87ee1223}</UniqueIdentifier>
     </Filter>
     <Filter Include="Widget\FolderList">
       <UniqueIdentifier>{125f1da9-6a50-4c60-bf06-5fe19e0e496f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Widget\MoreInput">
       <UniqueIdentifier>{7af71332-edfb-4eb4-8240-a53d3f323882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\Common">
+      <UniqueIdentifier>{0cdb1e75-f2ac-46b3-a37b-3dfd13742c9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\FileOp">
+      <UniqueIdentifier>{1279bef9-55a6-4545-a098-3f11b460cf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\PrettyEdit">
+      <UniqueIdentifier>{be465ef9-f847-4d7f-82f9-56a73efefe52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\FileEnum">
+      <UniqueIdentifier>{f8753b09-c294-4dc6-947c-d74a87ee1223}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -152,23 +143,14 @@
     <ClInclude Include="Resource.h">
       <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="ShellListCtrl.h">
-      <Filter>Widget\ShellListCtrl</Filter>
-    </ClInclude>
-    <ClInclude Include="TabTemplate.h">
-      <Filter>Widget\TabTemplate</Filter>
-    </ClInclude>
     <ClInclude Include="BookTab.h">
       <Filter>Kernel\BookTab</Filter>
-    </ClInclude>
-    <ClInclude Include="PrettyEdit.h">
-      <Filter>Widget\PrettyEdit</Filter>
     </ClInclude>
     <ClInclude Include="SearchEdit.h">
       <Filter>Widget\SearchEdit</Filter>
     </ClInclude>
     <ClInclude Include="FileOp.h">
-      <Filter>FileOp</Filter>
+      <Filter>Widget\FileOp</Filter>
     </ClInclude>
     <ClInclude Include="FileListBox.h">
       <Filter>Widget\FileListBox</Filter>
@@ -187,9 +169,6 @@
     </ClInclude>
     <ClInclude Include="DDXControl.h">
       <Filter>Widget\DDXControl</Filter>
-    </ClInclude>
-    <ClInclude Include="WndHelp.h">
-      <Filter>WndHelp</Filter>
     </ClInclude>
     <ClInclude Include="ListBoxEvent.h">
       <Filter>Widget\ListBoxEvent</Filter>
@@ -212,20 +191,23 @@
     <ClInclude Include="ItemInfoEdit.h">
       <Filter>Widget\ItemInfoEdit</Filter>
     </ClInclude>
-    <ClInclude Include="TagItemEdit.h">
-      <Filter>Widget\TagItemEdit</Filter>
-    </ClInclude>
     <ClInclude Include="HiliteBorder.h">
       <Filter>Widget\HiliteBorder</Filter>
-    </ClInclude>
-    <ClInclude Include="FolderEnum.h">
-      <Filter>Widget\FolderEnum</Filter>
     </ClInclude>
     <ClInclude Include="FolderList.h">
       <Filter>Widget\FolderList</Filter>
     </ClInclude>
     <ClInclude Include="MoreInput.h">
       <Filter>Widget\MoreInput</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Widget\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="PrettyEdit.h">
+      <Filter>Widget\PrettyEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="FileEnum.h">
+      <Filter>Widget\FileEnum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -238,23 +220,14 @@
     <ClCompile Include="SettingDlg.cpp">
       <Filter>Kernel\SettingDlg</Filter>
     </ClCompile>
-    <ClCompile Include="ShellListCtrl.cpp">
-      <Filter>Widget\ShellListCtrl</Filter>
-    </ClCompile>
-    <ClCompile Include="TabTemplate.cpp">
-      <Filter>Widget\TabTemplate</Filter>
-    </ClCompile>
     <ClCompile Include="BookTab.cpp">
       <Filter>Kernel\BookTab</Filter>
-    </ClCompile>
-    <ClCompile Include="PrettyEdit.cpp">
-      <Filter>Widget\PrettyEdit</Filter>
     </ClCompile>
     <ClCompile Include="SearchEdit.cpp">
       <Filter>Widget\SearchEdit</Filter>
     </ClCompile>
     <ClCompile Include="FileOp.cpp">
-      <Filter>FileOp</Filter>
+      <Filter>Widget\FileOp</Filter>
     </ClCompile>
     <ClCompile Include="FileListBox.cpp">
       <Filter>Widget\FileListBox</Filter>
@@ -274,9 +247,6 @@
     <ClCompile Include="DDXControl.cpp">
       <Filter>Widget\DDXControl</Filter>
     </ClCompile>
-    <ClCompile Include="WndHelp.cpp">
-      <Filter>WndHelp</Filter>
-    </ClCompile>
     <ClCompile Include="BookDlg.cpp">
       <Filter>Kernel\BookDlg</Filter>
     </ClCompile>
@@ -295,20 +265,23 @@
     <ClCompile Include="ItemInfoEdit.cpp">
       <Filter>Widget\ItemInfoEdit</Filter>
     </ClCompile>
-    <ClCompile Include="TagItemEdit.cpp">
-      <Filter>Widget\TagItemEdit</Filter>
-    </ClCompile>
     <ClCompile Include="HiliteBorder.cpp">
       <Filter>Widget\HiliteBorder</Filter>
-    </ClCompile>
-    <ClCompile Include="FolderEnum.cpp">
-      <Filter>Widget\FolderEnum</Filter>
     </ClCompile>
     <ClCompile Include="FolderList.cpp">
       <Filter>Widget\FolderList</Filter>
     </ClCompile>
     <ClCompile Include="MoreInput.cpp">
       <Filter>Widget\MoreInput</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Widget\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="PrettyEdit.cpp">
+      <Filter>Widget\PrettyEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="FileEnum.cpp">
+      <Filter>Widget\FileEnum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -14,17 +14,19 @@ CPrettyButton::~CPrettyButton()
 BEGIN_MESSAGE_MAP(CPrettyButton, CHilitButton)
 END_MESSAGE_MAP()
 
+static int GetConstTextMargin() { return 4; }
+
 void CPrettyButton::OnDrawText(CDC* pDC, const CRect& rect, const CString& strText, UINT uiDTFlags, UINT /*uiState*/)
 {
 	ASSERT_VALID(pDC);
 
 	CRect rectTextUp(rect), rectTextDown(rect);
 
-	rectTextUp.left += 4;
-	rectTextUp.bottom -= rect.Height() / 2 - 4;
+	rectTextUp.left += GetConstTextMargin();
+	rectTextUp.bottom -= rect.Height() / 2 - GetConstTextMargin();
 
-	rectTextDown.left += 4;
-	rectTextDown.top += rect.Height() / 2 + 4;
+	rectTextDown.left += GetConstTextMargin();
+	rectTextDown.top += rect.Height() / 2 + GetConstTextMargin();
 	
 	CString strTitle, strContent;
 

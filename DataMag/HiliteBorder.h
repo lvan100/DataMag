@@ -21,7 +21,7 @@ public:
 
 protected:
 	/**
-	 * 是否高亮
+	 * 是否显示高亮效果
 	 */
 	BOOL m_bHilited;
 

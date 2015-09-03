@@ -2,9 +2,9 @@
 #include "DataMag.h"
 #include "TagTab.h"
 #include "FileOp.h"
+#include "Common.h"
 #include "DataMag.h"
 #include "NameDlg.h"
-#include "WndHelp.h"
 #include "BookDlg.h"
 #include "CodeDlg.h"
 #include "MainSearch.h"
@@ -27,10 +27,10 @@ CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	}
 
 	m_tag_list.EnumFile(FALSE);
-	m_tag_list.SetListEvent(&m_tag_event);
+	m_tag_list.SetListBoxEvent(&m_tag_event);
 
 	m_tag_info.EnumFolder(FALSE);
-	m_tag_info.SetListEvent(&m_tag_info_event);
+	m_tag_info.SetListBoxEvent(&m_tag_info_event);
 
 	DirChangeListener listener;
 	listener = bind(&CTagTab::OnTagDirChange, this, std::placeholders::_1);

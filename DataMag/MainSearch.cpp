@@ -35,8 +35,8 @@ CMainSearch::CMainSearch(CWnd* pParent /*=nullptr*/)
 	m_book_search.SetSearchIcon(hSearchIcon);
 	m_code_search.SetSearchIcon(hSearchIcon);
 
-	m_recent_list.SetListEvent(&m_recent_list_event);
-	m_recommand_list.SetListEvent(&m_recommand_list_event);
+	m_recent_list.SetListBoxEvent(&m_recent_list_event);
+	m_recommand_list.SetListBoxEvent(&m_recommand_list_event);
 
 	RecentListChangeListener listener;
 	listener = bind(&CMainSearch::OnRecentListChange, this);
@@ -349,6 +349,9 @@ void CMainSearch::DoRecommand()
 	int nBookCount = SimpleEnumFolder(theApp.GetBookDir(), &theShellManager, function<void(LPITEMIDLIST)>());
 
 	int nCount = nCodeCount + nBookCount;
+	if (nCount == 0) {
+		return;
+	}
 
 	srand((unsigned int)time(nullptr));
 

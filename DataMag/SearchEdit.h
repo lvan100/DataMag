@@ -6,7 +6,12 @@
 using namespace std;
 
 /**
- * 搜索编辑框
+ * 定义按钮点击事件类型
+ */
+typedef function<void()> ClickEvent;
+
+/**
+ * 搜索编辑框，可以设置搜索按钮
  */
 class CSearchEdit : public CPrettyEdit
 {
@@ -47,14 +52,14 @@ public:
 	/**
 	 * 设置搜索按钮单击事件响应
 	 */
-	void SetClickEvent(function<void()> event) {
+	void SetClickEvent(ClickEvent event) {
 		m_click_event = event;
 	}
 
 	/**
 	 * 设置搜索按钮双击事件响应
 	 */
-	void SetDClickEvent(function<void()> event){
+	void SetDClickEvent(ClickEvent event){
 		m_dclick_event = event;
 	}
 
@@ -68,12 +73,7 @@ protected:
 	 * 设置提示文字
 	 */
 	CString m_strHint;
-
-	/**
-	 * 是否处于焦点状态
-	 */
-	BOOL m_bFocused;
-
+	
 	/**
 	 * 当前是否提示文字
 	 */
@@ -92,12 +92,12 @@ protected:
 	/**
 	 * 搜索按钮单击事件响应
 	 */
-	function<void()> m_click_event;
+	ClickEvent m_click_event;
 
 	/**
 	 * 搜索按钮双击事件响应
 	 */
-	function<void()> m_dclick_event;
+	ClickEvent m_dclick_event;
 
 protected:
 	/**

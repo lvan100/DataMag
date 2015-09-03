@@ -1,10 +1,9 @@
 #include "stdafx.h"
-#include "DataMag.h"
 #include "FolderList.h"
 
-IMPLEMENT_DYNAMIC(CFolderList, CListBox)
+IMPLEMENT_DYNAMIC(CFolderListCtrl, CListBox)
 
-CFolderList::CFolderList(CShellManager* pShellManager)
+CFolderListCtrl::CFolderListCtrl(CShellManager* pShellManager)
 	: m_event(nullptr)
 	, m_hTagImage(nullptr)
 	, m_hCodeImage(nullptr)
@@ -13,23 +12,23 @@ CFolderList::CFolderList(CShellManager* pShellManager)
 {
 }
 
-CFolderList::~CFolderList()
+CFolderListCtrl::~CFolderListCtrl()
 {
 }
 
-BEGIN_MESSAGE_MAP(CFolderList, CListBox)
+BEGIN_MESSAGE_MAP(CFolderListCtrl, CListBox)
 	ON_WM_KILLFOCUS()
 	ON_WM_ERASEBKGND()
 	ON_WM_CTLCOLOR_REFLECT()
-	ON_CONTROL_REFLECT(LBN_DBLCLK, &CFolderList::OnLbnDblclk)
+	ON_CONTROL_REFLECT(LBN_DBLCLK, &CFolderListCtrl::OnLbnDblclk)
 END_MESSAGE_MAP()
 
-HBRUSH CFolderList::CtlColor(CDC* pDC, UINT nCtlColor)
+HBRUSH CFolderListCtrl::CtlColor(CDC* pDC, UINT nCtlColor)
 {
 	return afxGlobalData.brBtnFace;
 }
 
-void CFolderList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
+void CFolderListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	LPCTSTR str = (LPCTSTR)lpDrawItemStruct->itemData;
 
@@ -76,12 +75,12 @@ void CFolderList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	pDC->DrawText(strName, rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 }
 
-void CFolderList::MeasureItem(LPMEASUREITEMSTRUCT /*lpMeasureItemStruct*/)
+void CFolderListCtrl::MeasureItem(LPMEASUREITEMSTRUCT /*lpMeasureItemStruct*/)
 {
 	// Do default.
 }
 
-BOOL CFolderList::DoDefault(int iItem)
+BOOL CFolderListCtrl::DoDefault(int iItem)
 {
 	AFX_SHELLITEMINFO info;
 
@@ -98,6 +97,7 @@ BOOL CFolderList::DoDefault(int iItem)
 			ASSERT(FALSE);
 			return FALSE;
 		}
+
 	} else {
 		psfFolder->AddRef();
 	}
@@ -143,31 +143,30 @@ BOOL CFolderList::DoDefault(int iItem)
 	return SUCCEEDED(hr);
 }
 
-void CFolderList::OnLbnDblclk()
+void CFolderListCtrl::OnLbnDblclk()
 {
 	if (m_event != nullptr) {
 		m_event->OnDoubleClick();
 	}
 }
 
-void CFolderList::OnKillFocus(CWnd* pNewWnd)
+void CFolderListCtrl::OnKillFocus(CWnd* pNewWnd)
 {
 	CListBox::OnKillFocus(pNewWnd);
 
 	Invalidate();
 }
 
-BOOL CFolderList::OnEraseBkgnd(CDC* pDC)
+BOOL CFolderListCtrl::OnEraseBkgnd(CDC* pDC)
 {
 	return TRUE;
 }
 
-BOOL CFolderList::GetItemPath(CString& strPath, int iItem)
+CString CFolderListCtrl::GetItemPath(int iItem)
 {
-	if (iItem < GetCount()) {
-		strPath = (LPCTSTR)GetItemData(iItem);
-		return TRUE;
+	if (iItem > 0 && iItem < GetCount()) {
+		return (LPCTSTR)GetItemData(iItem);
 	} else {
-		return FALSE;
+		return _T("");
 	}
 }

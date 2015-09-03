@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * 列表框事件接口
+ * 列表框控件事件接口
  */
 class ListBoxEvent
 {
@@ -12,18 +12,18 @@ public:
 	virtual void InitListBox() = 0;
 
 	/**
-	 * 列表项双击事件
+	 * 处理列表项双击事件
 	 */
 	virtual void OnDoubleClick() = 0;
 
 	/**
-	 * 列表项发生变化
+	 * 列表选择项发生变化
 	 */
 	virtual void OnSelectChanged() = 0;
 };
 
 /**
- * 列表框事件接口适配器
+ * 列表框控件事件接口适配器，为事件提供默认接口.
  */
 class CListBoxEventAdapter : public ListBoxEvent{
 
@@ -34,12 +34,12 @@ public:
 	virtual void InitListBox() {}
 	
 	/**
-	 * 列表项双击事件
+	 * 处理列表项双击事件
 	 */
 	virtual void OnDoubleClick() {}
 
 	/**
-	 * 列表项发生变化
+	 * 列表选择项发生变化
 	 */
 	virtual void OnSelectChanged() {}
 };

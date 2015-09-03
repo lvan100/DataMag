@@ -99,8 +99,8 @@ protected:
 protected:
 	CStatic m_recent_group;
 	CStatic m_recommand_group;
-	CFolderList m_recent_list;
-	CFolderList m_recommand_list;
+	CFolderListCtrl m_recent_list;
+	CFolderListCtrl m_recommand_list;
 
 	CPrettyButton m_add_tag;
 	CPrettyButton m_add_book;

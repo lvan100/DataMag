@@ -9,7 +9,7 @@ CBookDlg::CBookDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(CBookDlg::IDD, pParent)
 	, m_book_list(&theShellManager)
 {
-	m_book_list.SetListEvent(this);	
+	m_book_list.SetListBoxEvent(this);	
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 

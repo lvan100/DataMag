@@ -2,6 +2,10 @@
 
 #include "HilitButton.h"
 
+/**
+ * 漂亮的按钮控件，图片在左，文字在右，并
+ * 且支持多行文字显示，支持注释性文字显示.
+ */
 class CPrettyButton : public CHilitButton
 {
 	DECLARE_DYNAMIC(CPrettyButton)

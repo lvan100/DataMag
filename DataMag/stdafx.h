@@ -51,21 +51,6 @@
 #endif
 #endif
 
-template<typename T>
-struct AutoRelease{
-
-	AutoRelease(T& ptr)
-		: _ptr(ptr){
-	}
-
-	~AutoRelease(){
-		_ptr->Release();
-	}
-
-protected:
-	T& _ptr;
-};
-
 struct AutoCoInitialize
 {
 	AutoCoInitialize(){

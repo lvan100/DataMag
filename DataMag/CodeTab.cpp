@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "FileOp.h"
+#include "Common.h"
 #include "DataMag.h"
 #include "CodeTab.h"
 #include "NameDlg.h"
-#include "WndHelp.h"
 #include "MainSearch.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
@@ -26,7 +26,7 @@ CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=nullptr*/)
 	}
 
 	m_project_list.EnumFile(FALSE);
-	m_project_list.SetListEvent(this);
+	m_project_list.SetListBoxEvent(this);
 
 	DirChangeListener listener;
 	listener = bind(&CCodeTab::OnCodeMagDirChange, this, std::placeholders::_1);
@@ -200,7 +200,7 @@ void CCodeTab::OnBnClickedProjectAdd()
 			m_project_list.SelectString(0, dlg.m_name);
 
 			// 立即打开文件夹以方便后续操作
-			OpenFoler(strFolder);
+			OpenFolerInShell(strFolder);
 
 		} else {
 			CString strContent = _T("创建项目目录\"\"失败！");

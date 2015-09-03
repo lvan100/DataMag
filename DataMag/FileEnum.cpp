@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "FolderEnum.h"
+#include "FileEnum.h"
 
-CFolderEnum::CFolderEnum(CShellManager* pShellManager)
+CFileEnum::CFileEnum(CShellManager* pShellManager)
 	: m_pShellManager(pShellManager)
 	, m_psfCurFolder(nullptr)
 	, m_pidlCurFQ(nullptr)
@@ -10,71 +10,64 @@ CFolderEnum::CFolderEnum(CShellManager* pShellManager)
 	m_tfEnumConfig = (SHCONTF)(SHCONTF_FOLDERS | SHCONTF_NONFOLDERS);
 }
 
-CFolderEnum::~CFolderEnum(void)
+CFileEnum::~CFileEnum(void)
 {
 }
 
-BOOL CFolderEnum::GetCurrentFolder(CString& strPath)
+CString CFileEnum::GetCurrentFolder()
 {
-	strPath.Empty();
-
 	if (m_pidlCurFQ == nullptr) {
-		return FALSE;
+		return _T("");
 	}
 
-	TCHAR szPath [MAX_PATH];
-	if (!SHGetPathFromIDList(m_pidlCurFQ, szPath)) {
-		return FALSE;
+	TCHAR szPath [MAX_PATH + 1] = { 0 };
+	if (SHGetPathFromIDList(m_pidlCurFQ, szPath)) {
+		return szPath;
 	}
-
-	strPath = szPath;
-	return TRUE;
+	return _T("");
 }
 
-BOOL CFolderEnum::GetCurrentFolderName(CString& strName)
+CString CFileEnum::GetCurrentFolderName()
 {
-	strName.Empty();
-
 	if (m_pidlCurFQ == nullptr) {
-		return FALSE;
+		return _T("");
 	}
 
 	SHFILEINFO sfi;
-	if (!SHGetFileInfo((LPCTSTR)m_pidlCurFQ, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))	{
-		return FALSE;
+	if (SHGetFileInfo((LPCTSTR)m_pidlCurFQ, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))	{
+		return sfi.szDisplayName;
 	}
-
-	strName = sfi.szDisplayName;
-	return TRUE;
+	return _T("");
 }
 
-HRESULT CFolderEnum::Refresh()
+BOOL CFileEnum::Refresh()
 {
-	return DisplayFolder((LPAFX_SHELLITEMINFO) nullptr);
+	return SUCCEEDED(DisplayFolder((LPAFX_SHELLITEMINFO) nullptr));
 }
 
-HRESULT CFolderEnum::DisplayParentFolder()
+BOOL CFileEnum::DisplayParentFolder()
 {
 	ASSERT_VALID(m_pShellManager);
 
-	HRESULT hr = E_FAIL;
 	if (m_pidlCurFQ == nullptr)	{
-		return hr;
+		return FALSE;
 	}
 
 	AFX_SHELLITEMINFO info;
 	int nLevel = m_pShellManager->GetParentItem(m_pidlCurFQ, info.pidlFQ);
 	if (nLevel < 0)	{
-		return hr;
+		return FALSE;
 	}
+
+	HRESULT hr = E_FAIL;
 
 	if (nLevel == 0) {
 		// 整个文件系统的根节点
 		hr = DisplayFolder(&info);
 
 	} else {
-		// 获取根节点 Shell 操作接口
-		LPSHELLFOLDER pDesktopFolder;
+		// 获取文件系统根节点的 Shell 操作接口
+		LPSHELLFOLDER pDesktopFolder = nullptr;
 		hr = SHGetDesktopFolder(&pDesktopFolder);
 
 		if (SUCCEEDED(hr)) {
@@ -88,27 +81,22 @@ HRESULT CFolderEnum::DisplayParentFolder()
 	}
 
 	m_pShellManager->FreeItem(info.pidlFQ);
-	return hr;
+	return SUCCEEDED(hr);
 }
 
-HRESULT CFolderEnum::DisplayFolder(LPCTSTR lpszPath)
+BOOL CFileEnum::DisplayFolder(LPCTSTR lpszPath)
 {
-	if (m_pShellManager == nullptr)	{
-		ASSERT(FALSE);
-		return E_FAIL;
-	}
-
 	ENSURE(lpszPath != nullptr);
 	ASSERT_VALID(m_pShellManager);
 
 	AFX_SHELLITEMINFO info;
 	HRESULT hr = m_pShellManager->ItemFromPath(lpszPath, info.pidlRel);
 	if (FAILED(hr))	{
-		return hr;
+		return FALSE;
 	}
 
-	// 获取根节点 Shell 操作接口
-	LPSHELLFOLDER pDesktopFolder;
+	// 获取文件系统根节点 Shell 操作接口
+	LPSHELLFOLDER pDesktopFolder = nullptr;
 	hr = SHGetDesktopFolder(&pDesktopFolder);
 
 	if (SUCCEEDED(hr)) {
@@ -121,31 +109,27 @@ HRESULT CFolderEnum::DisplayFolder(LPCTSTR lpszPath)
 	}
 
 	m_pShellManager->FreeItem(info.pidlRel);
-	return hr;
+	return SUCCEEDED(hr);
 }
 
-HRESULT CFolderEnum::DisplayFolder(LPAFX_SHELLITEMINFO pItemInfo)
+BOOL CFileEnum::DisplayFolder(LPAFX_SHELLITEMINFO pItemInfo)
 {
-	HRESULT hr = E_FAIL;
+	ASSERT_VALID(m_pShellManager);
 
-	if (m_pShellManager == nullptr) {
-		ASSERT(FALSE);
-		return hr;
-	}
+	HRESULT hr = E_FAIL;
 
 	if (pItemInfo != nullptr) {
 		ReleaseCurrFolder();
 
 		hr = LockCurrentFolder(pItemInfo);
 		if (FAILED(hr)) {
-			return hr;
+			return FALSE;
 		}
 	}
 
 	OnDisplayFolderInit();
 
 	if (m_psfCurFolder != nullptr) {
-		CWaitCursor wait;
 
 		OnDisplayFolderBefore();
 		{
@@ -154,15 +138,14 @@ HRESULT CFolderEnum::DisplayFolder(LPAFX_SHELLITEMINFO pItemInfo)
 		OnDisplayFolderAfter();
 	}
 
-	return hr;
+	return SUCCEEDED(hr);
 }
 
-HRESULT CFolderEnum::LockCurrentFolder(LPAFX_SHELLITEMINFO pItemInfo)
+HRESULT CFileEnum::LockCurrentFolder(LPAFX_SHELLITEMINFO pItemInfo)
 {
 	ASSERT_VALID(m_pShellManager);
 
 	HRESULT hr = E_FAIL;
-	m_pidlCurFQ = nullptr;
 
 	if (pItemInfo != nullptr && pItemInfo->pParentFolder != nullptr) {
 		ENSURE(pItemInfo->pidlRel != nullptr);
@@ -180,10 +163,10 @@ HRESULT CFolderEnum::LockCurrentFolder(LPAFX_SHELLITEMINFO pItemInfo)
 		m_pidlCurFQ = m_pShellManager->CopyItem(pItemInfo->pidlFQ);
 	}
 
-	return hr;
+	return SUCCEEDED(hr);
 }
 
-void CFolderEnum::ReleaseCurrFolder()
+void CFileEnum::ReleaseCurrFolder()
 {
 	ASSERT_VALID(m_pShellManager);
 
@@ -196,7 +179,7 @@ void CFolderEnum::ReleaseCurrFolder()
 	}
 }
 
-CString CFolderEnum::GetItemText(LPAFX_SHELLITEMINFO pItem)
+CString CFileEnum::GetItemText(LPAFX_SHELLITEMINFO pItem)
 {
 	ENSURE(pItem != nullptr);
 
@@ -209,7 +192,7 @@ CString CFolderEnum::GetItemText(LPAFX_SHELLITEMINFO pItem)
 	return _T("");
 }
 
-HRESULT CFolderEnum::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent)
+HRESULT CFileEnum::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlParent)
 {
 	ASSERT_VALID(m_pShellManager);
 
@@ -232,9 +215,10 @@ HRESULT CFolderEnum::EnumObjects(LPSHELLFOLDER pParentFolder, LPITEMIDLIST pidlP
 			pItem->pidlRel = pidlTemp;
 
 			if (!OnEnumObject(pItem)) {
-				pParentFolder->Release();
-				m_pShellManager->FreeItem(pItem->pidlFQ);
 				m_pShellManager->FreeItem(pItem->pidlRel);
+				m_pShellManager->FreeItem(pItem->pidlFQ);
+				GlobalFree((HGLOBAL) pItem);
+				pParentFolder->Release();
 			}
 	
 			dwFetched = 0;

@@ -9,7 +9,7 @@ CCodeDlg::CCodeDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(CCodeDlg::IDD, pParent)
 	, m_project_list(&theShellManager)
 {
-	m_project_list.SetListEvent(this);
+	m_project_list.SetListBoxEvent(this);
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 }
 
