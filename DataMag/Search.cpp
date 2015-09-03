@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "DataMag.h"
-#include "BookTab.h"
-#include "TagTab.h"
-#include "CodeTab.h"
-#include "MainSearch.h"
+#include "Search.h"
 #include "DDXControl.h"
 
 #include <set>
@@ -12,24 +9,13 @@
 #include <algorithm>
 using namespace std;
 
-/**
- * 全局的主搜索对话框对象
- */
-CMainSearch* theMainSearch = nullptr;
+IMPLEMENT_DYNAMIC(CSearch, CAppWnd)
 
-IMPLEMENT_DYNAMIC(CMainSearch, CAppWnd)
-
-CMainSearch::CMainSearch(CWnd* pParent /*=nullptr*/)
-	: CAppWnd(CMainSearch::IDD, pParent)
+CSearch::CSearch(CWnd* pParent)
+	: CAppWnd(CSearch::IDD, pParent)
 	, m_recommand_list(&theShellManager)
 	, m_recent_list(&theShellManager)
 {
-	if (theMainSearch == nullptr) {
-		theMainSearch = this;
-	} else {
-		ASSERT(FALSE);
-	}
-
 	HICON hSearchIcon = theApp.GetSearchIcon();
 	m_tag_search.SetSearchIcon(hSearchIcon);
 	m_book_search.SetSearchIcon(hSearchIcon);
@@ -39,16 +25,16 @@ CMainSearch::CMainSearch(CWnd* pParent /*=nullptr*/)
 	m_recommand_list.SetListBoxEvent(&m_recommand_list_event);
 
 	RecentListChangeListener listener;
-	listener = bind(&CMainSearch::OnRecentListChange, this);
+	listener = bind(&CSearch::OnRecentListChange, this);
 	theApp.AddRecentListChangeListener(this, listener);
 }
 
-CMainSearch::~CMainSearch()
+CSearch::~CSearch()
 {
 	theApp.DeleteRecentListChangeListener(this);
 }
 
-void CMainSearch::DoDataExchange(CDataExchange* pDX)
+void CSearch::DoDataExchange(CDataExchange* pDX)
 {
 	CAppWnd::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_ADD_TAG, m_add_tag);
@@ -63,16 +49,16 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_RECOMMEND_GROUP, m_recommand_group);
 }
 
-BEGIN_MESSAGE_MAP(CMainSearch, CAppWnd)
-	ON_BN_CLICKED(IDC_ADD_CODE, &CMainSearch::OnBnClickedAddProject)
-	ON_BN_CLICKED(IDC_ADD_BOOK, &CMainSearch::OnBnClickedAddBook)
-	ON_BN_CLICKED(IDC_ADD_TAG, &CMainSearch::OnBnClickedAddTag)
+BEGIN_MESSAGE_MAP(CSearch, CAppWnd)
+	ON_BN_CLICKED(IDC_ADD_CODE, &CSearch::OnBnClickedAddProject)
+	ON_BN_CLICKED(IDC_ADD_BOOK, &CSearch::OnBnClickedAddBook)
+	ON_BN_CLICKED(IDC_ADD_TAG, &CSearch::OnBnClickedAddTag)
 	ON_WM_MOVE()
 END_MESSAGE_MAP()
 
-void CMainSearch::RecentListEvent::OnDoubleClick()
+void CSearch::RecentListEvent::OnDoubleClick()
 {
-	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recent_list_event)));
+	auto pThis = ((CSearch*)((BYTE*)this - offsetof(CSearch, m_recent_list_event)));
 
 	int nItem = pThis->m_recent_list.GetCurSel();
 	pThis->m_recent_list.DoDefaultDClick(nItem);
@@ -81,9 +67,9 @@ void CMainSearch::RecentListEvent::OnDoubleClick()
 	theApp.SetRecentFile(strPath);
 }
 
-void CMainSearch::RecommandListEvent::OnDoubleClick()
+void CSearch::RecommandListEvent::OnDoubleClick()
 {
-	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recommand_list_event)));
+	auto pThis = ((CSearch*)((BYTE*)this - offsetof(CSearch, m_recommand_list_event)));
 
 	int nItem = pThis->m_recommand_list.GetCurSel();
 	pThis->m_recommand_list.DoDefaultDClick(nItem);
@@ -92,7 +78,7 @@ void CMainSearch::RecommandListEvent::OnDoubleClick()
 	theApp.SetRecentFile(strPath);
 }
 
-BOOL CMainSearch::OnInitDialog()
+BOOL CSearch::OnInitDialog()
 {
 	CAppWnd::OnInitDialog();
 
@@ -119,7 +105,7 @@ BOOL CMainSearch::OnInitDialog()
 	m_recommand_list.SetBookImage(hBookIcon);
 	m_recommand_list.SetCodeImage(hProjectIcon);
 	
-	auto event = bind(&CMainSearch::DoSearch, this);
+	auto event = bind(&CSearch::DoSearch, this);
 
 	m_tag_search.SetClickEvent(event);
 	m_tag_search.SetHintText(_T("搜索标签"));
@@ -152,18 +138,39 @@ BOOL CMainSearch::OnInitDialog()
 	return FALSE;
 }
 
-void CMainSearch::DoSearch()
+void CSearch::ShowTagTab()
+{
+	m_tag_tab = new CTagTab(this);
+	m_tag_tab->Create(CTagTab::IDD);
+	m_tag_tab->ShowWindow(SW_SHOW);
+}
+
+void CSearch::ShowCodeTab()
+{
+	m_code_tab = new CCodeTab(this);
+	m_code_tab->Create(CCodeTab::IDD);
+	m_code_tab->ShowWindow(SW_SHOW);
+}
+
+void CSearch::ShowBookTab()
+{
+	m_book_tab = new CBookTab(this);
+	m_book_tab->Create(CBookTab::IDD);
+	m_book_tab->ShowWindow(SW_SHOW);
+}
+
+void CSearch::DoSearch()
 {
 	CString strSearchText;
 
 	CWnd* pFocus = GetFocus();
 	if (pFocus == &m_tag_search)
 	{
-		m_tag_search.GetWindowText(strSearchText);
-
+		ShowTagTab();
 		MoveToHideWindow(TRUE);
-		CTagTab(_T("search:") + strSearchText).DoModal();
-		MoveToHideWindow(FALSE);
+
+		m_tag_search.GetWindowText(strSearchText);
+		m_tag_tab->DoCommandSearch(strSearchText);
 
 		m_tag_search.SetWindowText(_T(""));
 		m_tag_search.SetFocus();
@@ -171,11 +178,11 @@ void CMainSearch::DoSearch()
 	} 
 	else if (pFocus == &m_code_search)
 	{
-		m_code_search.GetWindowText(strSearchText);
-
+		ShowCodeTab();
 		MoveToHideWindow(TRUE);
-		CCodeTab(_T("search:") + strSearchText).DoModal();
-		MoveToHideWindow(FALSE);
+
+		m_code_search.GetWindowText(strSearchText);
+		m_code_tab->DoCommandSearch(strSearchText);
 
 		m_code_search.SetWindowText(_T(""));
 		m_code_search.SetFocus();
@@ -183,18 +190,18 @@ void CMainSearch::DoSearch()
 	}
 	else if (pFocus == &m_book_search)
 	{
-		m_book_search.GetWindowText(strSearchText);
-
+		ShowBookTab();
 		MoveToHideWindow(TRUE);
-		CBookTab(_T("search:") + strSearchText).DoModal();
-		MoveToHideWindow(FALSE);
+
+		m_book_search.GetWindowText(strSearchText);
+		m_book_tab->DoCommandSearch(strSearchText);
 
 		m_book_search.SetWindowText(_T(""));
 		m_book_search.SetFocus();
 	}
 }
 
-BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
+BOOL CSearch::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN)
 	{
@@ -212,34 +219,34 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 	return CAppWnd::PreTranslateMessage(pMsg);
 }
 
-void CMainSearch::OnBnClickedAddTag()
+void CSearch::OnBnClickedAddTag()
 {
+	ShowTagTab();
 	MoveToHideWindow(TRUE);
-	CTagTab(_T("add")).DoModal();
-	MoveToHideWindow(FALSE);
+	m_tag_tab->DoCommandAdd();
 
 	m_code_search.SetFocus();
 }
 
-void CMainSearch::OnBnClickedAddProject()
+void CSearch::OnBnClickedAddProject()
 {
+	ShowCodeTab();
 	MoveToHideWindow(TRUE);
-	CCodeTab(_T("add")).DoModal();
-	MoveToHideWindow(FALSE);
+	m_code_tab->DoCommandAdd();
 
 	m_code_search.SetFocus();
 }
 
-void CMainSearch::OnBnClickedAddBook()
+void CSearch::OnBnClickedAddBook()
 {
+	ShowBookTab();
 	MoveToHideWindow(TRUE);
-	CBookTab(_T("add")).DoModal();
-	MoveToHideWindow(FALSE);
+	m_book_tab->DoCommandAdd();
 
 	m_code_search.SetFocus();
 }
 
-void CMainSearch::MoveToHideWindow(BOOL bHide)
+void CSearch::MoveToHideWindow(BOOL bHide)
 {
 	CRect rcWnd(m_rect_if_visiable);
 	
@@ -264,7 +271,7 @@ void CMainSearch::MoveToHideWindow(BOOL bHide)
 	MoveWindow(rcWnd);
 }
 
-void CMainSearch::OnMove(int x, int y)
+void CSearch::OnMove(int x, int y)
 {
 	CAppWnd::OnMove(x, y);
 
@@ -273,7 +280,7 @@ void CMainSearch::OnMove(int x, int y)
 	}
 }
 
-void CMainSearch::OnRecentListChange()
+void CSearch::OnRecentListChange()
 {
 	m_recent_list.ResetContent();
 
@@ -340,7 +347,7 @@ int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
 	return nFolderCount;
 }
 
-void CMainSearch::DoRecommand()
+void CSearch::DoRecommand()
 {
 	m_recommand_values.clear();
 	m_recommand_list.ResetContent();

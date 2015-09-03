@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "DataMag.h"
-#include "MainSearch.h"
+#include "Search.h"
 
 /**
  * 全局的应用程序对象
@@ -53,7 +53,7 @@ BOOL CDataMagApp::InitInstance()
 
 	AfxInitRichEdit2();
 
-	CMainSearch dlg;
+	CSearch dlg;
 	dlg.DoModal();
 
 	// 如果在程序中使用了 CMFCButton 等控件

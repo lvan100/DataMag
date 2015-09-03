@@ -10,21 +10,29 @@
 #include "ItemInfoEdit.h"
 
 /**
- * 图书标签页
+ * 图书页面
  */
 class CBookTab : public CAppWnd, CListBoxEventAdapter
 {
 	DECLARE_DYNAMIC(CBookTab)
 
 public:
-	/**
-	 * 命令格式:"open","search:xx","add".
-	 */
-	CBookTab(CString strCommand = _T(""), CWnd* pParent = nullptr);
+	CBookTab(CWnd* pParent);
 	virtual ~CBookTab();
 
 	enum { IDD = IDD_BOOKTAB };
 
+	/**
+	 * 响应添加事件
+	 */
+	void DoCommandAdd();
+
+	/**
+	 * 响应搜索事件
+	 */
+	void DoCommandSearch(CString str);
+
+public:
 	/**
 	 * 响应图书管理目录改变事件
 	 */
@@ -60,14 +68,6 @@ protected:
 	CStringA strText;
 
 	/**
-	 * 执行命令
-	 */
-	struct Command{
-		CString cmd;
-		CString arg;
-	}m_command;
-
-	/**
 	 * 编辑和禁止编辑图标
 	 */
 	HICON m_hCanEditIcon;
@@ -86,7 +86,7 @@ protected:
 
 protected:
 	/**
-	 * 获取默认焦点控件
+	 * 获取默认的焦点控件
 	 */
 	virtual CWnd* GetDefaultFocusWnd()
 	{ return &m_search_edit; }
@@ -97,6 +97,9 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	/**
+	 * 按钮控件
+	 */
 	CHilitButton m_setting;
 	CHilitButton m_book_add;
 	CHilitButton m_book_delete;
@@ -104,10 +107,16 @@ protected:
 	CHilitButton m_modify_info;
 	CHilitButton m_refresh_list;
 
+	/**
+	 * 图书列表控件
+	 */
 	CFileListBox m_book_list;
 	CSearchEdit m_search_edit;
 	CItemInfoEdit m_item_text;
 
+	/**
+	 * 图书详情控件
+	 */
 	CMoreInput m_more_input;
 	CPrettyEdit m_tag_group;
 	CStatic m_tag_group_title;
@@ -124,4 +133,5 @@ protected:
 	afx_msg void OnBnClickedBookRefresh();
 	afx_msg void OnChangeBookSearchEdit();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 };

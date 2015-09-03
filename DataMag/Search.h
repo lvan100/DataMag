@@ -1,24 +1,29 @@
 #pragma once
 
 #include "AppWnd.h"
-
+#include "TagTab.h"
+#include "BookTab.h"
+#include "CodeTab.h"
 #include "FolderList.h"
 #include "SearchEdit.h"
 #include "PrettyButton.h"
 
-class CMainSearch : public CAppWnd
+/**
+ * 主搜索对话框
+ */
+class CSearch : public CAppWnd
 {
-	DECLARE_DYNAMIC(CMainSearch)
+	DECLARE_DYNAMIC(CSearch)
 
 public:
-	CMainSearch(CWnd* pParent = nullptr);
-	virtual ~CMainSearch();
+	CSearch(CWnd* pParent = nullptr);
+	virtual ~CSearch();
 
 	enum { IDD = IDD_MAINSEARCH };
 
 protected:
 	/**
-	 * 最近访问列表事件对象
+	 * 最近访问列表控件事件对象
 	 */
 	class RecentListEvent: public CListBoxEventAdapter
 	{
@@ -28,10 +33,10 @@ protected:
 		 */
 		virtual void OnDoubleClick();
 
-	}m_recent_list_event;
+	} m_recent_list_event;
 
 	/**
-	 * 最近访问列表事件对象
+	 * 最近访问列表控件事件对象
 	 */
 	class RecommandListEvent: public CListBoxEventAdapter
 	{
@@ -41,7 +46,7 @@ protected:
 		 */
 		virtual void OnDoubleClick();
 
-	}m_recommand_list_event;
+	} m_recommand_list_event;
 
 public:
 	/**
@@ -71,6 +76,11 @@ public:
 	 */
 	void SetIfVisiableRect(CRect rc)
 	{ m_rect_if_visiable = rc; }
+	
+	/**
+	 * 移动窗口到不可见区域，以实现隐藏窗口
+	 */
+	void MoveToHideWindow(BOOL bHide);
 
 protected:
 	/**
@@ -78,37 +88,63 @@ protected:
 	 */
 	CRect m_rect_if_visiable;
 
-	/**
-	 * 移动窗口到不可见区域，以达到隐藏窗口的目的
-	 */
-	void MoveToHideWindow(BOOL bHide);
-
 protected:
 	/**
-	 * 随机推荐列表
+	 * 随机推荐项目或图书列表
 	 */
 	vector<CString> m_recommand_values;
 
 protected:
 	/**
-	 * 获取默认焦点控件
+	 * 获取默认的焦点控件
 	 */
 	virtual CWnd* GetDefaultFocusWnd()
 	{ return &m_code_search; }
 
-protected:
-	CStatic m_recent_group;
-	CStatic m_recommand_group;
-	CFolderListCtrl m_recent_list;
-	CFolderListCtrl m_recommand_list;
+	/**
+	 * 显示标签页面
+	 */
+	void ShowTagTab();
 
+	/**
+	 * 显示源码页面
+	 */
+	void ShowCodeTab();
+
+	/**
+	 * 显示图书页面
+	 */
+	void ShowBookTab();
+
+protected:
+	/**
+	 * 页面对话框
+	 */
+	CTagTab* m_tag_tab;
+	CCodeTab* m_code_tab;
+	CBookTab* m_book_tab;
+
+	/**
+	 * 按钮控件
+	 */
 	CPrettyButton m_add_tag;
 	CPrettyButton m_add_book;
 	CPrettyButton m_add_project;
 
+	/**
+	 * 搜索框
+	 */
 	CSearchEdit m_tag_search;
 	CSearchEdit m_book_search;
 	CSearchEdit m_code_search;
+
+	/**
+	 * 列表控件
+	 */
+	CStatic m_recent_group;
+	CStatic m_recommand_group;
+	CFolderListCtrl m_recent_list;
+	CFolderListCtrl m_recommand_list;
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -122,8 +158,3 @@ protected:
 	afx_msg void OnBnClickedAddBook();
 	afx_msg void OnBnClickedAddProject();
 };
-
-/**
- * 全局的主搜索对话框对象
- */
-extern CMainSearch* theMainSearch;

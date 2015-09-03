@@ -4,27 +4,19 @@
 #include "DataMag.h"
 #include "NameDlg.h"
 #include "BookTab.h"
-#include "MainSearch.h"
+#include "Search.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
 
 IMPLEMENT_DYNAMIC(CBookTab, CAppWnd)
 
-CBookTab::CBookTab(CString strCommand, CWnd* pParent /*=nullptr*/)
+CBookTab::CBookTab(CWnd* pParent)
 	: CAppWnd(CBookTab::IDD, pParent)
 	, m_book_list(&theShellManager)
 {
 	m_hCanEditIcon = AfxGetApp()->LoadIcon(IDI_EDIT_TAG);
 	m_hNotEditIcon = AfxGetApp()->LoadIcon(IDI_NOT_EDIT);
 
-	int colon = strCommand.Find(':');
-	if (colon > 0) {
-		m_command.cmd = strCommand.Left(colon);
-		m_command.arg = strCommand.Mid(colon + 1);
-	} else {
-		m_command.cmd = strCommand;
-	}
-	
 	m_book_list.EnumFile(FALSE);
 	m_book_list.SetListBoxEvent(this);
 
@@ -65,6 +57,7 @@ BEGIN_MESSAGE_MAP(CBookTab, CAppWnd)
 	ON_WM_MOVE()
 	ON_WM_DESTROY()
 	ON_WM_DROPFILES()
+	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CBookTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_BOOK_ADD, &CBookTab::OnBnClickedBookAdd)
 	ON_BN_CLICKED(IDC_BOOK_DELETE, &CBookTab::OnBnClickedBookDelete)
@@ -135,7 +128,8 @@ BOOL CBookTab::OnInitDialog()
 	m_more_input.SetMaxInputCount(limit);
 	m_more_input.SetMoreInputCount(limit);
 
-	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
+	CSearch* pWnd = (CSearch*) GetParent();
+	CenterWindowInRect(this, pWnd->GetIfVisiableRect());
 
 	[&](){
 		LOGFONT logFont = { 0 };
@@ -147,20 +141,19 @@ BOOL CBookTab::OnInitDialog()
 		m_tag_group_title.SetFont(CFont::FromHandle(hFont));
 	}();
 
-	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
-
-	} else if (m_command.cmd.CompareNoCase(_T("search")) == 0) {
-		if (!m_command.arg.IsEmpty()) {
-			m_search_edit.SetWindowText(m_command.arg);
-			m_search_edit.SetSel(-1);
-			m_book_list.SetFilterString(m_command.arg);
-		}
-
-	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
-		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_BOOK_ADD, BN_CLICKED), 0);
-	}
-
 	return FALSE; /* ½¹µãÉèÖÃ */
+}
+
+void CBookTab::DoCommandAdd()
+{
+	PostMessage(WM_COMMAND, MAKEWPARAM(IDC_BOOK_ADD, BN_CLICKED), 0);
+}
+
+void CBookTab::DoCommandSearch(CString str)
+{
+	m_book_list.SetFilterString(str);
+	m_search_edit.SetWindowText(str);
+	m_search_edit.SetSel(-1);
 }
 
 void CBookTab::OnBnClickedBookAdd()
@@ -302,6 +295,15 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
+		case VK_ESCAPE: 
+			{
+				auto* pWnd = (CSearch*) GetParent();
+				pWnd->MoveToHideWindow(FALSE);
+
+				delete this;
+				return TRUE;
+			}
+			break;
 		case VK_RETURN:
 			{
 				if (pFocusWnd != &m_item_text) {
@@ -467,6 +469,24 @@ void CBookTab::OnMove(int x, int y)
 		CRect rcWindow;
 		GetWindowRect(rcWindow);
 
-		theMainSearch->SetIfVisiableRect(rcWindow);
+		auto* pWnd = (CSearch*) GetParent();
+		pWnd->SetIfVisiableRect(rcWindow);
+	}
+}
+
+void CBookTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if (nID == SC_MINIMIZE) {
+		GetParent()->SendMessage(WM_SYSCOMMAND, nID, lParam);
+
+	} else if (nID == SC_CLOSE) {
+		auto* pWnd = (CSearch*) GetParent();
+		pWnd->MoveToHideWindow(FALSE);
+
+		DestroyWindow();
+		delete this;
+
+	} else {
+		CAppWnd::OnSysCommand(nID, lParam);
 	}
 }

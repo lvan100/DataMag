@@ -10,9 +10,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{7541c96c-da31-47c6-b995-270318e61250}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\BookTab">
-      <UniqueIdentifier>{6d8c0e41-cdb3-4b7a-b212-4914452a5cbc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Kernel\SettingDlg">
       <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
     </Filter>
@@ -28,9 +25,6 @@
     <Filter Include="Kernel\NameDlg">
       <UniqueIdentifier>{5fa0214c-73ba-4405-b7c5-21a144e30a6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\MainSearch">
-      <UniqueIdentifier>{6688b449-2f8b-46fd-a3e9-5b03de11b2a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widget\PrettyButton">
       <UniqueIdentifier>{63a62df5-f25a-4f23-81eb-09ce11040e6a}</UniqueIdentifier>
     </Filter>
@@ -43,14 +37,8 @@
     <Filter Include="Kernel\BookDlg">
       <UniqueIdentifier>{c28d5e6f-bc10-458c-a18b-fabba33ee288}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\TagTab">
-      <UniqueIdentifier>{a98c5081-6aa9-4d80-8818-4e3e6e67ea0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Kernel\CodeDlg">
       <UniqueIdentifier>{6636454a-bca3-40a4-9c3a-2ed2daf7707b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Kernel\CodeTab">
-      <UniqueIdentifier>{9ed6aa81-8c46-4cdf-9816-7c8cffba40fe}</UniqueIdentifier>
     </Filter>
     <Filter Include="Widget\ItemInfoEdit">
       <UniqueIdentifier>{742ff97e-6bd0-4878-b7c5-9031e95190c1}</UniqueIdentifier>
@@ -75,6 +63,18 @@
     </Filter>
     <Filter Include="Widget\FileEnum">
       <UniqueIdentifier>{f8753b09-c294-4dc6-947c-d74a87ee1223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\TagTab">
+      <UniqueIdentifier>{a98c5081-6aa9-4d80-8818-4e3e6e67ea0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\Search">
+      <UniqueIdentifier>{6688b449-2f8b-46fd-a3e9-5b03de11b2a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\CodeTab">
+      <UniqueIdentifier>{9ed6aa81-8c46-4cdf-9816-7c8cffba40fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel\BookTab">
+      <UniqueIdentifier>{6d8c0e41-cdb3-4b7a-b212-4914452a5cbc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +158,6 @@
     <ClInclude Include="NameDlg.h">
       <Filter>Kernel\NameDlg</Filter>
     </ClInclude>
-    <ClInclude Include="MainSearch.h">
-      <Filter>Kernel\MainSearch</Filter>
-    </ClInclude>
     <ClInclude Include="PrettyButton.h">
       <Filter>Widget\PrettyButton</Filter>
     </ClInclude>
@@ -209,6 +206,9 @@
     <ClInclude Include="FileEnum.h">
       <Filter>Widget\FileEnum</Filter>
     </ClInclude>
+    <ClInclude Include="Search.h">
+      <Filter>Kernel\Search</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -234,9 +234,6 @@
     </ClCompile>
     <ClCompile Include="NameDlg.cpp">
       <Filter>Kernel\NameDlg</Filter>
-    </ClCompile>
-    <ClCompile Include="MainSearch.cpp">
-      <Filter>Kernel\MainSearch</Filter>
     </ClCompile>
     <ClCompile Include="PrettyButton.cpp">
       <Filter>Widget\PrettyButton</Filter>
@@ -282,6 +279,9 @@
     </ClCompile>
     <ClCompile Include="FileEnum.cpp">
       <Filter>Widget\FileEnum</Filter>
+    </ClCompile>
+    <ClCompile Include="Search.cpp">
+      <Filter>Kernel\Search</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

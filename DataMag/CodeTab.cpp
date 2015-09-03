@@ -4,26 +4,18 @@
 #include "DataMag.h"
 #include "CodeTab.h"
 #include "NameDlg.h"
-#include "MainSearch.h"
+#include "Search.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
 
 IMPLEMENT_DYNAMIC(CCodeTab, CAppWnd)
 
-CCodeTab::CCodeTab(CString strCommand, CWnd* pParent /*=nullptr*/)
+CCodeTab::CCodeTab(CWnd* pParent)
 	: CAppWnd(CCodeTab::IDD, pParent)
 	, m_project_list(&theShellManager)
 {
 	m_hCanEditIcon = AfxGetApp()->LoadIcon(IDI_EDIT_TAG);
 	m_hNotEditIcon = AfxGetApp()->LoadIcon(IDI_NOT_EDIT);
-
-	int colon = strCommand.Find(':');
-	if (colon > 0) {
-		m_command.cmd = strCommand.Left(colon);
-		m_command.arg = strCommand.Mid(colon + 1);
-	} else {
-		m_command.cmd = strCommand;
-	}
 
 	m_project_list.EnumFile(FALSE);
 	m_project_list.SetListBoxEvent(this);
@@ -65,6 +57,7 @@ BEGIN_MESSAGE_MAP(CCodeTab, CAppWnd)
 	ON_WM_MOVE()
 	ON_WM_DESTROY()
 	ON_WM_DROPFILES()
+	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CCodeTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_CODE_ADD, &CCodeTab::OnBnClickedProjectAdd)
 	ON_BN_CLICKED(IDC_MODIFY_INFO, &CCodeTab::OnBnClickedModifyInfo)
@@ -135,7 +128,8 @@ BOOL CCodeTab::OnInitDialog()
 	m_more_input.SetMaxInputCount(limit);
 	m_more_input.SetMoreInputCount(limit);
 
-	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
+	CSearch* pWnd = (CSearch*) GetParent();
+	CenterWindowInRect(this, pWnd->GetIfVisiableRect());
 
 	[&](){
 		LOGFONT logFont = { 0 };
@@ -147,20 +141,19 @@ BOOL CCodeTab::OnInitDialog()
 		m_tag_group_title.SetFont(CFont::FromHandle(hFont));
 	}();
 
-	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
-
-	} else if (m_command.cmd.CompareNoCase(_T("search")) == 0) {
-		if (!m_command.arg.IsEmpty()) {
-			m_search_edit.SetWindowText(m_command.arg);
-			m_search_edit.SetSel(-1);
-			m_project_list.SetFilterString(m_command.arg);
-		}
-
-	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
-		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_CODE_ADD, BN_CLICKED), 0);
-	}
-
 	return FALSE; /* ½¹µãÉèÖÃ */
+}
+
+void CCodeTab::DoCommandAdd()
+{
+	PostMessage(WM_COMMAND, MAKEWPARAM(IDC_CODE_ADD, BN_CLICKED), 0);
+}
+
+void CCodeTab::DoCommandSearch(CString str)
+{
+	m_project_list.SetFilterString(str);
+	m_search_edit.SetWindowText(str);
+	m_search_edit.SetSel(-1);
 }
 
 void CCodeTab::OnBnClickedProjectAdd()
@@ -311,6 +304,15 @@ BOOL CCodeTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
+		case VK_ESCAPE: 
+			{
+				auto* pWnd = (CSearch*) GetParent();
+				pWnd->MoveToHideWindow(FALSE);
+
+				delete this;
+				return TRUE;
+			}
+			break;
 		case VK_RETURN:
 			{
 				if (pFocusWnd != &m_item_text) {
@@ -504,6 +506,24 @@ void CCodeTab::OnMove(int x, int y)
 		CRect rcWindow;
 		GetWindowRect(rcWindow);
 
-		theMainSearch->SetIfVisiableRect(rcWindow);
+		auto* pWnd = (CSearch*) GetParent();
+		pWnd->SetIfVisiableRect(rcWindow);
+	}
+}
+
+void CCodeTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if (nID == SC_MINIMIZE) {
+		GetParent()->SendMessage(WM_SYSCOMMAND, nID, lParam);
+
+	} else if (nID == SC_CLOSE) {
+		auto* pWnd = (CSearch*) GetParent();
+		pWnd->MoveToHideWindow(FALSE);
+
+		DestroyWindow();
+		delete this;
+
+	} else {
+		CAppWnd::OnSysCommand(nID, lParam);
 	}
 }

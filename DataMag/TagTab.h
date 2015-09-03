@@ -8,21 +8,29 @@
 #include "ItemInfoEdit.h"
 
 /**
- * 标签管理页
+ * 标签页面
  */
 class CTagTab : public CAppWnd
 {
 	DECLARE_DYNAMIC(CTagTab)
 
 public:
-	/**
-	 * 命令格式:"open","search:xx","add".
-	 */
-	CTagTab(CString strCommand = _T(""), CWnd* pParent = nullptr);
+	CTagTab(CWnd* pParent);
 	virtual ~CTagTab();
 
 	enum { IDD = IDD_TAGTAB };
 
+	/**
+	 * 响应添加事件
+	 */
+	void DoCommandAdd();
+
+	/**
+	 * 响应搜索事件
+	 */
+	void DoCommandSearch(CString str);
+
+public:
 	/**
 	 * 响应标签管理目录改变事件
 	 */
@@ -47,7 +55,7 @@ protected:
 		 */
 		virtual void OnSelectChanged();
 
-	}m_tag_event;
+	} m_tag_event;
 
 	/**
 	 * 关联列表事件对象
@@ -70,20 +78,12 @@ protected:
 		 */
 		virtual void OnSelectChanged();
 
-	}m_tag_info_event;
+	} m_tag_info_event;
 
 	/**
 	 * 描述文件的内容
 	 */
 	CStringA strText;
-	
-	/**
-	 * 执行命令
-	 */
-	struct Command{
-		CString cmd;
-		CString arg;
-	}m_command;
 
 protected:
 	/**
@@ -93,7 +93,7 @@ protected:
 
 protected:
 	/**
-	 * 获取默认焦点控件
+	 * 获取默认的焦点控件
 	 */
 	virtual CWnd* GetDefaultFocusWnd()
 	{ return &m_tag_search_edit; }
@@ -104,6 +104,9 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	/**
+	 * 按钮控件
+	 */
 	CHilitButton m_setting;
 	CHilitButton m_tag_add;
 	CHilitButton m_tag_delete;
@@ -112,6 +115,9 @@ protected:
 	CHilitButton m_remove_relate;
 	CHilitButton m_relate_project;
 
+	/**
+	 * 列表控件
+	 */
 	CFileListBox m_tag_list;
 	CFileListBox m_tag_info;
 	CItemInfoEdit m_item_text;
@@ -130,4 +136,5 @@ protected:
 	afx_msg void OnBnClickedTagRelateBook();
 	afx_msg void OnBnClickedTagRelateProject();
 	afx_msg void OnBnClickedRemoveRelationship();
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 };

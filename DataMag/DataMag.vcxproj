@@ -127,7 +127,7 @@
     <ClInclude Include="PrettyEdit.h" />
     <ClInclude Include="TagTab.h" />
     <ClInclude Include="ListBoxEvent.h" />
-    <ClInclude Include="MainSearch.h" />
+    <ClInclude Include="Search.h" />
     <ClInclude Include="NameDlg.h" />
     <ClInclude Include="PrettyButton.h" />
     <ClInclude Include="CodeDlg.h" />
@@ -152,7 +152,7 @@
     <ClCompile Include="HilitButton.cpp" />
     <ClCompile Include="HiliteBorder.cpp" />
     <ClCompile Include="ItemInfoEdit.cpp" />
-    <ClCompile Include="MainSearch.cpp" />
+    <ClCompile Include="Search.cpp" />
     <ClCompile Include="MoreInput.cpp" />
     <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="PrettyEdit.cpp" />

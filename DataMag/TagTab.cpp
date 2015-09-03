@@ -7,25 +7,17 @@
 #include "NameDlg.h"
 #include "BookDlg.h"
 #include "CodeDlg.h"
-#include "MainSearch.h"
+#include "Search.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
 
 IMPLEMENT_DYNAMIC(CTagTab, CDialogEx)
 
-CTagTab::CTagTab(CString strCommand, CWnd* pParent /*=nullptr*/)
+CTagTab::CTagTab(CWnd* pParent)
 	: CAppWnd(CTagTab::IDD, pParent)
 	, m_tag_list(&theShellManager)
 	, m_tag_info(&theShellManager)
 {
-	int colon = strCommand.Find(':');
-	if (colon > 0) {
-		m_command.cmd = strCommand.Left(colon);
-		m_command.arg = strCommand.Mid(colon + 1);
-	} else {
-		m_command.cmd = strCommand;
-	}
-
 	m_tag_list.EnumFile(FALSE);
 	m_tag_list.SetListBoxEvent(&m_tag_event);
 
@@ -65,6 +57,7 @@ void CTagTab::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CTagTab, CAppWnd)
 	ON_WM_MOVE()
+	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CTagTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_TAG_ADD, &CTagTab::OnBnClickedTagAdd)
 	ON_BN_CLICKED(IDC_TAG_DELETE, &CTagTab::OnBnClickedTagDelete)
@@ -155,22 +148,22 @@ BOOL CTagTab::OnInitDialog()
 	m_tag_search_edit.EnableSearchButton(FALSE);
 	m_tag_search_edit.SetHintText(_T("ËÑË÷±êÇ©"));
 
-	CenterWindowInRect(this, theMainSearch->GetIfVisiableRect());
-
-	if (m_command.cmd.CompareNoCase(_T("open")) == 0) {
-
-	} else if (m_command.cmd.CompareNoCase(_T("search")) == 0) {
-		if (!m_command.arg.IsEmpty()) {
-			m_tag_search_edit.SetWindowText(m_command.arg);
-			m_tag_search_edit.SetSel(-1);
-			m_tag_list.SetFilterString(m_command.arg);
-		}
-
-	} else if (m_command.cmd.CompareNoCase(_T("add")) == 0) {
-		PostMessage(WM_COMMAND, MAKEWPARAM(IDC_TAG_ADD, BN_CLICKED), 0);
-	}
+	CSearch* pWnd = (CSearch*) GetParent();
+	CenterWindowInRect(this, pWnd->GetIfVisiableRect());
 
 	return FALSE; /* ½¹µãÉèÖÃ */
+}
+
+void CTagTab::DoCommandAdd()
+{
+	PostMessage(WM_COMMAND, MAKEWPARAM(IDC_TAG_ADD, BN_CLICKED), 0);
+}
+
+void CTagTab::DoCommandSearch(CString str)
+{
+	m_tag_search_edit.SetWindowText(str);
+	m_tag_list.SetFilterString(str);
+	m_tag_search_edit.SetSel(-1);
 }
 
 void CTagTab::OnBnClickedTagAdd()
@@ -345,6 +338,15 @@ BOOL CTagTab::PreTranslateMessage(MSG* pMsg)
 
 		switch((UINT)pMsg->wParam)
 		{
+		case VK_ESCAPE: 
+			{
+				auto* pWnd = (CSearch*) GetParent();
+				pWnd->MoveToHideWindow(FALSE);
+
+				delete this;
+				return TRUE;
+			}
+			break;
 		case VK_RETURN:
 			{
 				return TRUE;
@@ -413,6 +415,24 @@ void CTagTab::OnMove(int x, int y)
 		CRect rcWindow;
 		GetWindowRect(rcWindow);
 
-		theMainSearch->SetIfVisiableRect(rcWindow);
+		auto* pWnd = (CSearch*) GetParent();
+		pWnd->SetIfVisiableRect(rcWindow);
+	}
+}
+
+void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if (nID == SC_MINIMIZE) {
+		GetParent()->SendMessage(WM_SYSCOMMAND, nID, lParam);
+
+	} else if (nID == SC_CLOSE) {
+		auto* pWnd = (CSearch*) GetParent();
+		pWnd->MoveToHideWindow(FALSE);
+
+		DestroyWindow();
+		delete this;
+
+	} else {
+		CAppWnd::OnSysCommand(nID, lParam);
 	}
 }
