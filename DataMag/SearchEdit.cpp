@@ -131,15 +131,17 @@ BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 
 void CSearchEdit::OnSetFocus(CWnd* pOldWnd)
 {
-	CPrettyEdit::OnSetFocus(pOldWnd);
-		
+	CEdit::OnSetFocus(pOldWnd);
+
+	m_bFocused = TRUE;
 	InvalidateWithHint();
 }
 
 void CSearchEdit::OnKillFocus(CWnd* pNewWnd)
 {
-	CPrettyEdit::OnKillFocus(pNewWnd);
-		
+	CEdit::OnKillFocus(pNewWnd);
+
+	m_bFocused = FALSE;
 	InvalidateWithHint();
 }
 
@@ -181,7 +183,7 @@ BOOL CSearchEdit::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	if (m_bEnableSearchBtn) {
 		if (HitSearchButton()) {
-			SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+			SetCursor(LoadCursor(nullptr, MAKEINTRESOURCE(IDC_ARROW)));
 			return TRUE;
 		}
 	}

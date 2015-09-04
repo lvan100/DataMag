@@ -13,10 +13,11 @@
 
 IMPLEMENT_DYNAMIC(CTagTab, CDialogEx)
 
-CTagTab::CTagTab(CWnd* pParent)
+CTagTab::CTagTab(CTagTab*& pointer, CWnd* pParent)
 	: CAppWnd(CTagTab::IDD, pParent)
 	, m_tag_list(&theShellManager)
 	, m_tag_info(&theShellManager)
+	, _self(pointer)
 {
 	m_tag_list.EnumFile(FALSE);
 	m_tag_list.SetListBoxEvent(&m_tag_event);
@@ -340,10 +341,7 @@ BOOL CTagTab::PreTranslateMessage(MSG* pMsg)
 		{
 		case VK_ESCAPE: 
 			{
-				auto* pWnd = (CSearch*) GetParent();
-				pWnd->MoveToHideWindow(FALSE);
-
-				delete this;
+				DestroyThisWindow();
 				return TRUE;
 			}
 			break;
@@ -420,17 +418,23 @@ void CTagTab::OnMove(int x, int y)
 	}
 }
 
+void CTagTab::DestroyThisWindow()
+{
+	auto* pWnd = (CSearch*) GetParent();
+	pWnd->MoveToHideWindow(FALSE);
+
+	DestroyWindow();
+	_self = nullptr;
+	delete this;
+}
+
 void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if (nID == SC_MINIMIZE) {
 		GetParent()->SendMessage(WM_SYSCOMMAND, nID, lParam);
 
 	} else if (nID == SC_CLOSE) {
-		auto* pWnd = (CSearch*) GetParent();
-		pWnd->MoveToHideWindow(FALSE);
-
-		DestroyWindow();
-		delete this;
+		DestroyThisWindow();
 
 	} else {
 		CAppWnd::OnSysCommand(nID, lParam);

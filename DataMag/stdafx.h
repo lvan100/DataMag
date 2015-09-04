@@ -51,6 +51,9 @@
 #endif
 #endif
 
+/**
+ * 自动释放COM环境
+ */
 struct AutoCoInitialize
 {
 	AutoCoInitialize(){

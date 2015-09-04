@@ -13,10 +13,10 @@ public:
 
 protected:
 	/**
-	 * 获取默认焦点控件
+	 * 获取默认的焦点控件
 	 */
 	virtual CWnd* GetDefaultFocusWnd()
-	{ return NULL; }
+	{ return nullptr; }
 
 protected:
 	/**
@@ -36,6 +36,5 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

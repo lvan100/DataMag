@@ -17,7 +17,7 @@ class CBookTab : public CAppWnd, CListBoxEventAdapter
 	DECLARE_DYNAMIC(CBookTab)
 
 public:
-	CBookTab(CWnd* pParent);
+	CBookTab(CBookTab*& pointer, CWnd* pParent);
 	virtual ~CBookTab();
 
 	enum { IDD = IDD_BOOKTAB };
@@ -84,6 +84,11 @@ protected:
 	 */
 	void EnableInfoEidt(BOOL enable);
 
+	/**
+	 * 销毁自身对话框
+	 */
+	void DestroyThisWindow();
+
 protected:
 	/**
 	 * 获取默认的焦点控件
@@ -97,6 +102,11 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	/**
+	 * 指向自身的指针
+	 */
+	CBookTab*& _self;
+
 	/**
 	 * 按钮控件
 	 */

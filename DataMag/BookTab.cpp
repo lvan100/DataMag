@@ -10,9 +10,10 @@
 
 IMPLEMENT_DYNAMIC(CBookTab, CAppWnd)
 
-CBookTab::CBookTab(CWnd* pParent)
+CBookTab::CBookTab(CBookTab*& pointer, CWnd* pParent)
 	: CAppWnd(CBookTab::IDD, pParent)
 	, m_book_list(&theShellManager)
+	, _self(pointer)
 {
 	m_hCanEditIcon = AfxGetApp()->LoadIcon(IDI_EDIT_TAG);
 	m_hNotEditIcon = AfxGetApp()->LoadIcon(IDI_NOT_EDIT);
@@ -111,7 +112,7 @@ void CBookTab::OnSelectChanged()
 			SetWindowTextA(m_item_text.GetSafeHwnd(), szText);
 		}
 	} else {
-		SetWindowTextA(m_item_text.GetSafeHwnd(), NULL);
+		SetWindowTextA(m_item_text.GetSafeHwnd(), nullptr);
 	}
 }
 
@@ -297,10 +298,7 @@ BOOL CBookTab::PreTranslateMessage(MSG* pMsg)
 		{
 		case VK_ESCAPE: 
 			{
-				auto* pWnd = (CSearch*) GetParent();
-				pWnd->MoveToHideWindow(FALSE);
-
-				delete this;
+				DestroyThisWindow();
 				return TRUE;
 			}
 			break;
@@ -474,17 +472,23 @@ void CBookTab::OnMove(int x, int y)
 	}
 }
 
+void CBookTab::DestroyThisWindow()
+{
+	auto* pWnd = (CSearch*) GetParent();
+	pWnd->MoveToHideWindow(FALSE);
+
+	DestroyWindow();
+	_self = nullptr;
+	delete this;
+}
+
 void CBookTab::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if (nID == SC_MINIMIZE) {
 		GetParent()->SendMessage(WM_SYSCOMMAND, nID, lParam);
 
 	} else if (nID == SC_CLOSE) {
-		auto* pWnd = (CSearch*) GetParent();
-		pWnd->MoveToHideWindow(FALSE);
-
-		DestroyWindow();
-		delete this;
+		DestroyThisWindow();
 
 	} else {
 		CAppWnd::OnSysCommand(nID, lParam);

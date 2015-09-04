@@ -10,9 +10,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{7541c96c-da31-47c6-b995-270318e61250}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\SettingDlg">
-      <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widget">
       <UniqueIdentifier>{b986d6fd-d3e0-4da5-9437-59a7ca910887}</UniqueIdentifier>
     </Filter>
@@ -76,6 +73,9 @@
     <Filter Include="Kernel\BookTab">
       <UniqueIdentifier>{6d8c0e41-cdb3-4b7a-b212-4914452a5cbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kernel\Setting">
+      <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -138,7 +138,7 @@
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="SettingDlg.h">
-      <Filter>Kernel\SettingDlg</Filter>
+      <Filter>Kernel\Setting</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Application</Filter>
@@ -218,7 +218,7 @@
       <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="SettingDlg.cpp">
-      <Filter>Kernel\SettingDlg</Filter>
+      <Filter>Kernel\Setting</Filter>
     </ClCompile>
     <ClCompile Include="BookTab.cpp">
       <Filter>Kernel\BookTab</Filter>

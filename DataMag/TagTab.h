@@ -15,7 +15,7 @@ class CTagTab : public CAppWnd
 	DECLARE_DYNAMIC(CTagTab)
 
 public:
-	CTagTab(CWnd* pParent);
+	CTagTab(CTagTab*& pointer, CWnd* pParent);
 	virtual ~CTagTab();
 
 	enum { IDD = IDD_TAGTAB };
@@ -90,6 +90,11 @@ protected:
 	 * 是否允许信息可以编辑
 	 */
 	void EnableInfoEidt(BOOL enable);
+	
+	/**
+	 * 销毁自身对话框
+	 */
+	void DestroyThisWindow();
 
 protected:
 	/**
@@ -104,6 +109,11 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	/**
+	 * 指向自身的指针
+	 */
+	CTagTab*& _self;
+
 	/**
 	 * 按钮控件
 	 */

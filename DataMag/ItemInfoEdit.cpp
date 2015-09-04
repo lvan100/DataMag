@@ -57,7 +57,7 @@ BOOL CItemInfoEdit::InitBorder()
 	m_pHiliteBorder = new CHiliteBorder();
 
 	DWORD dwStyle = WS_VISIBLE | WS_CHILD | SS_OWNERDRAW;
-	if (!m_pHiliteBorder->Create(NULL, dwStyle, rcBorder, GetParent())) {
+	if (!m_pHiliteBorder->Create(nullptr, dwStyle, rcBorder, GetParent())) {
 		return FALSE;
 	}
 
@@ -100,7 +100,7 @@ void CItemInfoEdit::OnEnLink(NMHDR *pNMHDR, LRESULT *pResult)
 		CHARRANGE chrg = pEnLink->chrg;
 		GetTextRange(chrg.cpMin, chrg.cpMax, strURL);
 
-		ShellExecute(NULL, _T( "open" ), strURL, NULL, NULL, SW_SHOWNORMAL);
+		ShellExecute(nullptr, _T( "open" ), strURL, nullptr, nullptr, SW_SHOWNORMAL);
 	}
 
 	*pResult = 0;

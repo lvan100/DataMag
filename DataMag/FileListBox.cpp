@@ -67,7 +67,7 @@ BOOL CFileListBox::InitBorder()
 	m_pHiliteBorder = new CHiliteBorder();
 
 	DWORD dwStyle = WS_VISIBLE | WS_CHILD | SS_OWNERDRAW;
-	if (!m_pHiliteBorder->Create(NULL, dwStyle, rcBorder, GetParent())) {
+	if (!m_pHiliteBorder->Create(nullptr, dwStyle, rcBorder, GetParent())) {
 		return FALSE;
 	}
 

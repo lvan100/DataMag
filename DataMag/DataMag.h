@@ -8,12 +8,12 @@
 using namespace std;
 
 /**
- * 定义目录监听器类型
+ * 定义目录变化监听器
  */
 typedef function<void(CString)> DirChangeListener;
 
 /**
- * 最近访问列表监听器
+ * 定义访问列表监听器
  */
 typedef function<void()> RecentListChangeListener;
 

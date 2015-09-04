@@ -15,6 +15,9 @@ CSearch::CSearch(CWnd* pParent)
 	: CAppWnd(CSearch::IDD, pParent)
 	, m_recommand_list(&theShellManager)
 	, m_recent_list(&theShellManager)
+	, m_book_tab(nullptr)
+	, m_code_tab(nullptr)
+	, m_tag_tab(nullptr)
 {
 	HICON hSearchIcon = theApp.GetSearchIcon();
 	m_tag_search.SetSearchIcon(hSearchIcon);
@@ -132,31 +135,51 @@ BOOL CSearch::OnInitDialog()
 		m_recent_list.AddString(list.at(i));
 	}
 
-	// 进行推荐
-	DoRecommand();
+	[&](){
+		// 进行推荐
+		DoRecommand();
+	}();
 
 	return FALSE;
 }
 
-void CSearch::ShowTagTab()
+void CSearch::CreateAndShowTagTab()
 {
-	m_tag_tab = new CTagTab(this);
-	m_tag_tab->Create(CTagTab::IDD);
-	m_tag_tab->ShowWindow(SW_SHOW);
+	MoveToHideWindow(TRUE);
+
+	if (m_tag_tab == nullptr) {
+		m_tag_tab = new CTagTab(m_tag_tab, this);
+		m_tag_tab->Create(CTagTab::IDD);
+		m_tag_tab->ShowWindow(SW_SHOW);
+	} else {
+		ASSERT(FALSE);
+	}
 }
 
-void CSearch::ShowCodeTab()
+void CSearch::CreateAndShowCodeTab()
 {
-	m_code_tab = new CCodeTab(this);
-	m_code_tab->Create(CCodeTab::IDD);
-	m_code_tab->ShowWindow(SW_SHOW);
+	MoveToHideWindow(TRUE);
+
+	if (m_code_tab == nullptr) {
+		m_code_tab = new CCodeTab(m_code_tab, this);
+		m_code_tab->Create(CCodeTab::IDD);
+		m_code_tab->ShowWindow(SW_SHOW);
+	} else {
+		ASSERT(FALSE);
+	}
 }
 
-void CSearch::ShowBookTab()
+void CSearch::CreateAndShowBookTab()
 {
-	m_book_tab = new CBookTab(this);
-	m_book_tab->Create(CBookTab::IDD);
-	m_book_tab->ShowWindow(SW_SHOW);
+	MoveToHideWindow(TRUE);
+
+	if (m_book_tab == nullptr) {
+		m_book_tab = new CBookTab(m_book_tab, this);
+		m_book_tab->Create(CBookTab::IDD);
+		m_book_tab->ShowWindow(SW_SHOW);
+	} else {
+		ASSERT(FALSE);
+	}
 }
 
 void CSearch::DoSearch()
@@ -166,38 +189,32 @@ void CSearch::DoSearch()
 	CWnd* pFocus = GetFocus();
 	if (pFocus == &m_tag_search)
 	{
-		ShowTagTab();
-		MoveToHideWindow(TRUE);
-
 		m_tag_search.GetWindowText(strSearchText);
-		m_tag_tab->DoCommandSearch(strSearchText);
+
+		CreateAndShowTagTab();
 
 		m_tag_search.SetWindowText(_T(""));
-		m_tag_search.SetFocus();
+		m_tag_tab->DoCommandSearch(strSearchText);
 
 	} 
 	else if (pFocus == &m_code_search)
 	{
-		ShowCodeTab();
-		MoveToHideWindow(TRUE);
-
 		m_code_search.GetWindowText(strSearchText);
-		m_code_tab->DoCommandSearch(strSearchText);
+
+		CreateAndShowCodeTab();
 
 		m_code_search.SetWindowText(_T(""));
-		m_code_search.SetFocus();
+		m_code_tab->DoCommandSearch(strSearchText);
 
 	}
 	else if (pFocus == &m_book_search)
 	{
-		ShowBookTab();
-		MoveToHideWindow(TRUE);
-
 		m_book_search.GetWindowText(strSearchText);
-		m_book_tab->DoCommandSearch(strSearchText);
+
+		CreateAndShowBookTab();
 
 		m_book_search.SetWindowText(_T(""));
-		m_book_search.SetFocus();
+		m_book_tab->DoCommandSearch(strSearchText);
 	}
 }
 
@@ -221,29 +238,20 @@ BOOL CSearch::PreTranslateMessage(MSG* pMsg)
 
 void CSearch::OnBnClickedAddTag()
 {
-	ShowTagTab();
-	MoveToHideWindow(TRUE);
+	CreateAndShowTagTab();
 	m_tag_tab->DoCommandAdd();
-
-	m_code_search.SetFocus();
 }
 
 void CSearch::OnBnClickedAddProject()
 {
-	ShowCodeTab();
-	MoveToHideWindow(TRUE);
+	CreateAndShowCodeTab();
 	m_code_tab->DoCommandAdd();
-
-	m_code_search.SetFocus();
 }
 
 void CSearch::OnBnClickedAddBook()
 {
-	ShowBookTab();
-	MoveToHideWindow(TRUE);
+	CreateAndShowBookTab();
 	m_book_tab->DoCommandAdd();
-
-	m_code_search.SetFocus();
 }
 
 void CSearch::MoveToHideWindow(BOOL bHide)

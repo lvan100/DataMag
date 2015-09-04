@@ -102,19 +102,19 @@ protected:
 	{ return &m_code_search; }
 
 	/**
-	 * 显示标签页面
+	 * 创建并显示显示标签页面
 	 */
-	void ShowTagTab();
+	void CreateAndShowTagTab();
 
 	/**
-	 * 显示源码页面
+	 * 创建并显示显示源码页面
 	 */
-	void ShowCodeTab();
+	void CreateAndShowCodeTab();
 
 	/**
-	 * 显示图书页面
+	 * 创建并显示显示图书页面
 	 */
-	void ShowBookTab();
+	void CreateAndShowBookTab();
 
 protected:
 	/**
