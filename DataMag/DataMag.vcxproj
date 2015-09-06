@@ -112,7 +112,6 @@
     <None Include="res\setting.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppWnd.h" />
     <ClInclude Include="BookDlg.h" />
     <ClInclude Include="BookTab.h" />
     <ClInclude Include="DataMag.h" />
@@ -141,7 +140,6 @@
     <ClInclude Include="Common.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AppWnd.cpp" />
     <ClCompile Include="BookDlg.cpp" />
     <ClCompile Include="BookTab.cpp" />
     <ClCompile Include="DataMag.cpp" />

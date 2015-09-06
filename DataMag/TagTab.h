@@ -1,7 +1,5 @@
 #pragma once
 
-#include "AppWnd.h"
-
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "HilitButton.h"
@@ -10,7 +8,7 @@
 /**
  * ±Í«©“≥√Ê
  */
-class CTagTab : public CAppWnd
+class CTagTab : public CDialogEx
 {
 	DECLARE_DYNAMIC(CTagTab)
 

@@ -9,12 +9,13 @@
 #include <algorithm>
 using namespace std;
 
-IMPLEMENT_DYNAMIC(CSearch, CAppWnd)
+IMPLEMENT_DYNAMIC(CSearch, CDialogEx)
 
 CSearch::CSearch(CWnd* pParent)
-	: CAppWnd(CSearch::IDD, pParent)
+	: CDialogEx(CSearch::IDD, pParent)
 	, m_recommand_list(&theShellManager)
 	, m_recent_list(&theShellManager)
+	, m_pLastFocusWnd(nullptr)
 	, m_book_tab(nullptr)
 	, m_code_tab(nullptr)
 	, m_tag_tab(nullptr)
@@ -39,7 +40,7 @@ CSearch::~CSearch()
 
 void CSearch::DoDataExchange(CDataExchange* pDX)
 {
-	CAppWnd::DoDataExchange(pDX);
+	CDialogEx::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_ADD_TAG, m_add_tag);
 	MFC_DDX_Control(pDX, IDC_ADD_BOOK, m_add_book);
 	DDX_Control(pDX, IDC_RECENT_LIST, m_recent_list);
@@ -52,10 +53,12 @@ void CSearch::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_RECOMMEND_GROUP, m_recommand_group);
 }
 
-BEGIN_MESSAGE_MAP(CSearch, CAppWnd)
+BEGIN_MESSAGE_MAP(CSearch, CDialogEx)
 	ON_BN_CLICKED(IDC_ADD_CODE, &CSearch::OnBnClickedAddProject)
 	ON_BN_CLICKED(IDC_ADD_BOOK, &CSearch::OnBnClickedAddBook)
 	ON_BN_CLICKED(IDC_ADD_TAG, &CSearch::OnBnClickedAddTag)
+	ON_WM_SYSCOMMAND()
+	ON_WM_ACTIVATE()
 	ON_WM_MOVE()
 END_MESSAGE_MAP()
 
@@ -83,7 +86,7 @@ void CSearch::RecommandListEvent::OnDoubleClick()
 
 BOOL CSearch::OnInitDialog()
 {
-	CAppWnd::OnInitDialog();
+	CDialogEx::OnInitDialog();
 
 	HICON hTagIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_TAG)
@@ -233,7 +236,7 @@ BOOL CSearch::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CAppWnd::PreTranslateMessage(pMsg);
+	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
 void CSearch::OnBnClickedAddTag()
@@ -281,7 +284,7 @@ void CSearch::MoveToHideWindow(BOOL bHide)
 
 void CSearch::OnMove(int x, int y)
 {
-	CAppWnd::OnMove(x, y);
+	CDialogEx::OnMove(x, y);
 
 	if (x >= 0 && y >= 0) {
 		GetWindowRect(m_rect_if_visiable);
@@ -422,6 +425,34 @@ void CSearch::DoRecommand()
 			m_recommand_list.AddString(strPath);
 			displaySet[nRander] = 1;
 			iTag++;
+		}
+	}
+}
+
+void CSearch::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if (nID == SC_MINIMIZE) {
+		m_pLastFocusWnd = GetFocus();
+	}
+	CDialogEx::OnSysCommand(nID, lParam);
+}
+
+void CSearch::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	if (nState == WA_INACTIVE ) {
+		if (!bMinimized) {
+			m_pLastFocusWnd = GetFocus();
+		}
+	} else {
+		if (m_pLastFocusWnd != nullptr) {
+			m_pLastFocusWnd->SetFocus();
+		} else {
+			CWnd* pWnd = GetDefaultFocusWnd();
+			if (pWnd != nullptr) {
+				pWnd->SetFocus();
+			}
 		}
 	}
 }

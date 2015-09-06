@@ -14,7 +14,7 @@
 IMPLEMENT_DYNAMIC(CTagTab, CDialogEx)
 
 CTagTab::CTagTab(CTagTab*& pointer, CWnd* pParent)
-	: CAppWnd(CTagTab::IDD, pParent)
+	: CDialogEx(CTagTab::IDD, pParent)
 	, m_tag_list(&theShellManager)
 	, m_tag_info(&theShellManager)
 	, _self(pointer)
@@ -41,7 +41,7 @@ CTagTab::~CTagTab()
 
 void CTagTab::DoDataExchange(CDataExchange* pDX)
 {
-	CAppWnd::DoDataExchange(pDX);
+	CDialogEx::DoDataExchange(pDX);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
 	MFC_DDX_Control(pDX, IDC_TAG_ADD, m_tag_add);
 	MFC_DDX_Control(pDX, IDC_TAG_LIST, m_tag_list);
@@ -56,7 +56,7 @@ void CTagTab::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_REMOVE_RELATIONSHIP, m_remove_relate);
 }
 
-BEGIN_MESSAGE_MAP(CTagTab, CAppWnd)
+BEGIN_MESSAGE_MAP(CTagTab, CDialogEx)
 	ON_WM_MOVE()
 	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CTagTab::OnBnClickedSetting)
@@ -138,7 +138,7 @@ void CTagTab::TagInfoEvent::OnSelectChanged()
 
 BOOL CTagTab::OnInitDialog()
 {
-	CAppWnd::OnInitDialog();
+	CDialogEx::OnInitDialog();
 
 	// 不允许对信息进行编辑
 	EnableInfoEidt(FALSE);
@@ -391,7 +391,7 @@ BOOL CTagTab::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CAppWnd::PreTranslateMessage(pMsg);
+	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
 void CTagTab::EnableInfoEidt(BOOL enable)
@@ -407,7 +407,7 @@ void CTagTab::EnableInfoEidt(BOOL enable)
 
 void CTagTab::OnMove(int x, int y)
 {
-	CAppWnd::OnMove(x, y);
+	CDialogEx::OnMove(x, y);
 
 	if (IsWindowVisible()) {
 		CRect rcWindow;
@@ -437,6 +437,6 @@ void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
 		DestroyThisWindow();
 
 	} else {
-		CAppWnd::OnSysCommand(nID, lParam);
+		CDialogEx::OnSysCommand(nID, lParam);
 	}
 }

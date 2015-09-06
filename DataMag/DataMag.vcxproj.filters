@@ -182,9 +182,6 @@
     <ClInclude Include="CodeTab.h">
       <Filter>Kernel\CodeTab</Filter>
     </ClInclude>
-    <ClInclude Include="AppWnd.h">
-      <Filter>Application</Filter>
-    </ClInclude>
     <ClInclude Include="ItemInfoEdit.h">
       <Filter>Widget\ItemInfoEdit</Filter>
     </ClInclude>
@@ -255,9 +252,6 @@
     </ClCompile>
     <ClCompile Include="CodeTab.cpp">
       <Filter>Kernel\CodeTab</Filter>
-    </ClCompile>
-    <ClCompile Include="AppWnd.cpp">
-      <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="ItemInfoEdit.cpp">
       <Filter>Widget\ItemInfoEdit</Filter>

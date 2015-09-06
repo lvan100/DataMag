@@ -8,10 +8,10 @@
 #include "SettingDlg.h"
 #include "DDXControl.h"
 
-IMPLEMENT_DYNAMIC(CCodeTab, CAppWnd)
+IMPLEMENT_DYNAMIC(CCodeTab, CDialogEx)
 
 CCodeTab::CCodeTab(CCodeTab*& pointer, CWnd* pParent)
-	: CAppWnd(CCodeTab::IDD, pParent)
+	: CDialogEx(CCodeTab::IDD, pParent)
 	, m_project_list(&theShellManager)
 	, _self(pointer)
 {
@@ -39,7 +39,7 @@ CCodeTab::~CCodeTab()
 
 void CCodeTab::DoDataExchange(CDataExchange* pDX)
 {
-	CAppWnd::DoDataExchange(pDX);
+	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAG_GROUP, m_tag_group);
 	MFC_DDX_Control(pDX, IDC_SETTING, m_setting);
 	DDX_Control(pDX, IDC_MORE_INPUT, m_more_input);
@@ -54,7 +54,7 @@ void CCodeTab::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_CODE_REFRESH, m_project_refresh);
 }
 
-BEGIN_MESSAGE_MAP(CCodeTab, CAppWnd)
+BEGIN_MESSAGE_MAP(CCodeTab, CDialogEx)
 	ON_WM_MOVE()
 	ON_WM_DESTROY()
 	ON_WM_DROPFILES()
@@ -118,7 +118,7 @@ void CCodeTab::OnSelectChanged()
 
 BOOL CCodeTab::OnInitDialog()
 {
-	CAppWnd::OnInitDialog();
+	CDialogEx::OnInitDialog();
 
 	EnableInfoEidt(FALSE); // ½ûÓÃ±à¼­¹¦ÄÜ
 
@@ -353,7 +353,7 @@ BOOL CCodeTab::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CAppWnd::PreTranslateMessage(pMsg);
+	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
 void CCodeTab::OnDropFiles(HDROP hDropInfo)
@@ -432,7 +432,7 @@ void CCodeTab::OnDropFiles(HDROP hDropInfo)
 
 	m_project_list.Refresh();
 
-	CAppWnd::OnDropFiles(hDropInfo);
+	CDialogEx::OnDropFiles(hDropInfo);
 }
 
 void CCodeTab::EnableInfoEidt(BOOL enable)
@@ -491,14 +491,14 @@ void CCodeTab::OnItemEditChange()
 
 void CCodeTab::OnDestroy()
 {
-	CAppWnd::OnDestroy();
+	CDialogEx::OnDestroy();
 
 	EnableInfoEidt(FALSE);
 }
 
 void CCodeTab::OnMove(int x, int y)
 {
-	CAppWnd::OnMove(x, y);
+	CDialogEx::OnMove(x, y);
 
 	if (IsWindowVisible()) {
 		CRect rcWindow;
@@ -528,6 +528,6 @@ void CCodeTab::OnSysCommand(UINT nID, LPARAM lParam)
 		DestroyThisWindow();
 
 	} else {
-		CAppWnd::OnSysCommand(nID, lParam);
+		CDialogEx::OnSysCommand(nID, lParam);
 	}
 }

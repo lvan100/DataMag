@@ -1,7 +1,5 @@
 #pragma once
 
-#include "AppWnd.h"
-
 #include "MoreInput.h"
 #include "PrettyEdit.h"
 #include "SearchEdit.h"
@@ -12,7 +10,7 @@
 /**
  * ÏîÄ¿Ò³Ãæ
  */
-class CCodeTab : public CAppWnd, CListBoxEventAdapter
+class CCodeTab : public CDialogEx, CListBoxEventAdapter
 {
 	DECLARE_DYNAMIC(CCodeTab)
 

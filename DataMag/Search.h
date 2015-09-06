@@ -1,6 +1,5 @@
 #pragma once
 
-#include "AppWnd.h"
 #include "TagTab.h"
 #include "BookTab.h"
 #include "CodeTab.h"
@@ -11,7 +10,7 @@
 /**
  * 主搜索对话框
  */
-class CSearch : public CAppWnd
+class CSearch : public CDialogEx
 {
 	DECLARE_DYNAMIC(CSearch)
 
@@ -96,12 +95,6 @@ protected:
 
 protected:
 	/**
-	 * 获取默认的焦点控件
-	 */
-	virtual CWnd* GetDefaultFocusWnd()
-	{ return &m_code_search; }
-
-	/**
 	 * 创建并显示显示标签页面
 	 */
 	void CreateAndShowTagTab();
@@ -146,10 +139,22 @@ protected:
 	CFolderListCtrl m_recent_list;
 	CFolderListCtrl m_recommand_list;
 
+	/**
+	 * 最后获得焦点的控件，不记录焦点在切换过程
+	 * 中的变化，只用于窗口失去激活状态前的焦点
+	 */
+	CWnd* m_pLastFocusWnd;
+
 protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
+
+	/**
+	 * 获取默认的焦点控件
+	 */
+	virtual CWnd* GetDefaultFocusWnd()
+	{ return &m_code_search; }
 
 	DECLARE_MESSAGE_MAP()
 protected:
@@ -157,4 +162,6 @@ protected:
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnBnClickedAddBook();
 	afx_msg void OnBnClickedAddProject();
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };
