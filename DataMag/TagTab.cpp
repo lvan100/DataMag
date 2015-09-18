@@ -13,11 +13,11 @@
 
 IMPLEMENT_DYNAMIC(CTagTab, CDialogEx)
 
-CTagTab::CTagTab(CTagTab*& pointer, CWnd* pParent)
+CTagTab::CTagTab(CWnd* pParent)
 	: CDialogEx(CTagTab::IDD, pParent)
 	, m_tag_list(&theShellManager)
 	, m_tag_info(&theShellManager)
-	, _self(pointer)
+	, m_pLastFocusWnd(nullptr)
 {
 	m_tag_list.EnumFile(FALSE);
 	m_tag_list.SetListBoxEvent(&m_tag_event);
@@ -58,6 +58,8 @@ void CTagTab::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CTagTab, CDialogEx)
 	ON_WM_MOVE()
+	ON_WM_ACTIVATE()
+	ON_WM_SETFOCUS()
 	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CTagTab::OnBnClickedSetting)
 	ON_BN_CLICKED(IDC_TAG_ADD, &CTagTab::OnBnClickedTagAdd)
@@ -420,12 +422,8 @@ void CTagTab::OnMove(int x, int y)
 
 void CTagTab::DestroyThisWindow()
 {
-	auto* pWnd = (CSearch*) GetParent();
-	pWnd->MoveToHideWindow(FALSE);
-
-	DestroyWindow();
-	_self = nullptr;
-	delete this;
+	auto* pSearchWnd = (CSearch*) GetParent();
+	pSearchWnd->DeleteTabWnd(this);
 }
 
 void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
@@ -438,5 +436,40 @@ void CTagTab::OnSysCommand(UINT nID, LPARAM lParam)
 
 	} else {
 		CDialogEx::OnSysCommand(nID, lParam);
+	}
+}
+
+void CTagTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	if (nState == WA_INACTIVE ) {
+		// 已经最小化的窗口不再处理
+		if (!bMinimized) {
+			m_pLastFocusWnd = GetFocus();
+		}
+	} else {
+		if (m_pLastFocusWnd != nullptr) {
+			m_pLastFocusWnd->SetFocus();
+		} else {
+			CWnd* pWnd = GetDefaultFocusWnd();
+			if (pWnd != nullptr) {
+				pWnd->SetFocus();
+			}
+		}
+	}
+}
+
+void CTagTab::OnSetFocus(CWnd* pOldWnd)
+{
+	CDialogEx::OnSetFocus(pOldWnd);
+
+	if (m_pLastFocusWnd != nullptr) {
+		m_pLastFocusWnd->SetFocus();
+	} else {
+		CWnd* pWnd = GetDefaultFocusWnd();
+		if (pWnd != nullptr) {
+			pWnd->SetFocus();
+		}
 	}
 }

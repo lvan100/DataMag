@@ -10,10 +10,10 @@
 
 IMPLEMENT_DYNAMIC(CCodeTab, CDialogEx)
 
-CCodeTab::CCodeTab(CCodeTab*& pointer, CWnd* pParent)
+CCodeTab::CCodeTab(CWnd* pParent)
 	: CDialogEx(CCodeTab::IDD, pParent)
 	, m_project_list(&theShellManager)
-	, _self(pointer)
+	, m_pLastFocusWnd(nullptr)
 {
 	m_hCanEditIcon = AfxGetApp()->LoadIcon(IDI_EDIT_TAG);
 	m_hNotEditIcon = AfxGetApp()->LoadIcon(IDI_NOT_EDIT);
@@ -57,6 +57,8 @@ void CCodeTab::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CCodeTab, CDialogEx)
 	ON_WM_MOVE()
 	ON_WM_DESTROY()
+	ON_WM_ACTIVATE()
+	ON_WM_SETFOCUS()
 	ON_WM_DROPFILES()
 	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SETTING, &CCodeTab::OnBnClickedSetting)
@@ -511,12 +513,8 @@ void CCodeTab::OnMove(int x, int y)
 
 void CCodeTab::DestroyThisWindow()
 {
-	auto* pWnd = (CSearch*) GetParent();
-	pWnd->MoveToHideWindow(FALSE);
-
-	DestroyWindow();
-	_self = nullptr;
-	delete this;
+	auto* pSearchWnd = (CSearch*) GetParent();
+	pSearchWnd->DeleteTabWnd(this);
 }
 
 void CCodeTab::OnSysCommand(UINT nID, LPARAM lParam)
@@ -529,5 +527,40 @@ void CCodeTab::OnSysCommand(UINT nID, LPARAM lParam)
 
 	} else {
 		CDialogEx::OnSysCommand(nID, lParam);
+	}
+}
+
+void CCodeTab::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	if (nState == WA_INACTIVE ) {
+		// 已经最小化的窗口不再处理
+		if (!bMinimized) {
+			m_pLastFocusWnd = GetFocus();
+		}
+	} else {
+		if (m_pLastFocusWnd != nullptr) {
+			m_pLastFocusWnd->SetFocus();
+		} else {
+			CWnd* pWnd = GetDefaultFocusWnd();
+			if (pWnd != nullptr) {
+				pWnd->SetFocus();
+			}
+		}
+	}
+}
+
+void CCodeTab::OnSetFocus(CWnd* pOldWnd)
+{
+	CDialogEx::OnSetFocus(pOldWnd);
+
+	if (m_pLastFocusWnd != nullptr) {
+		m_pLastFocusWnd->SetFocus();
+	} else {
+		CWnd* pWnd = GetDefaultFocusWnd();
+		if (pWnd != nullptr) {
+			pWnd->SetFocus();
+		}
 	}
 }

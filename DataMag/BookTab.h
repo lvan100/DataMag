@@ -15,7 +15,7 @@ class CBookTab : public CDialogEx, CListBoxEventAdapter
 	DECLARE_DYNAMIC(CBookTab)
 
 public:
-	CBookTab(CBookTab*& pointer, CWnd* pParent);
+	CBookTab(CWnd* pParent);
 	virtual ~CBookTab();
 
 	enum { IDD = IDD_BOOKTAB };
@@ -93,6 +93,12 @@ protected:
 	 */
 	virtual CWnd* GetDefaultFocusWnd()
 	{ return &m_search_edit; }
+	
+	/**
+	 * 最后获得焦点的控件，不记录焦点在切换过程
+	 * 中的变化，只用于窗口失去激活状态前的焦点
+	 */
+	CWnd* m_pLastFocusWnd;
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -100,11 +106,6 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
-	/**
-	 * 指向自身的指针
-	 */
-	CBookTab*& _self;
-
 	/**
 	 * 按钮控件
 	 */
@@ -128,7 +129,7 @@ protected:
 	CMoreInput m_more_input;
 	CPrettyEdit m_tag_group;
 	CStatic m_tag_group_title;
-
+	
 	DECLARE_MESSAGE_MAP()
 protected:
 	afx_msg void OnDestroy();
@@ -140,6 +141,8 @@ protected:
 	afx_msg void OnBnClickedModifyInfo();
 	afx_msg void OnBnClickedBookRefresh();
 	afx_msg void OnChangeBookSearchEdit();
+	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg void OnDropFiles(HDROP hDropInfo);
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

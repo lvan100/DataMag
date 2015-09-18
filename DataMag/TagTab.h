@@ -13,7 +13,7 @@ class CTagTab : public CDialogEx
 	DECLARE_DYNAMIC(CTagTab)
 
 public:
-	CTagTab(CTagTab*& pointer, CWnd* pParent);
+	CTagTab(CWnd* pParent);
 	virtual ~CTagTab();
 
 	enum { IDD = IDD_TAGTAB };
@@ -100,6 +100,12 @@ protected:
 	 */
 	virtual CWnd* GetDefaultFocusWnd()
 	{ return &m_tag_search_edit; }
+	
+	/**
+	 * 最后获得焦点的控件，不记录焦点在切换过程
+	 * 中的变化，只用于窗口失去激活状态前的焦点
+	 */
+	CWnd* m_pLastFocusWnd;
 
 protected:
 	virtual BOOL OnInitDialog();
@@ -107,11 +113,6 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
-	/**
-	 * 指向自身的指针
-	 */
-	CTagTab*& _self;
-
 	/**
 	 * 按钮控件
 	 */
@@ -141,8 +142,10 @@ protected:
 	afx_msg void OnBnClickedTagRename();
 	afx_msg void OnChangeTagSearchEdit();
 	afx_msg void OnChangeInfoSearchEdit();
+	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg void OnBnClickedTagRelateBook();
 	afx_msg void OnBnClickedTagRelateProject();
 	afx_msg void OnBnClickedRemoveRelationship();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

@@ -93,7 +93,7 @@ protected:
 	 */
 	vector<CString> m_recommand_values;
 
-protected:
+public:
 	/**
 	 * 创建并显示显示标签页面
 	 */
@@ -108,6 +108,11 @@ protected:
 	 * 创建并显示显示图书页面
 	 */
 	void CreateAndShowBookTab();
+
+	/**
+	 * 销毁页面窗口
+	 */
+	void DeleteTabWnd(CWnd* pWnd);
 
 protected:
 	/**
@@ -162,6 +167,5 @@ protected:
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnBnClickedAddBook();
 	afx_msg void OnBnClickedAddProject();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

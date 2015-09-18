@@ -57,7 +57,6 @@ BEGIN_MESSAGE_MAP(CSearch, CDialogEx)
 	ON_BN_CLICKED(IDC_ADD_CODE, &CSearch::OnBnClickedAddProject)
 	ON_BN_CLICKED(IDC_ADD_BOOK, &CSearch::OnBnClickedAddBook)
 	ON_BN_CLICKED(IDC_ADD_TAG, &CSearch::OnBnClickedAddTag)
-	ON_WM_SYSCOMMAND()
 	ON_WM_ACTIVATE()
 	ON_WM_MOVE()
 END_MESSAGE_MAP()
@@ -151,7 +150,7 @@ void CSearch::CreateAndShowTagTab()
 	MoveToHideWindow(TRUE);
 
 	if (m_tag_tab == nullptr) {
-		m_tag_tab = new CTagTab(m_tag_tab, this);
+		m_tag_tab = new CTagTab(this);
 		m_tag_tab->Create(CTagTab::IDD);
 		m_tag_tab->ShowWindow(SW_SHOW);
 	} else {
@@ -164,7 +163,7 @@ void CSearch::CreateAndShowCodeTab()
 	MoveToHideWindow(TRUE);
 
 	if (m_code_tab == nullptr) {
-		m_code_tab = new CCodeTab(m_code_tab, this);
+		m_code_tab = new CCodeTab(this);
 		m_code_tab->Create(CCodeTab::IDD);
 		m_code_tab->ShowWindow(SW_SHOW);
 	} else {
@@ -177,12 +176,31 @@ void CSearch::CreateAndShowBookTab()
 	MoveToHideWindow(TRUE);
 
 	if (m_book_tab == nullptr) {
-		m_book_tab = new CBookTab(m_book_tab, this);
+		m_book_tab = new CBookTab(this);
 		m_book_tab->Create(CBookTab::IDD);
 		m_book_tab->ShowWindow(SW_SHOW);
 	} else {
 		ASSERT(FALSE);
 	}
+}
+
+void CSearch::DeleteTabWnd(CWnd* pWnd)
+{
+	if (pWnd == m_code_tab){
+		m_code_tab = nullptr;
+	} else if (pWnd == m_book_tab){
+		m_book_tab = nullptr;
+	} else if (pWnd == m_tag_tab){
+		m_tag_tab = nullptr;
+	}
+
+	if (m_pLastFocusWnd == pWnd){
+		m_pLastFocusWnd = nullptr;
+	}
+
+	delete pWnd;
+
+	MoveToHideWindow(FALSE);
 }
 
 void CSearch::DoSearch()
@@ -429,29 +447,38 @@ void CSearch::DoRecommand()
 	}
 }
 
-void CSearch::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if (nID == SC_MINIMIZE) {
-		m_pLastFocusWnd = GetFocus();
-	}
-	CDialogEx::OnSysCommand(nID, lParam);
-}
-
 void CSearch::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
 	if (nState == WA_INACTIVE ) {
+		// 已经最小化的窗口不再处理
 		if (!bMinimized) {
-			m_pLastFocusWnd = GetFocus();
+			if (m_tag_tab != nullptr) {
+				m_pLastFocusWnd = m_tag_tab;
+			} else if (m_code_tab != nullptr) {
+				m_pLastFocusWnd = m_code_tab;
+			} else if (m_book_tab != nullptr) {
+				m_pLastFocusWnd = m_book_tab;
+			} else {
+				m_pLastFocusWnd = GetFocus();
+			}
 		}
 	} else {
 		if (m_pLastFocusWnd != nullptr) {
 			m_pLastFocusWnd->SetFocus();
 		} else {
-			CWnd* pWnd = GetDefaultFocusWnd();
-			if (pWnd != nullptr) {
-				pWnd->SetFocus();
+			if (m_tag_tab != nullptr) {
+				m_tag_tab->SetFocus();
+			} else if (m_code_tab != nullptr) {
+				m_code_tab->SetFocus();
+			} else if (m_book_tab != nullptr) {
+				m_book_tab->SetFocus();
+			} else {
+				CWnd* pWnd = GetDefaultFocusWnd();
+				if (pWnd != nullptr) {
+					pWnd->SetFocus();
+				}
 			}
 		}
 	}
