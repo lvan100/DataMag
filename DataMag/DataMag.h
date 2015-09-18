@@ -150,6 +150,11 @@ public:
 	void SetRecentFile(CString file);
 
 	/**
+	 * 移除最近访问列表项
+	 */
+	void RemoveRecentFile(CString file);
+
+	/**
 	 * 设置最近访问列表监听器
 	 */
 	void AddRecentListChangeListener(CWnd* pWnd, RecentListChangeListener listener){

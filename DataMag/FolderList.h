@@ -63,6 +63,11 @@ protected:
 	HICON m_hCodeImage;
 	HICON m_hBookImage;
 
+	/*
+	 * 背景已经被清除过
+	 */
+	BOOL m_isBkgndCleared;
+
 protected:
 	virtual BOOL DoDefault(int iItem);
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);

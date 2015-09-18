@@ -8,6 +8,7 @@ CFolderListCtrl::CFolderListCtrl(CShellManager* pShellManager)
 	, m_hTagImage(nullptr)
 	, m_hCodeImage(nullptr)
 	, m_hBookImage(nullptr)
+	, m_isBkgndCleared(FALSE)
 	, m_pShellManager(pShellManager)
 {
 }
@@ -30,6 +31,22 @@ HBRUSH CFolderListCtrl::CtlColor(CDC* pDC, UINT nCtlColor)
 
 void CFolderListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
+	CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
+
+	if (::IsRectEmpty(&lpDrawItemStruct->rcItem)) {
+		if (!m_isBkgndCleared){
+			m_isBkgndCleared = TRUE;
+
+			CRect rcClient;
+			GetClientRect(rcClient);
+			pDC->FillSolidRect(rcClient, afxGlobalData.clrBtnFace);
+		}
+
+		return;
+	}
+
+	m_isBkgndCleared = FALSE;
+
 	LPCTSTR str = (LPCTSTR)lpDrawItemStruct->itemData;
 
 	CString strPath(str);
@@ -41,8 +58,6 @@ void CFolderListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CString strSub = strPath.Left(nBackslash);
 	nBackslash = strSub.ReverseFind('\\');
 	CString strType = strSub.Mid(nBackslash + 1);
-
-	CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 
 	if ((GetFocus() == this) && ((lpDrawItemStruct->itemState & ODS_SELECTED) == ODS_SELECTED)) {
 		pDC->FillRect(&lpDrawItemStruct->rcItem, &afxGlobalData.brHilite);
@@ -164,7 +179,7 @@ BOOL CFolderListCtrl::OnEraseBkgnd(CDC* pDC)
 
 CString CFolderListCtrl::GetItemPath(int iItem)
 {
-	if (iItem > 0 && iItem < GetCount()) {
+	if (iItem >= 0 && iItem < GetCount()) {
 		return (LPCTSTR)GetItemData(iItem);
 	} else {
 		return _T("");

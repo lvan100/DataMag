@@ -213,3 +213,43 @@ void CDataMagApp::SetRecentFile(CString file)
 		(*iter).second();
 	}
 }
+
+void CDataMagApp::RemoveRecentFile(CString file)
+{
+	auto find_iter = recentFileList.begin();
+
+	for (;find_iter != recentFileList.end(); find_iter++) {
+		if ((*find_iter).CompareNoCase(file) == 0) {
+			break;
+		}
+	}
+
+	if (find_iter != recentFileList.end()) {
+		recentFileList.erase(find_iter);
+	} else {
+		return;
+	}
+
+	for (size_t i = 0; i < recentFileList.size(); i++) {
+
+		CString recentFileIndex;
+		recentFileIndex.Format(_T("File%d"), i);
+
+		theApp.WriteProfileString(_T("RecentFile"), recentFileIndex, recentFileList.at(i));
+	}
+
+	/* 将最后一个文件记录设置为空 */ {
+
+		CString recentFileIndex;
+		recentFileIndex.Format(_T("File%d"), recentFileList.size());
+
+		theApp.WriteProfileString(_T("RecentFile"), recentFileIndex, _T(""));
+	}
+
+	for (auto iter = recentListChangeListener.begin()
+		; iter != recentListChangeListener.end()
+		; iter++)
+	{
+		(*iter).second();
+	}
+}

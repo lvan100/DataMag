@@ -79,10 +79,13 @@ void CCodeTab::InitListBox()
 void CCodeTab::OnDoubleClick()
 {
 	int nItem = m_project_list.GetCurSel();
-	m_project_list.DoDefaultDClick(nItem);
+	if (nItem >= 0 && nItem < m_project_list.GetCount()){
 
-	CString strFile = m_project_list.GetItemPath(nItem);
-	theApp.SetRecentFile(strFile);
+		m_project_list.DoDefaultDClick(nItem);
+
+		CString strFile = m_project_list.GetItemPath(nItem);
+		theApp.SetRecentFile(strFile);
+	}
 }
 
 void CCodeTab::OnSelectChanged()
@@ -157,6 +160,12 @@ void CCodeTab::DoCommandSearch(CString str)
 	m_project_list.SetFilterString(str);
 	m_search_edit.SetWindowText(str);
 	m_search_edit.SetSel(-1);
+
+	if (m_project_list.GetCount() == 1){
+		CString strPath = m_project_list.GetItemPath(0);
+		theApp.SetRecentFile(strPath);
+		OpenFolerInShell(strPath);
+	}
 }
 
 void CCodeTab::OnBnClickedProjectAdd()
@@ -197,6 +206,9 @@ void CCodeTab::OnBnClickedProjectAdd()
 
 			// 立即打开文件夹以方便后续操作
 			OpenFolerInShell(strFolder);
+
+			// 添加到最近访问列表
+			theApp.SetRecentFile(strFolder);
 
 		} else {
 			CString strContent = _T("创建项目目录\"\"失败！");

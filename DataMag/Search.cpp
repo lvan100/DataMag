@@ -66,10 +66,16 @@ void CSearch::RecentListEvent::OnDoubleClick()
 	auto pThis = ((CSearch*)((BYTE*)this - offsetof(CSearch, m_recent_list_event)));
 
 	int nItem = pThis->m_recent_list.GetCurSel();
-	pThis->m_recent_list.DoDefaultDClick(nItem);
-
 	CString strPath = pThis->m_recent_list.GetItemPath(nItem);
-	theApp.SetRecentFile(strPath);
+
+	if (PathFileExists(strPath)){
+		theApp.SetRecentFile(strPath);
+		pThis->m_recent_list.DoDefaultDClick(nItem);
+	} else {
+		if (pThis->MessageBox(_T("找不到选择项，是否从最近访问列表中删除？"), _T("提示"), MB_OKCANCEL) == IDOK) {
+			theApp.RemoveRecentFile(strPath);
+		}
+	}
 }
 
 void CSearch::RecommandListEvent::OnDoubleClick()
@@ -197,7 +203,7 @@ void CSearch::DeleteTabWnd(CWnd* pWnd)
 	if (m_pLastFocusWnd == pWnd){
 		m_pLastFocusWnd = nullptr;
 	}
-
+	pWnd->DestroyWindow();
 	delete pWnd;
 
 	MoveToHideWindow(FALSE);
@@ -396,7 +402,7 @@ void CSearch::DoRecommand()
 	do {
 		int nRander = rand() % nCount;
 		codeBookSet.insert(nRander);
-	} while(codeBookSet.size() < CDataMagApp::MaxRecentFileCount);
+	} while (codeBookSet.size() < (size_t)nCount && codeBookSet.size() < CDataMagApp::MaxRecentFileCount);
 
 	vector<int> codeSet, bookSet;
 

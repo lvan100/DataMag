@@ -134,6 +134,11 @@ BOOL CFileListBox::OnEnumObject(LPAFX_SHELLITEMINFO pItem)
 
 BOOL CFileListBox::DoDefault(int iItem)
 {
+	if (iItem < 0 || iItem >= GetCount()){
+		ASSERT(FALSE);
+		return FALSE;
+	}
+
 	LPAFX_SHELLITEMINFO pInfo = (LPAFX_SHELLITEMINFO) GetItemData(iItem);
 	if (pInfo == nullptr || pInfo->pParentFolder == nullptr || pInfo->pidlRel == nullptr) {
 		ASSERT(FALSE);
