@@ -3,6 +3,7 @@
 #include "SearchEdit.h"
 #include "FileListBox.h"
 #include "HilitButton.h"
+#include "TagPathLink.h"
 #include "ItemInfoEdit.h"
 
 /**
@@ -132,6 +133,11 @@ protected:
 	CItemInfoEdit m_item_text;
 	CSearchEdit m_tag_search_edit;
 	CSearchEdit m_info_search_edit;
+
+	/**
+	 * 标签路径链接控件
+	 */
+	CTagPathLink m_tag_path_link;
 
 	DECLARE_MESSAGE_MAP()
 protected:

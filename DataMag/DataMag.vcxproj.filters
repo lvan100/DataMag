@@ -76,6 +76,9 @@
     <Filter Include="Kernel\Setting">
       <UniqueIdentifier>{397ff780-7b6a-4eab-be53-7f56f3573a53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\TagPathLink">
+      <UniqueIdentifier>{6ee25b33-35ea-48a1-a4e4-2f364a377e03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -206,6 +209,9 @@
     <ClInclude Include="Search.h">
       <Filter>Kernel\Search</Filter>
     </ClInclude>
+    <ClInclude Include="TagPathLink.h">
+      <Filter>Widget\TagPathLink</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -276,6 +282,9 @@
     </ClCompile>
     <ClCompile Include="Search.cpp">
       <Filter>Kernel\Search</Filter>
+    </ClCompile>
+    <ClCompile Include="TagPathLink.cpp">
+      <Filter>Widget\TagPathLink</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

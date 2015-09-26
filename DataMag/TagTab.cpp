@@ -46,9 +46,10 @@ void CTagTab::DoDataExchange(CDataExchange* pDX)
 	MFC_DDX_Control(pDX, IDC_TAG_ADD, m_tag_add);
 	MFC_DDX_Control(pDX, IDC_TAG_LIST, m_tag_list);
 	MFC_DDX_Control(pDX, IDC_TAG_DELETE, m_tag_delete);
-	MFC_DDX_Control(pDX, IDC_TAG_ITEM_INFO, m_item_text);
 	MFC_DDX_Control(pDX, IDC_TAG_RENAME, m_tag_rename);
 	MFC_DDX_Control(pDX, IDC_TAG_INFO_LIST, m_tag_info);
+	MFC_DDX_Control(pDX, IDC_TAG_ITEM_INFO, m_item_text);
+	MFC_DDX_Control(pDX, IDC_TAG_PATH_LINK, m_tag_path_link);
 	MFC_DDX_Control(pDX, IDC_TAG_RELATE_BOOK, m_relate_book);
 	MFC_DDX_Control(pDX, IDC_TAG_RELATE_CODE, m_relate_project);
 	MFC_DDX_Control(pDX, IDC_TAG_SEARCH_EDIT, m_tag_search_edit);
@@ -65,8 +66,8 @@ BEGIN_MESSAGE_MAP(CTagTab, CDialogEx)
 	ON_BN_CLICKED(IDC_TAG_ADD, &CTagTab::OnBnClickedTagAdd)
 	ON_BN_CLICKED(IDC_TAG_DELETE, &CTagTab::OnBnClickedTagDelete)
 	ON_BN_CLICKED(IDC_TAG_RENAME, &CTagTab::OnBnClickedTagRename)
-	ON_EN_CHANGE(IDC_INFO_SEARCH_EDIT, &CTagTab::OnChangeInfoSearchEdit)
 	ON_EN_CHANGE(IDC_TAG_SEARCH_EDIT, &CTagTab::OnChangeTagSearchEdit)
+	ON_EN_CHANGE(IDC_INFO_SEARCH_EDIT, &CTagTab::OnChangeInfoSearchEdit)
 	ON_BN_CLICKED(IDC_TAG_RELATE_BOOK, &CTagTab::OnBnClickedTagRelateBook)
 	ON_BN_CLICKED(IDC_TAG_RELATE_CODE, &CTagTab::OnBnClickedTagRelateProject)
 	ON_BN_CLICKED(IDC_REMOVE_RELATIONSHIP, &CTagTab::OnBnClickedRemoveRelationship)
@@ -153,6 +154,8 @@ BOOL CTagTab::OnInitDialog()
 
 	CSearch* pWnd = (CSearch*) GetParent();
 	CenterWindowInRect(this, pWnd->GetIfVisiableRect());
+
+	m_tag_path_link.SetLinkPath(_T("资料管理>资料管理"));
 
 	return FALSE; /* 焦点设置 */
 }

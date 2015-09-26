@@ -8,7 +8,8 @@ void MFC_DDX_Control(CDataExchange* pDX, int nIDC, CWnd& rControl)
 	TCHAR lpszClassName [MAX_CLASS_NAME + 1] = { 0 };
 	::GetClassName(pOrgWnd->m_hWnd, lpszClassName, MAX_CLASS_NAME);
 
-	if (_tcscmp(lpszClassName, _T("MFCButton")) == 0)
+	if ((_tcscmp(lpszClassName, _T("MFCButton")) == 0) ||
+		(_tcscmp(lpszClassName, _T("MFCLink")) == 0))
 	{
 		CMFCButton *pMFCButton = (CMFCButton *) pOrgWnd;
 		auto& pToolTipCtrl = pMFCButton->GetToolTipCtrl();

@@ -124,6 +124,7 @@
     <ClInclude Include="ItemInfoEdit.h" />
     <ClInclude Include="MoreInput.h" />
     <ClInclude Include="PrettyEdit.h" />
+    <ClInclude Include="TagPathLink.h" />
     <ClInclude Include="TagTab.h" />
     <ClInclude Include="ListBoxEvent.h" />
     <ClInclude Include="Search.h" />
@@ -154,6 +155,7 @@
     <ClCompile Include="MoreInput.cpp" />
     <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="PrettyEdit.cpp" />
+    <ClCompile Include="TagPathLink.cpp" />
     <ClCompile Include="TagTab.cpp" />
     <ClCompile Include="PrettyButton.cpp" />
     <ClCompile Include="CodeDlg.cpp" />
