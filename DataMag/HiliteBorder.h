@@ -25,6 +25,11 @@ protected:
 	 */
 	BOOL m_bHilited;
 
+	/**
+	 * »ÒÉ«»­Ë¢
+	 */
+	CBrush grayBrush;
+
 protected:
 	virtual void DrawItem(LPDRAWITEMSTRUCT);
 

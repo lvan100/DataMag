@@ -136,7 +136,7 @@ void CItemInfoEdit::OnDestroy()
 
 void CItemInfoEdit::OnEnChange()
 {
-	if (!m_change_listener._Empty()) {
+	if (m_change_listener.target<void()>() != nullptr) {
 		m_change_listener();
 	}
 }

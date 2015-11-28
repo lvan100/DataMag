@@ -9,6 +9,7 @@ CFolderListCtrl::CFolderListCtrl(CShellManager* pShellManager)
 	, m_hCodeImage(nullptr)
 	, m_hBookImage(nullptr)
 	, m_isBkgndCleared(FALSE)
+	, m_pHiliteBorder(nullptr)
 	, m_pShellManager(pShellManager)
 {
 }
@@ -18,11 +19,74 @@ CFolderListCtrl::~CFolderListCtrl()
 }
 
 BEGIN_MESSAGE_MAP(CFolderListCtrl, CListBox)
+	ON_WM_CREATE()
+	ON_WM_DESTROY()
+	ON_WM_SETFOCUS()
 	ON_WM_KILLFOCUS()
 	ON_WM_ERASEBKGND()
 	ON_WM_CTLCOLOR_REFLECT()
 	ON_CONTROL_REFLECT(LBN_DBLCLK, &CFolderListCtrl::OnLbnDblclk)
 END_MESSAGE_MAP()
+
+int CFolderListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CListBox::OnCreate(lpCreateStruct) == -1) {
+		return -1;
+	}
+
+	if (m_event != nullptr) {
+		m_event->InitListBox();
+	}
+
+	if (!InitBorder()) {
+		return -1;
+	}
+
+	return 0;
+}
+
+void CFolderListCtrl::PreSubclassWindow()
+{
+	CListBox::PreSubclassWindow();
+
+	if (m_event != nullptr) {
+		m_event->InitListBox();
+	}
+
+	if (!InitBorder()) {
+		ASSERT(FALSE);
+	}
+}
+BOOL CFolderListCtrl::InitBorder()
+{
+	ASSERT(m_pHiliteBorder == nullptr);
+
+	CRect rcBorder;
+	GetWindowRect(rcBorder);
+	GetParent()->ScreenToClient(rcBorder);
+
+	m_pHiliteBorder = new CHiliteBorder();
+
+	DWORD dwStyle = WS_VISIBLE | WS_CHILD | SS_OWNERDRAW;
+	if (!m_pHiliteBorder->Create(nullptr, dwStyle, rcBorder, GetParent())) {
+		return FALSE;
+	}
+
+	rcBorder.DeflateRect(1, 1, 1, 1);
+	MoveWindow(rcBorder);
+
+	return TRUE;
+}
+
+void CFolderListCtrl::OnDestroy()
+{
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->DestroyWindow();
+		delete m_pHiliteBorder;
+	}
+
+	CListBox::OnDestroy();
+}
 
 HBRUSH CFolderListCtrl::CtlColor(CDC* pDC, UINT nCtlColor)
 {
@@ -165,15 +229,38 @@ void CFolderListCtrl::OnLbnDblclk()
 	}
 }
 
+void CFolderListCtrl::OnSetFocus(CWnd* pOldWnd)
+{
+	CListBox::OnSetFocus(pOldWnd);
+
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->Hilite(TRUE);
+	}
+}
+
 void CFolderListCtrl::OnKillFocus(CWnd* pNewWnd)
 {
 	CListBox::OnKillFocus(pNewWnd);
 
-	Invalidate();
+	if (m_pHiliteBorder != nullptr) {
+		m_pHiliteBorder->Hilite(FALSE);
+	}
 }
 
 BOOL CFolderListCtrl::OnEraseBkgnd(CDC* pDC)
 {
+	if (GetFocus() == this) {
+		CRect rcClient;
+		GetClientRect(rcClient);
+
+		rcClient.top += 5;
+		rcClient.left += 5;
+		rcClient.right -= 5;
+		rcClient.bottom -= 5;		
+
+		pDC->DrawFocusRect(rcClient);
+	}
+
 	return TRUE;
 }
 

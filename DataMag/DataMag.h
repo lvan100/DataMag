@@ -27,6 +27,7 @@ public:
 
 public:
 	virtual BOOL InitInstance();
+	virtual int ExitInstance();
 
 public:
 	/**
@@ -44,7 +45,9 @@ public:
 	/**
 	 * 获取源码目录
 	 */
-	CString GetCodeDir();
+	CString GetCodeDir() {
+		return GetSettingDirectory(_T("CodeDir"), _T("..\\源码"));
+	}
 
 	/**
 	 * 设置源码目录
@@ -75,7 +78,9 @@ public:
 	/**
 	 * 获取图书目录
 	 */
-	CString GetBookDir();
+	CString GetBookDir() {
+		return GetSettingDirectory(_T("BookDir"), _T("..\\图书"));
+	}
 
 	/**
 	 * 设置图书目录
@@ -106,7 +111,9 @@ public:
 	/**
 	 * 获取标签目录
 	 */
-	CString GetTagDir();
+	CString GetTagDir() {
+		return GetSettingDirectory(_T("TagDir"), _T("..\\标签"));
+	}
 
 	/**
 	 * 设置标签目录
@@ -137,7 +144,7 @@ public:
 	/**
 	 * 最近访问列表的最大数量
 	 */
-	enum { MaxRecentFileCount = 8 };
+	enum { MaxRecentFileCount = 11 };
 
 	/**
 	 * 获取最近访问文件列表
@@ -178,6 +185,12 @@ protected:
 	 * 最近访问列表监听器列表
 	 */
 	map<CWnd*, RecentListChangeListener> recentListChangeListener;
+
+protected:
+	/**
+	 * 获取特定类型的设置目录
+	 */
+	CString GetSettingDirectory(CString strType, CString strDefaultPath);
 };
 
 /**
