@@ -6,7 +6,6 @@ IMPLEMENT_DYNAMIC(CHiliteBorder, CStatic)
 CHiliteBorder::CHiliteBorder()
 	: m_bHilited(FALSE)
 {
-	grayBrush.CreateSolidBrush(RGB(220, 220, 220));
 }
 
 CHiliteBorder::~CHiliteBorder()
@@ -27,7 +26,7 @@ BOOL CHiliteBorder::OnEraseBkgnd(CDC* pDC)
 	if (m_bHilited) {
 		pDC->FrameRect(rcClient, &afxGlobalData.brHilite);
 	} else {
- 		pDC->FrameRect(rcClient, &grayBrush);
+		pDC->FrameRect(rcClient, &afxGlobalData.brBtnFace);
 	}
 
 	return TRUE;

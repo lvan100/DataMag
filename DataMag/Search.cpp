@@ -328,7 +328,7 @@ void CSearch::OnRecentListChange()
 /**
  * 简单的枚举文件夹内容，返回内容数量
  */
-static int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
+int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
 	, CShellManager* pShellManager			// Shell管理器
 	, function<void(LPITEMIDLIST)> filter)	// 过滤器函数
 {
@@ -359,7 +359,7 @@ static int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
 			LPITEMIDLIST pidlTemp;
 			while (pEnum->Next(1, &pidlTemp, &dwFetched) == S_OK && dwFetched) {
 
-				if (filter.target<void(LPITEMIDLIST)>() != nullptr) {
+				if (!filter._Empty()) {
 					LPITEMIDLIST itemID = pShellManager->ConcatenateItem(info.pidlRel, pidlTemp);
 					filter(itemID);
 					pShellManager->FreeItem(itemID);

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ListBoxEvent.h"
-#include "HiliteBorder.h"
 
 /**
  * 文件夹列表控件，显示用户输入的文件夹
@@ -60,18 +59,6 @@ public:
 	{ m_hBookImage = hIcon; }
 
 protected:
-	/**
-	 * 初始化边框控件
-	 */
-	BOOL InitBorder();
-
-protected:
-	/**
-	* 边框
-	*/
-	CHiliteBorder* m_pHiliteBorder;
-
-protected:
 	HICON m_hTagImage;
 	HICON m_hCodeImage;
 	HICON m_hBookImage;
@@ -82,18 +69,14 @@ protected:
 	BOOL m_isBkgndCleared;
 
 protected:
-	virtual void PreSubclassWindow();
 	virtual BOOL DoDefault(int iItem);
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 	virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 
 	DECLARE_MESSAGE_MAP()
 protected:
-	afx_msg void OnDestroy();
 	afx_msg void OnLbnDblclk();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
