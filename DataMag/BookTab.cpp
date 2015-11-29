@@ -81,7 +81,7 @@ void CBookTab::OnDoubleClick()
 	int nItem = m_book_list.GetCurSel();
 	if (nItem >= 0 && nItem < m_book_list.GetCount()){
 
-		m_book_list.DoDefaultDClick(nItem);
+		m_book_list.DoDoubleClick(nItem);
 
 		CString strFile = m_book_list.GetItemPath(nItem);
 		theApp.SetRecentFile(strFile);

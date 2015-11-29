@@ -13,15 +13,13 @@ public:
 	virtual ~CPrettyEdit();
 
 protected:
-	virtual void Init();
-
-protected:
 	/**
 	 * 是否处于焦点状态
 	 */
 	BOOL m_bFocused;
 
 protected:
+	virtual void Init();
 	virtual void PreSubclassWindow();
 
 	DECLARE_MESSAGE_MAP()

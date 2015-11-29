@@ -26,14 +26,14 @@ protected:
 	BOOL m_bHilited;
 
 	/**
-	 * 灰色画刷
+	 * 灰色画刷，非高亮
 	 */
-	CBrush grayBrush;
+	CBrush m_gray_brush;
 
 protected:
 	virtual void DrawItem(LPDRAWITEMSTRUCT);
 
-	DECLARE_MESSAGE_MAP()
 protected:
+	DECLARE_MESSAGE_MAP()
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };

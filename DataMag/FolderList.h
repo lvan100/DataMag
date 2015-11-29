@@ -4,7 +4,7 @@
 #include "HiliteBorder.h"
 
 /**
- * 文件夹列表控件，显示用户输入的文件夹
+ * 文件夹列表控件，显示用户提供对的列表
  */
 class CFolderListCtrl : public CListBox
 {
@@ -24,7 +24,7 @@ public:
 	/**
 	 * 执行默认的双击操作
 	 */
-	void DoDefaultDClick(int iItem) {
+	void DoDoubleClick(int iItem) {
 		DoDefault(iItem);
 	}
 
@@ -60,26 +60,27 @@ public:
 	{ m_hBookImage = hIcon; }
 
 protected:
-	/**
-	 * 初始化边框控件
-	 */
-	BOOL InitBorder();
-
-protected:
-	/**
-	* 边框
-	*/
-	CHiliteBorder* m_pHiliteBorder;
-
-protected:
 	HICON m_hTagImage;
 	HICON m_hCodeImage;
 	HICON m_hBookImage;
 
+protected:
 	/*
 	 * 背景已经被清除过
 	 */
 	BOOL m_isBkgndCleared;
+
+protected:
+	/**
+	 * 初始化边框控件
+	 */
+	BOOL InitHiliteBorder();
+
+protected:
+	/**
+	 * 边框控件
+	 */
+	CHiliteBorder* m_pHiliteBorder;
 
 protected:
 	virtual void PreSubclassWindow();

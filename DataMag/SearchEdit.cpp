@@ -19,7 +19,6 @@ BEGIN_MESSAGE_MAP(CSearchEdit, CEdit)
 	ON_WM_KILLFOCUS()
 	ON_WM_ERASEBKGND()
 	ON_WM_CTLCOLOR_REFLECT()
-	ON_WM_LBUTTONDBLCLK()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_SETCURSOR()
 	ON_WM_MOUSEMOVE()
@@ -236,29 +235,8 @@ void CSearchEdit::OnLButtonDown(UINT nFlags, CPoint point)
 		CPrettyEdit::OnLButtonUp(nFlags, point);
 
 		if (HitSearchButton()) {
-			if (m_click_event.target<void()>() != nullptr) {
-				m_click_event.operator()();
-			}
-		}
-	}
-}
-
-void CSearchEdit::OnLButtonDblClk(UINT nFlags, CPoint point)
-{
-	if (m_bEnableSearchBtn) {
-		ReleaseCapture();
-		m_bMouseHover = FALSE;
-	}
-
-	CPrettyEdit::OnLButtonDblClk(nFlags, point);
-
-	if (m_bEnableSearchBtn)
-	{
-		CPrettyEdit::OnLButtonUp(nFlags, point);
-
-		if (HitSearchButton()) {
-			if (m_dclick_event.target<void()>() != nullptr) {
-				m_dclick_event.operator()();
+			if (m_click_event != false) {
+				m_click_event();
 			}
 		}
 	}

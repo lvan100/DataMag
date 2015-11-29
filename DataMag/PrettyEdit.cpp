@@ -65,6 +65,8 @@ BOOL CPrettyEdit::OnEraseBkgnd(CDC* pDC)
 
 	if (GetFocus() == this) {
 		pDC->FrameRect(rcClient, &afxGlobalData.brHilite);
+	} else {
+		// 可以设置非焦点状态下的边框效果
 	}
 
 	return TRUE;

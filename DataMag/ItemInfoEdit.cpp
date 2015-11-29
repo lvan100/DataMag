@@ -26,7 +26,7 @@ int CItemInfoEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CRichEditCtrl::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (!InitBorder()) {
+	if (!InitHiliteBorder()) {
 		return -1;
 	}
 
@@ -39,14 +39,14 @@ void CItemInfoEdit::PreSubclassWindow()
 {
 	CRichEditCtrl::PreSubclassWindow();
 
-	if (!InitBorder()) {
+	if (!InitHiliteBorder()) {
 		ASSERT(FALSE);
 	}
 
 	InitCtrl();
 }
 
-BOOL CItemInfoEdit::InitBorder() 
+BOOL CItemInfoEdit::InitHiliteBorder() 
 {
 	ASSERT(m_pHiliteBorder == nullptr);
 
@@ -136,7 +136,7 @@ void CItemInfoEdit::OnDestroy()
 
 void CItemInfoEdit::OnEnChange()
 {
-	if (m_change_listener.target<void()>() != nullptr) {
+	if (m_change_listener != false) {
 		m_change_listener();
 	}
 }

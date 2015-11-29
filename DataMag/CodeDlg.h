@@ -6,7 +6,7 @@
 /**
  * 项目选择对话框
  */
-class CCodeDlg : public CDialogEx, CListBoxEventAdapter
+class CCodeDlg : public CDialogEx, ListBoxEvent
 {
 	DECLARE_DYNAMIC(CCodeDlg)
 

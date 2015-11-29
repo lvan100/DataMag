@@ -16,6 +16,7 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	, m_recommand_list(&theShellManager)
 	, m_recent_list(&theShellManager)
 {
+	m_search_pad = new CSearchPad();
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 
 	m_recent_list.SetListBoxEvent(&m_recent_list_event);
@@ -24,6 +25,7 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 
 CMainSearch::~CMainSearch()
 {
+	delete m_search_pad;
 }
 
 void CMainSearch::DoDataExchange(CDataExchange* pDX)
@@ -38,6 +40,7 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
+	ON_EN_CHANGE(IDC_MAIN_SEARCH, &CMainSearch::OnEnChangeMainSearch)
 END_MESSAGE_MAP()
 
 void CMainSearch::RecentListEvent::OnDoubleClick()
@@ -49,7 +52,7 @@ void CMainSearch::RecentListEvent::OnDoubleClick()
 
 	if (PathFileExists(strPath)) {
 		theApp.SetRecentFile(strPath);
-		pThis->m_recent_list.DoDefaultDClick(nItem);
+		pThis->m_recent_list.DoDoubleClick(nItem);
 	}
 	else {
 		if (pThis->MessageBox(_T("找不到选择项，是否从最近访问列表中删除？"), _T("提示"), MB_OKCANCEL) == IDOK) {
@@ -63,7 +66,7 @@ void CMainSearch::RecommandListEvent::OnDoubleClick()
 	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recommand_list_event)));
 
 	int nItem = pThis->m_recommand_list.GetCurSel();
-	pThis->m_recommand_list.DoDefaultDClick(nItem);
+	pThis->m_recommand_list.DoDoubleClick(nItem);
 
 	CString strPath = pThis->m_recommand_list.GetItemPath(nItem);
 	theApp.SetRecentFile(strPath);
@@ -72,6 +75,8 @@ void CMainSearch::RecommandListEvent::OnDoubleClick()
 BOOL CMainSearch::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	m_search_pad->Create(IDD_SEARCHPAD, this);
 
 	HICON hTagIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_TAG)
@@ -130,6 +135,26 @@ BOOL CMainSearch::OnInitDialog()
 	m_search_edit.SetFocus();
 
 	return FALSE;
+}
+
+CRect CMainSearch::GetSearchPadRect()
+{
+	CRect rcSearchFilter;
+	m_search_filter.GetWindowRect(rcSearchFilter);
+	
+	CRect rcRecommandList;
+	m_recommand_list.GetWindowRect(rcRecommandList);
+
+	return CRect(rcSearchFilter.left, rcSearchFilter.bottom + 2, rcRecommandList.right + 1, rcRecommandList.bottom);
+}
+
+void CMainSearch::ShowSearchPad(bool bShow)
+{
+	m_search_pad->MoveWindow(GetSearchPadRect());
+	m_search_pad->ShowWindow(bShow ? SW_SHOW : SW_HIDE);
+
+	// 将焦点始终设置在搜索框上
+	m_search_edit.SetFocus();
 }
 
 /**
@@ -269,5 +294,23 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
+	if (pMsg->wParam == VK_ESCAPE) {
+		if (m_search_pad->IsWindowVisible()) {
+			m_search_edit.SetWindowText(_T(""));
+			ShowSearchPad(false);
+			return TRUE;
+		}
+	}
+
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CMainSearch::OnEnChangeMainSearch()
+{
+	CString strSearchFilter;
+	m_search_edit.GetWindowText(strSearchFilter);
+
+	// 显示或隐藏搜索结果面板
+	ShowSearchPad(strSearchFilter.GetLength() > 0);
+
 }

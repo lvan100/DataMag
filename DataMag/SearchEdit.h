@@ -56,13 +56,6 @@ public:
 		m_click_event = event;
 	}
 
-	/**
-	 * 设置搜索按钮双击事件响应
-	 */
-	void SetDClickEvent(ClickEvent event){
-		m_dclick_event = event;
-	}
-
 protected:
 	/**
 	 * 搜索图标
@@ -94,11 +87,6 @@ protected:
 	 */
 	ClickEvent m_click_event;
 
-	/**
-	 * 搜索按钮双击事件响应
-	 */
-	ClickEvent m_dclick_event;
-
 protected:
 	/**
 	 * 刷新 Hint 字符串
@@ -126,6 +114,5 @@ protected:
 	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 };

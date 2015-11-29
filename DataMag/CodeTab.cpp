@@ -81,7 +81,7 @@ void CCodeTab::OnDoubleClick()
 	int nItem = m_project_list.GetCurSel();
 	if (nItem >= 0 && nItem < m_project_list.GetCount()){
 
-		m_project_list.DoDefaultDClick(nItem);
+		m_project_list.DoDoubleClick(nItem);
 
 		CString strFile = m_project_list.GetItemPath(nItem);
 		theApp.SetRecentFile(strFile);

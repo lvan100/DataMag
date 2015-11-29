@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SearchPad.h"
 #include "FolderList.h"
 #include "SearchEdit.h"
 
@@ -18,7 +19,7 @@ protected:
 	/**
 	* 最近访问列表控件事件对象
 	*/
-	class RecentListEvent : public CListBoxEventAdapter
+	class RecentListEvent : public ListBoxEvent
 	{
 	public:
 		/**
@@ -31,7 +32,7 @@ protected:
 	/**
 	* 最近访问列表控件事件对象
 	*/
-	class RecommandListEvent : public CListBoxEventAdapter
+	class RecommandListEvent : public ListBoxEvent
 	{
 	public:
 		/**
@@ -47,6 +48,16 @@ protected:
 	*/
 	void DoRecommand();
 
+	/**
+	* 获取搜索面板显示区域
+	*/
+	CRect GetSearchPadRect();
+
+	/**
+	 * 显示搜索结果面板
+	 */
+	void ShowSearchPad(bool bShow);
+
 protected:
 	/**
 	* 随机推荐项目或图书列表
@@ -59,6 +70,11 @@ protected:
 	 */
 	CSearchEdit m_search_edit;
 	CComboBox m_search_filter;
+
+	/**
+	 * 搜索结果面板
+	 */
+	CSearchPad* m_search_pad;
 
 	/**
 	 * 最近访问列表控件
@@ -79,4 +95,5 @@ protected:
 
 protected:
 	DECLARE_MESSAGE_MAP()
+	afx_msg void OnEnChangeMainSearch();
 };

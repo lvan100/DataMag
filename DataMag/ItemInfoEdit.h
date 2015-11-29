@@ -38,7 +38,7 @@ protected:
 	/**
 	 * ³õÊ¼»¯±ß¿ò¿Ø¼þ
 	 */
-	BOOL InitBorder();
+	BOOL InitHiliteBorder();
 
 protected:
 	/**

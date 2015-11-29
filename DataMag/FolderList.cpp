@@ -4,13 +4,13 @@
 IMPLEMENT_DYNAMIC(CFolderListCtrl, CListBox)
 
 CFolderListCtrl::CFolderListCtrl(CShellManager* pShellManager)
-	: m_event(nullptr)
-	, m_hTagImage(nullptr)
-	, m_hCodeImage(nullptr)
-	, m_hBookImage(nullptr)
-	, m_isBkgndCleared(FALSE)
+	: m_pShellManager(pShellManager)
 	, m_pHiliteBorder(nullptr)
-	, m_pShellManager(pShellManager)
+	, m_isBkgndCleared(FALSE)
+	, m_hBookImage(nullptr)
+	, m_hCodeImage(nullptr)
+	, m_hTagImage(nullptr)
+	, m_event(nullptr)
 {
 }
 
@@ -34,12 +34,12 @@ int CFolderListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
-	if (m_event != nullptr) {
-		m_event->InitListBox();
+	if (!InitHiliteBorder()) {
+		return -1;
 	}
 
-	if (!InitBorder()) {
-		return -1;
+	if (m_event != nullptr) {
+		m_event->InitListBox();
 	}
 
 	return 0;
@@ -49,15 +49,16 @@ void CFolderListCtrl::PreSubclassWindow()
 {
 	CListBox::PreSubclassWindow();
 
+	if (!InitHiliteBorder()) {
+		ASSERT(FALSE);
+	}
+
 	if (m_event != nullptr) {
 		m_event->InitListBox();
 	}
-
-	if (!InitBorder()) {
-		ASSERT(FALSE);
-	}
 }
-BOOL CFolderListCtrl::InitBorder()
+
+BOOL CFolderListCtrl::InitHiliteBorder()
 {
 	ASSERT(m_pHiliteBorder == nullptr);
 
@@ -123,7 +124,7 @@ void CFolderListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	nBackslash = strSub.ReverseFind('\\');
 	CString strType = strSub.Mid(nBackslash + 1);
 
-	if ((GetFocus() == this) && ((lpDrawItemStruct->itemState & ODS_SELECTED) == ODS_SELECTED)) {
+	if (/*(GetFocus() == this) &&*/ ((lpDrawItemStruct->itemState & ODS_SELECTED) == ODS_SELECTED)) {
 		pDC->FillRect(&lpDrawItemStruct->rcItem, &afxGlobalData.brHilite);
 	} else {
 		pDC->FillRect(&lpDrawItemStruct->rcItem, &afxGlobalData.brBtnFace);

@@ -10,7 +10,7 @@
 /**
  * ÏîÄ¿Ò³Ãæ
  */
-class CCodeTab : public CDialogEx, CListBoxEventAdapter
+class CCodeTab : public CDialogEx, ListBoxEvent
 {
 	DECLARE_DYNAMIC(CCodeTab)
 

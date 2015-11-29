@@ -41,7 +41,7 @@ protected:
 	/**
 	 * 标签列表事件对象
 	 */
-	class TagListEvent: public CListBoxEventAdapter
+	class TagListEvent: public ListBoxEvent
 	{
 	public:
 		/**
@@ -59,7 +59,7 @@ protected:
 	/**
 	 * 关联列表事件对象
 	 */
-	class TagInfoEvent: public CListBoxEventAdapter
+	class TagInfoEvent: public ListBoxEvent
 	{
 	public:
 		/**

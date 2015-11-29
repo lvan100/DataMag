@@ -24,7 +24,7 @@ protected:
 	/**
 	 * 最近访问列表控件事件对象
 	 */
-	class RecentListEvent: public CListBoxEventAdapter
+	class RecentListEvent: public ListBoxEvent
 	{
 	public:
 		/**
@@ -37,7 +37,7 @@ protected:
 	/**
 	 * 最近访问列表控件事件对象
 	 */
-	class RecommandListEvent: public CListBoxEventAdapter
+	class RecommandListEvent: public ListBoxEvent
 	{
 	public:
 		/**

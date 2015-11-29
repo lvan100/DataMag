@@ -70,7 +70,7 @@ void CSearch::RecentListEvent::OnDoubleClick()
 
 	if (PathFileExists(strPath)){
 		theApp.SetRecentFile(strPath);
-		pThis->m_recent_list.DoDefaultDClick(nItem);
+		pThis->m_recent_list.DoDoubleClick(nItem);
 	} else {
 		if (pThis->MessageBox(_T("找不到选择项，是否从最近访问列表中删除？"), _T("提示"), MB_OKCANCEL) == IDOK) {
 			theApp.RemoveRecentFile(strPath);
@@ -83,7 +83,7 @@ void CSearch::RecommandListEvent::OnDoubleClick()
 	auto pThis = ((CSearch*)((BYTE*)this - offsetof(CSearch, m_recommand_list_event)));
 
 	int nItem = pThis->m_recommand_list.GetCurSel();
-	pThis->m_recommand_list.DoDefaultDClick(nItem);
+	pThis->m_recommand_list.DoDoubleClick(nItem);
 
 	CString strPath = pThis->m_recommand_list.GetItemPath(nItem);
 	theApp.SetRecentFile(strPath);
@@ -359,7 +359,7 @@ static int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
 			LPITEMIDLIST pidlTemp;
 			while (pEnum->Next(1, &pidlTemp, &dwFetched) == S_OK && dwFetched) {
 
-				if (filter.target<void(LPITEMIDLIST)>() != nullptr) {
+				if (filter != false) {
 					LPITEMIDLIST itemID = pShellManager->ConcatenateItem(info.pidlRel, pidlTemp);
 					filter(itemID);
 					pShellManager->FreeItem(itemID);

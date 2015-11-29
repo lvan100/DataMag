@@ -102,7 +102,7 @@ void CTagTab::TagInfoEvent::InitListBox()
 void CTagTab::TagInfoEvent::OnDoubleClick()
 {
 	auto pThis = ((CTagTab*)((BYTE*)this - offsetof(CTagTab, m_tag_info_event)));
-	pThis->m_tag_info.DoDefaultDClick(pThis->m_tag_info.GetCurSel());
+	pThis->m_tag_info.DoDoubleClick(pThis->m_tag_info.GetCurSel());
 }
 
 void CTagTab::TagInfoEvent::OnSelectChanged()

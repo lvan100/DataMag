@@ -10,7 +10,7 @@
 /**
  * Õº È“≥√Ê
  */
-class CBookTab : public CDialogEx, CListBoxEventAdapter
+class CBookTab : public CDialogEx, ListBoxEvent
 {
 	DECLARE_DYNAMIC(CBookTab)
 

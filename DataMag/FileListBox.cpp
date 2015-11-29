@@ -36,7 +36,7 @@ int CFileListBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_event->InitListBox();
 	}
 
-	if (!InitBorder()) {
+	if (!InitHiliteBorder()) {
 		return -1;
 	}
 
@@ -51,12 +51,12 @@ void CFileListBox::PreSubclassWindow()
 		m_event->InitListBox();
 	}
 
-	if (!InitBorder()) {
+	if (!InitHiliteBorder()) {
 		ASSERT(FALSE);
 	}
 }
 
-BOOL CFileListBox::InitBorder() 
+BOOL CFileListBox::InitHiliteBorder() 
 {
 	ASSERT(m_pHiliteBorder == nullptr);
 
@@ -71,7 +71,7 @@ BOOL CFileListBox::InitBorder()
 		return FALSE;
 	}
 
-	rcBorder.DeflateRect(1,1,1,1);
+	rcBorder.DeflateRect(0,1,1,1);
 	MoveWindow(rcBorder);
 
 	return TRUE;

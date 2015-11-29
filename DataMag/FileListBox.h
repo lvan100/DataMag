@@ -22,7 +22,7 @@ public:
 	/**
 	 * 执行默认的列表项双击操作
 	 */
-	void DoDefaultDClick(int iItem) {
+	void DoDoubleClick(int iItem) {
 		DoDefault(iItem);
 	}
 
@@ -80,7 +80,7 @@ protected:
 	/**
 	 * 初始化边框控件
 	 */
-	BOOL InitBorder();
+	BOOL InitHiliteBorder();
 
 protected:
 	/**

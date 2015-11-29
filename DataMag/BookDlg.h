@@ -6,7 +6,7 @@
 /**
  * 图书选择对话框
  */
-class CBookDlg : public CDialogEx, CListBoxEventAdapter
+class CBookDlg : public CDialogEx, ListBoxEvent
 {
 	DECLARE_DYNAMIC(CBookDlg)
 
