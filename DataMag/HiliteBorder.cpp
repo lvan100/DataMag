@@ -25,7 +25,8 @@ BOOL CHiliteBorder::OnEraseBkgnd(CDC* pDC)
 	pDC->SetBkMode(TRANSPARENT);
 
 	if (m_bHilited) {
-		pDC->FrameRect(rcClient, &afxGlobalData.brHilite);
+		pDC->FrameRect(rcClient, &afxGlobalData.brBtnFace);
+		pDC->DrawFocusRect(rcClient); /* »æÖÆ½¹µãÇøÓò */
 	} else {
  		pDC->FrameRect(rcClient, &m_gray_brush);
 	}

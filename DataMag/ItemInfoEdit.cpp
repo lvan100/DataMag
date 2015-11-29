@@ -136,7 +136,7 @@ void CItemInfoEdit::OnDestroy()
 
 void CItemInfoEdit::OnEnChange()
 {
-	if (m_change_listener != false) {
+	if (m_change_listener) {
 		m_change_listener();
 	}
 }

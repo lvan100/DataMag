@@ -359,7 +359,7 @@ static int SimpleEnumFolder(LPCTSTR lpszPath		// ÎÄ¼þ¼ÐÂ·¾¶
 			LPITEMIDLIST pidlTemp;
 			while (pEnum->Next(1, &pidlTemp, &dwFetched) == S_OK && dwFetched) {
 
-				if (filter != false) {
+				if (filter) {
 					LPITEMIDLIST itemID = pShellManager->ConcatenateItem(info.pidlRel, pidlTemp);
 					filter(itemID);
 					pShellManager->FreeItem(itemID);

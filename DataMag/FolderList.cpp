@@ -124,7 +124,7 @@ void CFolderListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	nBackslash = strSub.ReverseFind('\\');
 	CString strType = strSub.Mid(nBackslash + 1);
 
-	if (/*(GetFocus() == this) &&*/ ((lpDrawItemStruct->itemState & ODS_SELECTED) == ODS_SELECTED)) {
+	if ((GetFocus() == this) && ((lpDrawItemStruct->itemState & ODS_SELECTED) == ODS_SELECTED)) {
 		pDC->FillRect(&lpDrawItemStruct->rcItem, &afxGlobalData.brHilite);
 	} else {
 		pDC->FillRect(&lpDrawItemStruct->rcItem, &afxGlobalData.brBtnFace);

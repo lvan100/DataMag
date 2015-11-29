@@ -27,6 +27,7 @@ void CBookDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CBookDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CBookDlg::OnBnClickedOk)
 	ON_EN_CHANGE(IDC_BOOK_SEARCH_EDIT, &CBookDlg::OnChangeBookSearchEdit)
+	ON_CBN_SELCHANGE(IDC_SEARCH_COMBO, &CBookDlg::OnCbnSelchangeSearchCombo)
 END_MESSAGE_MAP()
 
 void CBookDlg::InitListBox()
@@ -61,4 +62,9 @@ void CBookDlg::OnChangeBookSearchEdit()
 	CString strFilter;
 	m_search_edit.GetWindowText(strFilter);
 	m_book_list.SetFilterString(strFilter);
+}
+
+void CBookDlg::OnCbnSelchangeSearchCombo()
+{
+	// TODO: 在此添加控件通知处理程序代码
 }

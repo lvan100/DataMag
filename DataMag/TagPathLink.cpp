@@ -22,7 +22,7 @@ END_MESSAGE_MAP()
 
 void CPathLinkButton::OnBnDoubleclicked()
 {
-	if (clickEvent != false) {
+	if (clickEvent) {
 		clickEvent(this);
 	}
 }
@@ -169,7 +169,7 @@ void CTagPathLink::OnPathBtnClicked(CMFCButton* pBtn)
 		strLinkPath += strPath;
 	}
 
-	if (mPathChangedEvent != false) {
+	if (mPathChangedEvent) {
 		mPathChangedEvent(strLinkPath);
 	}
 }

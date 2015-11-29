@@ -44,4 +44,6 @@ protected:
 protected:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnChangeBookSearchEdit();
+public:
+	afx_msg void OnCbnSelchangeSearchCombo();
 };

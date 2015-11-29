@@ -40,7 +40,9 @@ void CMainSearch::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
+	ON_WM_SETFOCUS()
 	ON_EN_CHANGE(IDC_MAIN_SEARCH, &CMainSearch::OnEnChangeMainSearch)
+	ON_CBN_SELCHANGE(IDC_SEARCH_COMBO, &CMainSearch::OnCbnSelchangeSearchCombo)
 END_MESSAGE_MAP()
 
 void CMainSearch::RecentListEvent::OnDoubleClick()
@@ -77,6 +79,7 @@ BOOL CMainSearch::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	m_search_pad->Create(IDD_SEARCHPAD, this);
+	m_search_pad->MoveWindow(GetSearchPadRect());
 
 	HICON hTagIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_TAG)
@@ -97,6 +100,10 @@ BOOL CMainSearch::OnInitDialog()
 	m_recommand_list.SetTagImage(hTagIcon);
 	m_recommand_list.SetBookImage(hBookIcon);
 	m_recommand_list.SetCodeImage(hProjectIcon);
+
+	m_search_pad->SetTagImage(hTagIcon);
+	m_search_pad->SetBookImage(hBookIcon);
+	m_search_pad->SetCodeImage(hProjectIcon);
 
 	// 设置搜索过滤器的默认值
 	m_search_filter.SetCurSel(0);
@@ -150,11 +157,14 @@ CRect CMainSearch::GetSearchPadRect()
 
 void CMainSearch::ShowSearchPad(bool bShow)
 {
-	m_search_pad->MoveWindow(GetSearchPadRect());
 	m_search_pad->ShowWindow(bShow ? SW_SHOW : SW_HIDE);
+	m_search_pad->MoveWindow(GetSearchPadRect(), TRUE);
+	m_search_pad->Invalidate(bShow ? TRUE : FALSE);
 
 	// 将焦点始终设置在搜索框上
-	m_search_edit.SetFocus();
+	if (GetFocus() != &m_search_edit) {
+		m_search_edit.SetFocus();
+	}
 }
 
 /**
@@ -219,8 +229,8 @@ void CMainSearch::DoRecommand()
 	m_recommand_values.clear();
 	m_recommand_list.ResetContent();
 
-	int nCodeCount = SimpleEnumFolder(theApp.GetCodeDir(), &theShellManager, function<void(LPITEMIDLIST)>());
-	int nBookCount = SimpleEnumFolder(theApp.GetBookDir(), &theShellManager, function<void(LPITEMIDLIST)>());
+	int nCodeCount = SimpleEnumFolder(theApp.GetCodeDir(), &theShellManager, nullptr);
+	int nBookCount = SimpleEnumFolder(theApp.GetBookDir(), &theShellManager, nullptr);
 
 	int nCount = nCodeCount + nBookCount;
 	if (nCount == 0) {
@@ -289,28 +299,101 @@ void CMainSearch::DoRecommand()
 BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN) {
+
 		if (GetFocus() != &m_search_edit) {
 			m_search_edit.SetFocus();
 		}
-	}
 
-	if (pMsg->wParam == VK_ESCAPE) {
-		if (m_search_pad->IsWindowVisible()) {
-			m_search_edit.SetWindowText(_T(""));
-			ShowSearchPad(false);
-			return TRUE;
+		if (pMsg->wParam == VK_ESCAPE) {
+			if (m_search_pad->IsWindowVisible()) {
+				m_search_edit.SetWindowText(_T(""));
+				ShowSearchPad(false);
+				return TRUE;
+			}
+		}
+
+		if (pMsg->wParam == VK_DOWN) {
+			if (m_search_pad->IsWindowVisible()) {
+				m_search_pad->SelectNextItem();
+				return TRUE;
+			}
+		}
+
+		if (pMsg->wParam == VK_UP) {
+			if (m_search_pad->IsWindowVisible()) {
+				m_search_pad->SelectPrevItem();
+				return TRUE;
+			}
 		}
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
+void CMainSearch::OnCbnSelchangeSearchCombo()
+{
+	OnEnChangeMainSearch();
+}
+
 void CMainSearch::OnEnChangeMainSearch()
 {
+	m_search_pad->ClearResult();
+
+	CString strSearchText;
+	m_search_edit.GetWindowText(strSearchText);
+	m_search_pad->SetSearchText(strSearchText);
+
 	CString strSearchFilter;
-	m_search_edit.GetWindowText(strSearchFilter);
+	m_search_filter.GetWindowText(strSearchFilter);
+	m_search_pad->SetSearchFilter(strSearchFilter);
+	
+	if (strSearchText.GetLength() > 0) {
 
-	// 显示或隐藏搜索结果面板
-	ShowSearchPad(strSearchFilter.GetLength() > 0);
+		vector<CString> arrResult;
 
+		auto FilterPath = [&](LPITEMIDLIST itemID) {
+			TCHAR szPath[MAX_PATH] = { 0 };
+			if (SHGetPathFromIDList(itemID, szPath)) {
+				if (_tcsstr(szPath, strSearchText) != nullptr) {
+					arrResult.push_back(szPath);
+				}
+			}
+		};
+
+		if (strSearchFilter == _T("标签") || strSearchFilter == _T("全部")) {
+			SimpleEnumFolder(theApp.GetTagDir(), &theShellManager, FilterPath);
+			m_search_pad->AddTag(arrResult);
+			arrResult.clear();
+		}
+
+		if (strSearchFilter == _T("源码") || strSearchFilter == _T("全部")) {
+			SimpleEnumFolder(theApp.GetCodeDir(), &theShellManager, FilterPath);
+			m_search_pad->AddCode(arrResult);
+			arrResult.clear();
+		}
+
+		if (strSearchFilter == _T("图书") || strSearchFilter == _T("全部")) {
+			SimpleEnumFolder(theApp.GetBookDir(), &theShellManager, FilterPath);
+			m_search_pad->AddBook(arrResult);
+			arrResult.clear();
+		}
+	}
+
+	// 执行显示前的准备工作
+	m_search_pad->Prepare();
+
+	// 显示或者隐藏搜索结果对话框
+	ShowSearchPad(strSearchText.GetLength() > 0);
+}
+
+void CMainSearch::OnSetFocus(CWnd* pOldWnd)
+{
+	CDialogEx::OnSetFocus(pOldWnd);
+
+	if (GetFocus() != &m_search_edit) {
+		m_search_edit.SetFocus();
+	}
+
+	// 设置不默认选中全部文本
+	m_search_edit.SetSel(-1);
 }

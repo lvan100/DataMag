@@ -96,4 +96,6 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnEnChangeMainSearch();
+	afx_msg void OnSetFocus(CWnd* pOldWnd);
+	afx_msg void OnCbnSelchangeSearchCombo();
 };

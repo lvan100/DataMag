@@ -94,13 +94,7 @@ BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 	CBrush whiteBrush(RGB(255,255,255));
 	pDC->FillRect(rcClient, &whiteBrush);
 
-	if (m_bFocused) {
-		pDC->FrameRect(rcClient, &afxGlobalData.brHilite);
-	} else {
-		CRect rect(rcClient);
-		rect.right = rect.left + 1;
-		pDC->FrameRect(rect, &afxGlobalData.brBtnFace);
-	}
+	pDC->FrameRect(rcClient, &afxGlobalData.brHilite);
 
 	CRect rcSearchBtn = GetSearchBtnRect();
 
@@ -235,7 +229,7 @@ void CSearchEdit::OnLButtonDown(UINT nFlags, CPoint point)
 		CPrettyEdit::OnLButtonUp(nFlags, point);
 
 		if (HitSearchButton()) {
-			if (m_click_event != false) {
+			if (m_click_event) {
 				m_click_event();
 			}
 		}
