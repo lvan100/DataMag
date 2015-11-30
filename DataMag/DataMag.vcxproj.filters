@@ -91,6 +91,9 @@
     <Filter Include="其他\Widget\FileOp">
       <UniqueIdentifier>{1279bef9-55a6-4545-a098-3f11b460cf29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="WellWidget\ResourceSet">
+      <UniqueIdentifier>{341c1177-1cca-4dbd-b132-5b57ec229396}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -230,6 +233,9 @@
     <ClInclude Include="SearchPad.h">
       <Filter>MainSearch</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceSet.h">
+      <Filter>WellWidget\ResourceSet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -309,6 +315,9 @@
     </ClCompile>
     <ClCompile Include="SearchPad.cpp">
       <Filter>MainSearch</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceSet.cpp">
+      <Filter>WellWidget\ResourceSet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

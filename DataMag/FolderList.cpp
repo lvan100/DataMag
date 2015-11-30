@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "FolderList.h"
+#include "ResourceSet.h"
 
 IMPLEMENT_DYNAMIC(CFolderListCtrl, CListBox)
 
@@ -12,11 +13,6 @@ CFolderListCtrl::CFolderListCtrl(CShellManager* pShellManager)
 	, m_hTagImage(nullptr)
 	, m_event(nullptr)
 {
-	LOGFONT logFont = { 0 };
-	afxGlobalData.fontRegular.GetLogFont(&logFont);
-
-	logFont.lfHeight = -15;
-	m_text_font = CFont::FromHandle(CreateFontIndirect(&logFont));
 }
 
 CFolderListCtrl::~CFolderListCtrl()
@@ -39,12 +35,12 @@ int CFolderListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
-	if (!InitHiliteBorder()) {
-		return -1;
-	}
-
 	if (m_event != nullptr) {
 		m_event->InitListBox();
+	}
+
+	if (!InitHiliteBorder()) {
+		return -1;
 	}
 
 	return 0;
@@ -54,12 +50,12 @@ void CFolderListCtrl::PreSubclassWindow()
 {
 	CListBox::PreSubclassWindow();
 
-	if (!InitHiliteBorder()) {
-		ASSERT(FALSE);
-	}
-
 	if (m_event != nullptr) {
 		m_event->InitListBox();
+	}
+
+	if (!InitHiliteBorder()) {
+		ASSERT(FALSE);
 	}
 }
 
@@ -78,7 +74,7 @@ BOOL CFolderListCtrl::InitHiliteBorder()
 		return FALSE;
 	}
 
-	rcBorder.DeflateRect(1, 1, 1, 1);
+	rcBorder.DeflateRect(1, 1, 1, 0);
 	MoveWindow(rcBorder);
 
 	return TRUE;
@@ -157,21 +153,26 @@ void CFolderListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	rcText.left = rcIcon.right + 4;
 
 	pDC->SetBkMode(TRANSPARENT);
-	CFont* pOldFont = pDC->SelectObject(m_text_font);
+	CFont* pOldFont = pDC->SelectObject(theResourceSet.GetFontBySize(12));
 	pDC->DrawText(strName, rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 	pDC->SelectObject(pOldFont);
 }
 
 void CFolderListCtrl::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 {
+	lpMeasureItemStruct->itemHeight = GetMeasuredItemHeight();
+}
+
+int CFolderListCtrl::GetMeasuredItemHeight()
+{
 	static int itemHeight = 0;
 	if (itemHeight == 0) {
 		CDC* pDC = GetDC();
-		CFont* pOldFont = pDC->SelectObject(m_text_font);
+		CFont* pOldFont = pDC->SelectObject(theResourceSet.GetFontBySize(12));
 		itemHeight = pDC->GetTextExtent(_T("Í¼Êé")).cy + 8;
 		ReleaseDC(pDC);
 	}
-	lpMeasureItemStruct->itemHeight = itemHeight;
+	return itemHeight;
 }
 
 BOOL CFolderListCtrl::DoDefault(int iItem)

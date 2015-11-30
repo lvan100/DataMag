@@ -28,6 +28,11 @@ protected:
 	{
 	public:
 		/**
+		 * 初始化列表框控件
+		 */
+		virtual void InitListBox();
+
+		/**
 		* 列表项双击事件
 		*/
 		virtual void OnDoubleClick();
@@ -40,6 +45,11 @@ protected:
 	class RecommandListEvent : public ListBoxEvent
 	{
 	public:
+		/**
+		 * 初始化列表框控件
+		 */
+		virtual void InitListBox();
+
 		/**
 		* 列表项双击事件
 		*/

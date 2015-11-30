@@ -2,6 +2,7 @@
 #include "DataMag.h"
 #include "MainSearch.h"
 #include "DDXControl.h"
+#include "ResourceSet.h"
 
 #include <set>
 #include <map>
@@ -49,6 +50,21 @@ BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_SEARCH_COMBO, &CMainSearch::OnCbnSelchangeSearchCombo)
 END_MESSAGE_MAP()
 
+void CMainSearch::RecentListEvent::InitListBox()
+{
+	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recent_list_event)));
+
+	int itemHeight = pThis->m_recent_list.GetMeasuredItemHeight();
+
+	CRect rcWindow;
+	pThis->m_recent_list.GetWindowRect(rcWindow);
+
+	pThis->ScreenToClient(rcWindow);
+
+	rcWindow.bottom = rcWindow.top + itemHeight * CDataMagApp::MaxRecentFileCount + 2;
+	pThis->m_recent_list.MoveWindow(rcWindow);
+}
+
 void CMainSearch::RecentListEvent::OnDoubleClick()
 {
 	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recent_list_event)));
@@ -64,6 +80,21 @@ void CMainSearch::RecentListEvent::OnDoubleClick()
 			theApp.RemoveRecentFile(strPath);
 		}
 	}
+}
+
+void CMainSearch::RecommandListEvent::InitListBox()
+{
+	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recommand_list_event)));
+
+	int itemHeight = pThis->m_recommand_list.GetMeasuredItemHeight();
+
+	CRect rcWindow;
+	pThis->m_recommand_list.GetWindowRect(rcWindow);
+
+	pThis->ScreenToClient(rcWindow);
+
+	rcWindow.bottom = rcWindow.top + itemHeight * CDataMagApp::MaxRecentFileCount + 2;
+	pThis->m_recommand_list.MoveWindow(rcWindow);
 }
 
 void CMainSearch::RecommandListEvent::OnDoubleClick()
@@ -143,28 +174,10 @@ BOOL CMainSearch::OnInitDialog()
 	int searchFilter = theApp.GetProfileInt(_T("Settings"), _T("SearchFilter"), 0);
 	m_search_filter.SetCurSel(searchFilter);
 
-	[&]() { // 设置搜索框的字体
-
-		LOGFONT logFont = { 0 };
-		afxGlobalData.fontRegular.GetLogFont(&logFont);
-
-		logFont.lfHeight = -15;
-
-		HFONT hFont = CreateFontIndirect(&logFont);
-		m_search_filter.SetFont(CFont::FromHandle(hFont));
-	}();
-
-	[&]() { // 设置推荐表的字体
-		LOGFONT logFont = { 0 };
-		afxGlobalData.fontRegular.GetLogFont(&logFont);
-
-		logFont.lfHeight = -16;
-
-		HFONT hFont = CreateFontIndirect(&logFont);
-		m_recent_label.SetFont(CFont::FromHandle(hFont));
-		m_recommand_label.SetFont(CFont::FromHandle(hFont));
-	}();
-
+	m_recent_label.SetFont(theResourceSet.GetFontBySize(13));
+	m_search_filter.SetFont(theResourceSet.GetFontBySize(12));
+	m_recommand_label.SetFont(theResourceSet.GetFontBySize(13));
+	
 	// 填充最近访问列表数据
 	auto& list = theApp.GetRecentFileList();
 	for (size_t i = 0; i < list.size(); i++) {

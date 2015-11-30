@@ -28,6 +28,11 @@ public:
 		DoDefault(iItem);
 	}
 
+	/**
+	 * 获取测量之后的项的高度
+	 */
+	int GetMeasuredItemHeight();
+
 public:
 	/**
 	 * 获取列表项的文件地址
@@ -81,12 +86,6 @@ protected:
 	 * 边框控件
 	 */
 	CHiliteBorder* m_pHiliteBorder;
-
-protected:
-	/**
-	* 内容使用的字体
-	*/
-	CFont* m_text_font;
 
 protected:
 	virtual void PreSubclassWindow();
