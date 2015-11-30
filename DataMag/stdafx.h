@@ -63,3 +63,7 @@ struct AutoCoInitialize
 		CoUninitialize();
 	}
 };
+
+#ifndef STATIC
+#define STATIC static
+#endif

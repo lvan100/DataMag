@@ -51,7 +51,7 @@ protected:
 	/**
 	* 完成推荐
 	*/
-	void DoRecommand();
+	void DoRandomRecommand();
 
 	/**
 	* 获取搜索面板显示区域
@@ -70,11 +70,6 @@ protected:
 	vector<CString> m_recommand_values;
 
 protected:
-	/**
-	 * 标题栏图标
-	 */
-	HICON m_title_icon;
-
 	/**
 	 * 搜索控件
 	 */

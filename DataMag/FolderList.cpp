@@ -282,7 +282,7 @@ BOOL CFolderListCtrl::OnEraseBkgnd(CDC* pDC)
 CString CFolderListCtrl::GetItemPath(int iItem)
 {
 	if (iItem >= 0 && iItem < GetCount()) {
-		return wcsdup((LPCTSTR)GetItemData(iItem));
+		return (LPCTSTR)GetItemData(iItem);
 	} else {
 		return _T("");
 	}

@@ -27,15 +27,25 @@ public:
 
 public:
 	virtual BOOL InitInstance();
-	virtual int ExitInstance();
+	virtual int  ExitInstance();
 
 public:
+	/*
+	* 获取应用程序图标
+	*/
+	HICON GetAppIcon();
+
 	/**
 	 * 获取搜索框图标
 	 */
 	HICON GetSearchIcon();
 
 protected:
+	/**
+	 * 应用程序图标
+	 */
+	HICON m_hAppIcon;
+
 	/**
 	 * 搜索框图标
 	 */
@@ -45,9 +55,7 @@ public:
 	/**
 	 * 获取源码目录
 	 */
-	CString GetCodeDir() {
-		return GetSettingDirectory(_T("CodeDir"), _T("..\\源码"));
-	}
+	CString GetCodeDir();
 
 	/**
 	 * 设置源码目录
@@ -78,9 +86,7 @@ public:
 	/**
 	 * 获取图书目录
 	 */
-	CString GetBookDir() {
-		return GetSettingDirectory(_T("BookDir"), _T("..\\图书"));
-	}
+	CString GetBookDir();
 
 	/**
 	 * 设置图书目录
@@ -111,9 +117,7 @@ public:
 	/**
 	 * 获取标签目录
 	 */
-	CString GetTagDir() {
-		return GetSettingDirectory(_T("TagDir"), _T("..\\标签"));
-	}
+	CString GetTagDir();
 
 	/**
 	 * 设置标签目录

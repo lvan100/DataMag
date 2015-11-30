@@ -16,8 +16,6 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	, m_recommand_list(&theShellManager)
 	, m_recent_list(&theShellManager)
 {
-	m_title_icon = theApp.LoadIcon(IDR_MAINFRAME);
-
 	m_search_pad = new CSearchPad();
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 
@@ -61,8 +59,7 @@ void CMainSearch::RecentListEvent::OnDoubleClick()
 	if (PathFileExists(strPath)) {
 		theApp.SetRecentFile(strPath);
 		pThis->m_recent_list.DoDoubleClick(nItem);
-	}
-	else {
+	} else {
 		if (pThis->MessageBox(_T("找不到选择项，是否从最近访问列表中删除？"), _T("提示"), MB_OKCANCEL) == IDOK) {
 			theApp.RemoveRecentFile(strPath);
 		}
@@ -82,8 +79,8 @@ void CMainSearch::RecommandListEvent::OnDoubleClick()
 
 void CMainSearch::OnRecentListChange()
 {
-	m_recent_list.SetRedraw(FALSE); {
-
+	m_recent_list.SetRedraw(FALSE);
+	{
 		m_recent_list.ResetContent();
 
 		auto& list = theApp.GetRecentFileList();
@@ -98,8 +95,8 @@ BOOL CMainSearch::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	SetIcon(m_title_icon, TRUE);
-	SetIcon(m_title_icon, FALSE);
+	SetIcon(theApp.GetAppIcon(), TRUE);
+	SetIcon(theApp.GetAppIcon(), FALSE);
 
 	m_search_pad->Create(IDD_SEARCHPAD, this);
 	m_search_pad->MoveWindow(GetSearchPadRect());
@@ -108,7 +105,7 @@ BOOL CMainSearch::OnInitDialog()
 		, MAKEINTRESOURCE(IDI_TAG)
 		, IMAGE_ICON, 0, 0, 0);
 
-	HICON hProjectIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+	HICON hCodeIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_CODE)
 		, IMAGE_ICON, 0, 0, 0);
 
@@ -118,11 +115,11 @@ BOOL CMainSearch::OnInitDialog()
 
 	m_recent_list.SetTagImage(hTagIcon);
 	m_recent_list.SetBookImage(hBookIcon);
-	m_recent_list.SetCodeImage(hProjectIcon);
+	m_recent_list.SetCodeImage(hCodeIcon);
 
 	m_recommand_list.SetTagImage(hTagIcon);
 	m_recommand_list.SetBookImage(hBookIcon);
-	m_recommand_list.SetCodeImage(hProjectIcon);
+	m_recommand_list.SetCodeImage(hCodeIcon);
 
 	HICON hRenameIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_RENAME)
@@ -130,7 +127,7 @@ BOOL CMainSearch::OnInitDialog()
 
 	HICON hInfoIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_INFO)
-		, IMAGE_ICON, 0, 0, 0); // TODO 改名字
+		, IMAGE_ICON, 0, 0, 0);
 
 	HICON hDeleteIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_DELETE)
@@ -139,14 +136,15 @@ BOOL CMainSearch::OnInitDialog()
 	m_search_pad->SetTagImage(hTagIcon);
 	m_search_pad->SetBookImage(hBookIcon);
 	m_search_pad->SetInfoImage(hInfoIcon);
-	m_search_pad->SetCodeImage(hProjectIcon);
+	m_search_pad->SetCodeImage(hCodeIcon);
 	m_search_pad->SetDeleteImage(hDeleteIcon);
 	m_search_pad->SetRenameImage(hRenameIcon);
 
-	// 设置搜索过滤器的默认值
-	m_search_filter.SetCurSel(0);
+	int searchFilter = theApp.GetProfileInt(_T("Settings"), _T("SearchFilter"), 0);
+	m_search_filter.SetCurSel(searchFilter);
 
-	[&]() {
+	[&]() { // 设置搜索框的字体
+
 		LOGFONT logFont = { 0 };
 		afxGlobalData.fontRegular.GetLogFont(&logFont);
 
@@ -156,7 +154,7 @@ BOOL CMainSearch::OnInitDialog()
 		m_search_filter.SetFont(CFont::FromHandle(hFont));
 	}();
 
-	[&]() {
+	[&]() { // 设置推荐表的字体
 		LOGFONT logFont = { 0 };
 		afxGlobalData.fontRegular.GetLogFont(&logFont);
 
@@ -167,20 +165,32 @@ BOOL CMainSearch::OnInitDialog()
 		m_recommand_label.SetFont(CFont::FromHandle(hFont));
 	}();
 
-	// 最近访问
+	// 填充最近访问列表数据
 	auto& list = theApp.GetRecentFileList();
 	for (size_t i = 0; i < list.size(); i++) {
 		m_recent_list.AddString(list.at(i));
 	}
 
-	// 随机推荐
-	DoRecommand();
+	// 完成随机推荐过程
+	DoRandomRecommand();
 
 	// 设置默认焦点控件
 	m_search_edit.SetFocus(); /* 自动搜索 */
 	m_search_edit.EnableSearchButton(FALSE);
 
-	return FALSE;
+	return FALSE; /* 自定义焦点 */
+}
+
+void CMainSearch::OnSetFocus(CWnd* pOldWnd)
+{
+	CDialogEx::OnSetFocus(pOldWnd);
+
+	if (GetFocus() != &m_search_edit) {
+		m_search_edit.SetFocus();
+	}
+
+	// 设置不默认选中全部文本
+	m_search_edit.SetSel(-1);
 }
 
 CRect CMainSearch::GetSearchPadRect()
@@ -191,13 +201,16 @@ CRect CMainSearch::GetSearchPadRect()
 	CRect rcRecommandList;
 	m_recommand_list.GetWindowRect(rcRecommandList);
 
-	return CRect(rcSearchFilter.left, rcSearchFilter.bottom + 2, rcRecommandList.right + 1, rcRecommandList.bottom);
+	return CRect(rcSearchFilter.left
+		, rcSearchFilter.bottom + 2
+		, rcRecommandList.right + 1
+		, rcRecommandList.bottom);
 }
 
 void CMainSearch::ShowSearchPad(bool bShow)
 {
 	m_search_pad->ShowWindow(bShow ? SW_SHOW : SW_HIDE);
-	m_search_pad->MoveWindow(GetSearchPadRect(), TRUE);
+	m_search_pad->MoveWindow(GetSearchPadRect(), FALSE);
 	m_search_pad->Invalidate(bShow ? TRUE : FALSE);
 
 	// 将焦点始终设置在搜索框上
@@ -207,11 +220,11 @@ void CMainSearch::ShowSearchPad(bool bShow)
 }
 
 /**
-* 简单的枚举文件夹内容，返回内容数量
-*/
-static int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
-	, CShellManager* pShellManager			// Shell管理器
-	, function<void(LPITEMIDLIST)> filter)	// 过滤器函数
+ * 枚举文件夹内容，并返回内容数量
+ */
+STATIC int SimpleEnumFolder(LPCTSTR lpszPath	// 文件夹路径
+	, CShellManager* pShellManager				// Shell管理器
+	, function<void(LPITEMIDLIST)> filter)		// 过滤器函数
 {
 	ENSURE(lpszPath != nullptr);
 	ASSERT_VALID(pShellManager);
@@ -242,7 +255,7 @@ static int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
 
 				if (filter) { /* VS2015 的新特性，增加了 operator bool() 函数 */
 					LPITEMIDLIST itemID = pShellManager->ConcatenateItem(info.pidlRel, pidlTemp);
-					filter(itemID);
+					filter(itemID); /* 通过回调由客户端自行决定 */
 					pShellManager->FreeItem(itemID);
 				}
 
@@ -263,13 +276,12 @@ static int SimpleEnumFolder(LPCTSTR lpszPath		// 文件夹路径
 	return nFolderCount;
 }
 
-void CMainSearch::DoRecommand()
+void CMainSearch::DoRandomRecommand()
 {
-	m_recommand_values.clear();
-	m_recommand_list.ResetContent();
-
-	int nCodeCount = SimpleEnumFolder(theApp.GetCodeDir(), &theShellManager, nullptr);
-	int nBookCount = SimpleEnumFolder(theApp.GetBookDir(), &theShellManager, nullptr);
+	int nCodeCount = SimpleEnumFolder(theApp.GetCodeDir()
+		, &theShellManager, nullptr);
+	int nBookCount = SimpleEnumFolder(theApp.GetBookDir()
+		, &theShellManager, nullptr);
 
 	int nCount = nCodeCount + nBookCount;
 	if (nCount == 0) {
@@ -281,17 +293,16 @@ void CMainSearch::DoRecommand()
 	set<int> codeBookSet;
 
 	do {
-		int nRander = rand() % nCount;
-		codeBookSet.insert(nRander);
-	} while (codeBookSet.size() < (size_t)nCount && codeBookSet.size() < CDataMagApp::MaxRecentFileCount);
+		codeBookSet.insert(rand() % nCount);
+		if (codeBookSet.size() < (size_t)nCount) { break; }
+	} while (codeBookSet.size() < CDataMagApp::MaxRecentFileCount);
 
 	vector<int> codeSet, bookSet;
 
 	for_each(codeBookSet.begin(), codeBookSet.end(), [&](int n) {
 		if (n < nCodeCount) {
 			codeSet.push_back(n);
-		}
-		else {
+		} else {
 			bookSet.push_back(n - nCodeCount);
 		}
 	});
@@ -369,11 +380,6 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CMainSearch::OnCbnSelchangeSearchCombo()
-{
-	OnEnChangeMainSearch();
-}
-
 void CMainSearch::OnEnChangeMainSearch()
 {
 	m_search_pad->ClearResult();
@@ -426,14 +432,7 @@ void CMainSearch::OnEnChangeMainSearch()
 	ShowSearchPad(strSearchText.GetLength() > 0);
 }
 
-void CMainSearch::OnSetFocus(CWnd* pOldWnd)
+void CMainSearch::OnCbnSelchangeSearchCombo()
 {
-	CDialogEx::OnSetFocus(pOldWnd);
-
-	if (GetFocus() != &m_search_edit) {
-		m_search_edit.SetFocus();
-	}
-
-	// 设置不默认选中全部文本
-	m_search_edit.SetSel(-1);
+	OnEnChangeMainSearch();
 }

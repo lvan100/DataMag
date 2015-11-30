@@ -317,6 +317,8 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\info.ico" />
+    <Image Include="res\info.ico">
+      <Filter>其他\Application\Resource</Filter>
+    </Image>
   </ItemGroup>
 </Project>

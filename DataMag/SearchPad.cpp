@@ -4,10 +4,12 @@
 
 IMPLEMENT_DYNAMIC(CSearchPad, CDialogEx)
 
+const pair<CSearchPad::SearchItem*, int> CSearchPad::NullItem(nullptr, 0);
+
 CSearchPad::CSearchPad(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_SEARCHPAD, pParent)
-	, m_last_pressed_item(make_pair(nullptr, -1))
-	, m_last_hovered_item(make_pair(nullptr, -1))
+	, m_last_pressed_item(NullItem)
+	, m_last_hovered_item(NullItem)
 {
 }
 
@@ -23,11 +25,10 @@ void CSearchPad::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CSearchPad, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_LBUTTONUP()
+	ON_WM_MOUSEWHEEL()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONDBLCLK()
-	ON_WM_MOUSEWHEEL()
 	ON_WM_ERASEBKGND()
-	ON_WM_MOUSEMOVE()
 	ON_WM_VSCROLL()
 END_MESSAGE_MAP()
 
@@ -47,41 +48,36 @@ BOOL CSearchPad::OnInitDialog()
 	return TRUE;
 }
 
+BOOL CSearchPad::OnEraseBkgnd(CDC* pDC)
+{
+	return TRUE;
+}
+
 void CSearchPad::Prepare()
 {
 	if (m_arr_result.size() == 0) {
 
-		if (m_search_filter == _T("标签") || m_search_filter == _T("全部")) {
+		auto NewResultItem = [&](CString strCatalog) {
 
-			CString strNewTag;
-			strNewTag.Format(_T("新建标签 %s"), m_search_text);
+			CString strNewItem;
+			strNewItem.Format(_T("新建%s %s"), strCatalog, m_search_text);
 
 			SearchItem item;
-			item.catalog = _T("标签");
-			item.content = _T("new:") + strNewTag;
+			item.catalog = strCatalog;
+			item.content = _T("new:") + strNewItem;
 			m_arr_result.push_back(item);
+		};
+
+		if (m_search_filter == _T("标签") || m_search_filter == _T("全部")) {
+			NewResultItem(_T("标签"));
 		}
 
 		if (m_search_filter == _T("源码") || m_search_filter == _T("全部")) {
-
-			CString strNewCode;
-			strNewCode.Format(_T("新建源码 %s"), m_search_text);
-
-			SearchItem item;
-			item.catalog = _T("源码");
-			item.content = _T("new:") + strNewCode;
-			m_arr_result.push_back(item);
+			NewResultItem(_T("源码"));
 		}
 
 		if (m_search_filter == _T("图书") || m_search_filter == _T("全部")) {
-
-			CString strNewBook;
-			strNewBook.Format(_T("新建图书 %s"), m_search_text);
-
-			SearchItem item;
-			item.catalog = _T("图书");
-			item.content = _T("new:") + strNewBook;
-			m_arr_result.push_back(item);
+			NewResultItem(_T("图书"));
 		}
 	}
 
@@ -104,7 +100,7 @@ void CSearchPad::Prepare()
 		if (lastCatalog != item.catalog) {
 			dc.SelectObject(m_title_font);
 			m_title_height = dc.GetTextExtent(item.catalog).cy;
-			offsetY += m_title_height + 8;
+			offsetY += (m_title_height + m_pedding * 2);
 			dc.SelectObject(m_text_font);
 			lastCatalog = item.catalog;
 		}
@@ -113,10 +109,10 @@ void CSearchPad::Prepare()
 
 		item.show_rect.top = offsetY;
 		item.show_rect.left = offsetX;
-		item.show_rect.bottom = offsetY + size.cy + 8;
 		item.show_rect.right = rcClient.right - offsetX;
+		item.show_rect.bottom = offsetY + size.cy + m_pedding * 2;
 
-		offsetY += size.cy + 8;
+		offsetY += item.show_rect.Height();
 	}
 
 	dc.SelectObject(pOldFont);
@@ -124,41 +120,57 @@ void CSearchPad::Prepare()
 	SCROLLINFO si;
 	si.cbSize = sizeof(SCROLLINFO);
 	si.fMask = SIF_PAGE | SIF_POS | SIF_RANGE;
-	si.nPos = 0;
-	si.nMin = 0;
+	si.nPos = si.nMin = 0;
 	si.nMax = offsetY + 4;
 	si.nPage = rcClient.Height();
 	SetScrollInfo(SB_VERT, &si, TRUE);
 }
 
-BOOL CSearchPad::OnEraseBkgnd(CDC* pDC)
+HICON CSearchPad::GetCatalogImage(CString catalog)
 {
-	return TRUE;
+	if (catalog == _T("源码")) {
+		return m_hCodeImage;
+	} else if (catalog == _T("图书")) {
+		return m_hBookImage;
+	} else if (catalog == _T("标签")) {
+		return m_hTagImage;
+	} else {
+		return nullptr;
+	}
 }
 
-void CSearchPad::OnPaint()
+int CSearchPad::GetCurrentScroolPos()
 {
 	SCROLLINFO si;
 	si.cbSize = sizeof(SCROLLINFO);
 	si.fMask = SIF_POS;
 	GetScrollInfo(SB_VERT, &si);
+	return si.nPos;
+}
 
+void CSearchPad::OnPaint()
+{
 	CRect rcClient;
 	GetClientRect(rcClient);
 
 	CPaintDC dc(this);
+
+	// 使用双层缓冲绘图技术
 	CMemDC memDC(dc, rcClient);
 	CDC& actualDC = memDC.GetDC();
 
-	// 背景透明化
+	// 将文字背景透明化
 	actualDC.SetBkMode(TRANSPARENT);
+
+	// 获取当前的窗口滚动位置
+	int nScrollPos = GetCurrentScroolPos();
 
 	actualDC.FillRect(rcClient, &afxGlobalData.brBtnFace);
 
-	// 绘制被点击按钮的背景
+	// 绘制获得焦点状态的按钮的背景
 	if (m_last_pressed_item.first != nullptr) {
 		CRect rcHilite = m_last_pressed_item.first->show_rect;
-		rcHilite.OffsetRect(0, -si.nPos);
+		rcHilite.OffsetRect(0, -nScrollPos);
 		actualDC.FillRect(rcHilite, &afxGlobalData.brHilite);
 	}
 
@@ -169,36 +181,29 @@ void CSearchPad::OnPaint()
 	for (SearchItem& item : m_arr_result) {
 
 		if (lastCatalog != item.catalog) {
+
+			CRect catalogRect(item.show_rect);
+			catalogRect.OffsetRect(0, -catalogRect.Height());
+
 			actualDC.SelectObject(m_title_font);
-			actualDC.TextOut(item.show_rect.left, item.show_rect.top - m_title_height - si.nPos, item.catalog);
+			actualDC.DrawText(item.catalog, catalogRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 			actualDC.SelectObject(m_text_font);
+
 			lastCatalog = item.catalog;
 		}
 
 		CRect iconRect = item.show_rect;
-		iconRect.bottom -= 2;
-		iconRect.left += 2;
-		iconRect.top += 2;
+		iconRect.DeflateRect(2, 2, 2, 2);
 		iconRect.right = iconRect.left + iconRect.Height();
-		iconRect.OffsetRect(0, -si.nPos);
+		iconRect.OffsetRect(0, -nScrollPos);
 
-		if (lastCatalog == _T("源码")) {
-			DrawIconEx(actualDC.GetSafeHdc(), iconRect.left, iconRect.top
-				, m_hCodeImage, iconRect.Width(), iconRect.Height()
-				, 0, nullptr, DI_NORMAL);
-		} else if (lastCatalog == _T("图书")) {
-			DrawIconEx(actualDC.GetSafeHdc(), iconRect.left, iconRect.top
-				, m_hBookImage, iconRect.Width(), iconRect.Height()
-				, 0, nullptr, DI_NORMAL);
-		} else if (lastCatalog == _T("标签")) {
-			DrawIconEx(actualDC.GetSafeHdc(), iconRect.left, iconRect.top
-				, m_hTagImage, iconRect.Width(), iconRect.Height()
-				, 0, nullptr, DI_NORMAL);
-		}
+		DrawIconEx(actualDC.GetSafeHdc(), iconRect.left, iconRect.top
+			, GetCatalogImage(lastCatalog), iconRect.Width()
+			, iconRect.Height(), 0, nullptr, DI_NORMAL);
 
 		CRect textRect(item.show_rect);
 		textRect.left += textRect.Height();
-		textRect.OffsetRect(0, -si.nPos);
+		textRect.OffsetRect(0, -nScrollPos);
 
 		int colonIndex = item.content.Find(':');
 		int lastSlashIndex = item.content.ReverseFind('\\');		
@@ -207,18 +212,16 @@ void CSearchPad::OnPaint()
 		CString strText = item.content.Mid(midIndex + 1);
 		actualDC.DrawText(strText, textRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 
-		if (item.content.Left(colonIndex) == _T("path") && item.is_pressed) {
+		if (item.content.Left(colonIndex) == _T("path") && item.is_focused) {
 
 			CPoint point;
 			GetCursorPos(&point);
 			ScreenToClient(&point);
 
 			CRect deleteRect(item.show_rect);
-			deleteRect.top += 2;
-			deleteRect.right -= 2;
-			deleteRect.bottom -= 2;			
+			deleteRect.DeflateRect(2, 2, 2, 2);		
 			deleteRect.left = deleteRect.right - deleteRect.Height();
-			deleteRect.OffsetRect(0, -si.nPos);
+			deleteRect.OffsetRect(0, -nScrollPos);
 			
 			CRect copyDeleteRect(deleteRect);
 			if (item.is_downing && copyDeleteRect.PtInRect(point)) {
@@ -230,8 +233,7 @@ void CSearchPad::OnPaint()
 				, 0, nullptr, DI_NORMAL);
 
 			CRect infoRect(deleteRect);
-			infoRect.left -= infoRect.Height() + 2;
-			infoRect.right -= infoRect.Height() + 2;
+			infoRect.OffsetRect(deleteRect.Height() + 2, 0);
 
 			CRect copyInfoRect(infoRect);
 			if (item.is_downing && copyInfoRect.PtInRect(point)) {
@@ -243,8 +245,7 @@ void CSearchPad::OnPaint()
 				, 0, nullptr, DI_NORMAL);
 
 			CRect renameRect(infoRect);
-			renameRect.left -= renameRect.Height() + 2;
-			renameRect.right -= renameRect.Height() + 2;
+			renameRect.OffsetRect(infoRect.Height() + 2, 0);
 
 			CRect copyRenameRect(renameRect);
 			if (item.is_downing && copyRenameRect.PtInRect(point)) {
@@ -262,82 +263,44 @@ void CSearchPad::OnPaint()
 
 pair<CSearchPad::SearchItem*, int> CSearchPad::HitTest(CPoint pt)
 {
-	SCROLLINFO si;
-	si.cbSize = sizeof(SCROLLINFO);
-	si.fMask = SIF_POS;
-	GetScrollInfo(SB_VERT, &si);
-
-	pt.Offset(0, si.nPos);
+	pt.Offset(0, GetCurrentScroolPos());
 
 	for (size_t i = 0; i < m_arr_result.size(); i++) {
 		if (m_arr_result[i].show_rect.PtInRect(pt)) {
 			return make_pair(&m_arr_result[i], i);
 		}
 	}
-	return make_pair(nullptr, -1);
-}
 
-void CSearchPad::DoClientScroolOrMouseMove()
-{
-	CPoint point;
-	GetCursorPos(&point);
-	ScreenToClient(&point);
-
-	if (m_last_hovered_item.first != nullptr) {
-		m_last_hovered_item.first->is_hovered = false;
-	}
-
-	m_last_hovered_item = HitTest(point);
-	if (m_last_hovered_item.first != nullptr) {
-		m_last_hovered_item.first->is_hovered = true;
-	}
-
-	Invalidate(TRUE);
+	return NullItem;
 }
 
 CSearchPad::HitAction CSearchPad::HitTestAction(CPoint point)
 {
-	SCROLLINFO si;
-	si.cbSize = sizeof(SCROLLINFO);
-	si.fMask = SIF_POS;
-	GetScrollInfo(SB_VERT, &si);
-
 	CRect deleteRect(m_last_pressed_item.first->show_rect);
+	deleteRect.DeflateRect(2, 2, 2, 2);
 
-	deleteRect.top += 2;
-	deleteRect.right -= 2;
-	deleteRect.bottom -= 2;
 	deleteRect.left = deleteRect.right - deleteRect.Height();
-	deleteRect.OffsetRect(0, -si.nPos);
+	deleteRect.OffsetRect(0, -GetCurrentScroolPos());
 
 	if (deleteRect.PtInRect(point)) {
 		return HitAction::Delete;
 	}
 
 	CRect infoRect(deleteRect);
-	infoRect.left -= infoRect.Height() + 2;
-	infoRect.right -= infoRect.Height() + 2;
+	infoRect.OffsetRect(deleteRect.Height() + 2, 0);
 
 	if (infoRect.PtInRect(point)) {
 		return HitAction::Info;
 	}
 
 	CRect renameRect(infoRect);
-	renameRect.left -= renameRect.Height() + 2;
-	renameRect.right -= renameRect.Height() + 2;
+	renameRect.OffsetRect(infoRect.Height() + 2, 0);
 
 	if (renameRect.PtInRect(point)) {
 		return HitAction::Rename;
 	}
 
 	return HitAction::Click;
-}
-
-void CSearchPad::OnMouseMove(UINT nFlags, CPoint point)
-{
-	CDialogEx::OnMouseMove(nFlags, point);
-
-	// DoClientScroolOrMouseMove();
 }
 
 void CSearchPad::OnLButtonUp(UINT nFlags, CPoint point)
@@ -349,11 +312,17 @@ void CSearchPad::OnLButtonUp(UINT nFlags, CPoint point)
 
 		switch (HitTestAction(point))
 		{
-		case HitAction::Delete:
+		case HitAction::Delete: {
+			// DO DELETE
+		}
 			break;
-		case HitAction::Rename:
+		case HitAction::Rename: {
+			// DO RENAME
+		}
 			break;
-		case HitAction::Info:
+		case HitAction::Info: {
+			// DO INFO
+		}
 			break;
 		default:
 			break;
@@ -371,12 +340,12 @@ void CSearchPad::OnLButtonDown(UINT nFlags, CPoint point)
 	CDialogEx::OnLButtonDown(nFlags, point);
 
 	if (m_last_pressed_item.first != nullptr) {
-		m_last_pressed_item.first->is_pressed = false;
+		m_last_pressed_item.first->is_focused = false;
 	}
 
 	m_last_pressed_item = HitTest(point);
 	if (m_last_pressed_item.first != nullptr) {
-		m_last_pressed_item.first->is_pressed = true;
+		m_last_pressed_item.first->is_focused = true;
 		m_last_pressed_item.first->is_downing = true;
 	}
 
@@ -398,11 +367,9 @@ void CSearchPad::OnLButtonDblClk(UINT nFlags, CPoint point)
 			if (strPathOrNew == _T("path")) {
 				CString strPath = strContent.Mid(colonIndex + 1);
 				ShellExecute(NULL, _T("open"), strPath, NULL, strPath, SW_SHOWMAXIMIZED);
-			}
-			else if (strPathOrNew == _T("new")) {
+			} else if (strPathOrNew == _T("new")) {
 
-			}
-			else {
+			} else {
 				// DO NOTHING
 			}
 		}		
@@ -425,19 +392,25 @@ void CSearchPad::SelectNextItem()
 {
 	ASSERT(m_arr_result.size() > 0);
 
+	pair<SearchItem*, int> resultItem(NullItem);
+
 	if (m_last_pressed_item.first == nullptr) {
-		m_last_pressed_item = make_pair(&m_arr_result[0], 0);
+		resultItem = make_pair(&m_arr_result[0], 0);
 	} else {
 		int targetIndex(m_last_pressed_item.second + 1);
 		if (targetIndex < (int) m_arr_result.size()) {
-			m_last_pressed_item = make_pair(&m_arr_result[targetIndex], targetIndex);
+			resultItem = make_pair(&m_arr_result[targetIndex], targetIndex);
 		}
 	}
 
-	ASSERT(m_last_pressed_item.first != nullptr);
+	ASSERT(resultItem.first != nullptr);
 
-	if (m_last_pressed_item.first != nullptr) {
-		m_last_pressed_item.first->is_pressed = true;
+	if (resultItem.first != nullptr) {
+		resultItem.first->is_focused = true;
+	}
+
+	if (resultItem.second != m_last_pressed_item.second) {
+		m_last_pressed_item = resultItem;
 		Invalidate(TRUE);
 	}
 }
@@ -446,15 +419,21 @@ void CSearchPad::SelectPrevItem()
 {
 	ASSERT(m_arr_result.size() > 0);
 
+	pair<SearchItem*, int> resultItem(NullItem);
+
 	if (m_last_pressed_item.first != nullptr) {
 		int targetIndex(m_last_pressed_item.second - 1);
 		if (targetIndex >= 0) {
-			m_last_pressed_item = make_pair(&m_arr_result[targetIndex], targetIndex);
+			resultItem = make_pair(&m_arr_result[targetIndex], targetIndex);
 		}
 	}
 
-	if (m_last_pressed_item.first != nullptr) {
-		m_last_pressed_item.first->is_pressed = true;
+	if (resultItem.first != nullptr) {
+		resultItem.first->is_focused = true;
+	}
+
+	if (resultItem.second != m_last_pressed_item.second) {
+		m_last_pressed_item = resultItem;
 		Invalidate(TRUE);
 	}
 }
@@ -466,15 +445,15 @@ BOOL CSearchPad::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	si.fMask = SIF_POS | SIF_RANGE;
 	GetScrollInfo(SB_VERT, &si);
 
-	if (si.nPos != -1) {
-		si.nPos -= zDelta / 10;
-		si.nPos = min(max(si.nPos, si.nMin), si.nMax);
-		SetScrollPos(SB_VERT, si.nPos, TRUE);
-		ScrollClient(SB_VERT, si.nPos);
+	int nCurrentScrollPos = GetCurrentScroolPos();
+	int nTargetScrollPos = nCurrentScrollPos - zDelta / 10;
+	nTargetScrollPos = min(max(nTargetScrollPos, si.nMin), si.nMax);
+
+	if (nTargetScrollPos != nCurrentScrollPos) {
+		SetScrollPos(SB_VERT, nTargetScrollPos, TRUE);
+		ScrollClient(SB_VERT, nTargetScrollPos);
 		Invalidate(TRUE);
 	}
-
-	// DoClientScroolOrMouseMove();
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }

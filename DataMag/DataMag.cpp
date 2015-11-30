@@ -15,19 +15,29 @@ CShellManager theShellManager;
 /**
  * 获取当前目录下的文件
  */
-CString GetCurrentDirectoryFile(CString strFileName) {
-
-	TCHAR szDir[MAX_PATH];
+STATIC CString GetCurrentDirectoryFile(CString strFileName)
+{
+	TCHAR szDir[MAX_PATH] = { 0 };
 	GetCurrentDirectory(MAX_PATH, szDir);
-
 	PathAppend(szDir, strFileName);
 	return szDir;
 }
 
 CDataMagApp::CDataMagApp()
-	: m_hSearchIcon(nullptr)
+	: m_hAppIcon(nullptr)
+	, m_hSearchIcon(nullptr)
 {
 	m_pszProfileName = _tcsdup(GetCurrentDirectoryFile(_T("\\DataMag.ini")));
+}
+
+HICON CDataMagApp::GetAppIcon()
+{
+	if (m_hAppIcon == nullptr) {
+		m_hAppIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+			, MAKEINTRESOURCE(IDR_MAINFRAME)
+			, IMAGE_ICON, 0, 0, 0);
+	}
+	return m_hAppIcon;
 }
 
 HICON CDataMagApp::GetSearchIcon()
@@ -54,15 +64,17 @@ BOOL CDataMagApp::InitInstance()
 	AutoCoInitialize autoCom;
 
 	if (!AfxSocketInit()) {
+		ASSERT(FALSE);
 		return FALSE;
 	}
 
 	if (!AfxInitRichEdit2()) {
+		ASSERT(FALSE);
 		return FALSE;
 	}
 
-	// VS2015 需要通过获取函数初始化 afxGlobalData 变量.
-	/* AFX_GLOBAL_DATA* ptr = */ GetGlobalData();
+	// VS2015 通过函数初始化 afxGlobalData 变量.
+	/* AFX_GLOBAL_DATA* p = */ GetGlobalData();
 
 	CMainSearch().DoModal();
 
@@ -78,8 +90,8 @@ int CDataMagApp::ExitInstance()
 	return CWinApp::ExitInstance();
 }
 
-CString CDataMagApp::GetSettingDirectory(CString strType, CString strDefaultPath) {
-
+CString CDataMagApp::GetSettingDirectory(CString strType, CString strDefaultPath)
+{
 	CString strPath = GetCurrentDirectoryFile(strDefaultPath);
 	strPath = GetProfileString(_T("Settings"), strType, strPath);
 
@@ -90,10 +102,15 @@ CString CDataMagApp::GetSettingDirectory(CString strType, CString strDefaultPath
 	return strPath;
 }
 
+CString CDataMagApp::GetCodeDir()
+{
+	return GetSettingDirectory(_T("CodeDir"), _T("..\\源码"));
+}
+
 void CDataMagApp::SetCodeDir(CString dir)
 {
-	if (GetCodeDir().CompareNoCase(dir) != 0) {
-
+	if (GetCodeDir().CompareNoCase(dir) != 0)
+	{
 		WriteProfileString(_T("Settings"), _T("CodeDir"), dir);
 
 		for (auto iter = codeDirChangeListener.begin()
@@ -105,10 +122,15 @@ void CDataMagApp::SetCodeDir(CString dir)
 	}
 }
 
+CString CDataMagApp::GetBookDir()
+{
+	return GetSettingDirectory(_T("BookDir"), _T("..\\图书"));
+}
+
 void CDataMagApp::SetBookDir(CString dir)
 {
-	if (GetBookDir().CompareNoCase(dir) != 0) {
-
+	if (GetBookDir().CompareNoCase(dir) != 0)
+	{
 		WriteProfileString(_T("Settings"), _T("BookDir"), dir);
 
 		for (auto iter = bookDirChangeListener.begin()
@@ -120,10 +142,15 @@ void CDataMagApp::SetBookDir(CString dir)
 	}
 }
 
+CString CDataMagApp::GetTagDir()
+{
+	return GetSettingDirectory(_T("TagDir"), _T("..\\标签"));
+}
+
 void CDataMagApp::SetTagDir(CString dir)
 {
-	if (GetTagDir().CompareNoCase(dir) != 0) {
-
+	if (GetTagDir().CompareNoCase(dir) != 0)
+	{
 		WriteProfileString(_T("Settings"), _T("TagDir"), dir);
 
 		for (auto iter = tagDirChangeListener.begin()
@@ -144,7 +171,7 @@ const vector<CString>& CDataMagApp::GetRecentFileList()
 			CString recentFileIndex;
 			recentFileIndex.Format(_T("File%d"), i);
 
-			CString strFile = GetProfileString(_T("RecentFile"), recentFileIndex, nullptr);
+			CString strFile = GetProfileString(_T("RecentFile"), recentFileIndex, _T(""));
 			if (strFile.GetLength() > 0) {
 				recentFileList.push_back(strFile);
 			}
