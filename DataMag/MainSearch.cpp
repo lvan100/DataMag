@@ -16,6 +16,8 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	, m_recommand_list(&theShellManager)
 	, m_recent_list(&theShellManager)
 {
+	m_title_icon = theApp.LoadIcon(IDR_MAINFRAME);
+
 	m_search_pad = new CSearchPad();
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 
@@ -78,6 +80,9 @@ BOOL CMainSearch::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	SetIcon(m_title_icon, TRUE);
+	SetIcon(m_title_icon, FALSE);
+
 	m_search_pad->Create(IDD_SEARCHPAD, this);
 	m_search_pad->MoveWindow(GetSearchPadRect());
 
@@ -101,9 +106,24 @@ BOOL CMainSearch::OnInitDialog()
 	m_recommand_list.SetBookImage(hBookIcon);
 	m_recommand_list.SetCodeImage(hProjectIcon);
 
+	HICON hRenameIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_RENAME)
+		, IMAGE_ICON, 0, 0, 0);
+
+	HICON hEditIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_EDIT_TAG)
+		, IMAGE_ICON, 0, 0, 0); // TODO 改名字
+
+	HICON hDeleteIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_DELETE)
+		, IMAGE_ICON, 0, 0, 0);
+
 	m_search_pad->SetTagImage(hTagIcon);
 	m_search_pad->SetBookImage(hBookIcon);
+	m_search_pad->SetEditImage(hEditIcon);
 	m_search_pad->SetCodeImage(hProjectIcon);
+	m_search_pad->SetDeleteImage(hDeleteIcon);
+	m_search_pad->SetRenameImage(hRenameIcon);
 
 	// 设置搜索过滤器的默认值
 	m_search_filter.SetCurSel(0);

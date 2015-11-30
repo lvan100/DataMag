@@ -66,6 +66,11 @@ protected:
 
 protected:
 	/**
+	 * 标题栏图标
+	 */
+	HICON m_title_icon;
+
+	/**
 	 * 搜索控件
 	 */
 	CSearchEdit m_search_edit;

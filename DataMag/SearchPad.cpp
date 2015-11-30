@@ -6,7 +6,8 @@ IMPLEMENT_DYNAMIC(CSearchPad, CDialogEx)
 
 CSearchPad::CSearchPad(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_SEARCHPAD, pParent)
-	, m_last_dwon_item(make_pair(nullptr, -1))
+	, m_last_pressed_item(make_pair(nullptr, -1))
+	, m_last_hovered_item(make_pair(nullptr, -1))
 {
 }
 
@@ -26,6 +27,7 @@ BEGIN_MESSAGE_MAP(CSearchPad, CDialogEx)
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_MOUSEWHEEL()
 	ON_WM_ERASEBKGND()
+	ON_WM_MOUSEMOVE()
 	ON_WM_VSCROLL()
 END_MESSAGE_MAP()
 
@@ -111,10 +113,10 @@ void CSearchPad::Prepare()
 
 		item.show_rect.top = offsetY;
 		item.show_rect.left = offsetX;
-		item.show_rect.bottom = offsetY + size.cy;
+		item.show_rect.bottom = offsetY + size.cy + 8;
 		item.show_rect.right = rcClient.right - offsetX;
 
-		offsetY += size.cy;
+		offsetY += size.cy + 8;
 	}
 
 	dc.SelectObject(pOldFont);
@@ -154,8 +156,8 @@ void CSearchPad::OnPaint()
 	actualDC.FillRect(rcClient, &afxGlobalData.brBtnFace);
 
 	// 绘制被点击按钮的背景
-	if (m_last_dwon_item.first != nullptr) {
-		CRect rcHilite = m_last_dwon_item.first->show_rect;
+	if (m_last_pressed_item.first != nullptr) {
+		CRect rcHilite = m_last_pressed_item.first->show_rect;
 		rcHilite.OffsetRect(0, -si.nPos);
 		actualDC.FillRect(rcHilite, &afxGlobalData.brHilite);
 	}
@@ -174,7 +176,10 @@ void CSearchPad::OnPaint()
 		}
 
 		CRect iconRect = item.show_rect;
-		iconRect.right = iconRect.Height();
+		iconRect.bottom -= 2;
+		iconRect.left += 2;
+		iconRect.top += 2;
+		iconRect.right = iconRect.left + iconRect.Height();
 		iconRect.OffsetRect(0, -si.nPos);
 
 		if (lastCatalog == _T("源码")) {
@@ -191,15 +196,65 @@ void CSearchPad::OnPaint()
 				, 0, nullptr, DI_NORMAL);
 		}
 
-		CRect textRect = item.show_rect;
-		textRect.left += iconRect.Height();
+		CRect textRect(item.show_rect);
+		textRect.left += textRect.Height();
+		textRect.OffsetRect(0, -si.nPos);
 
 		int colonIndex = item.content.Find(':');
 		int lastSlashIndex = item.content.ReverseFind('\\');		
 
 		int midIndex = max(lastSlashIndex, colonIndex);
 		CString strText = item.content.Mid(midIndex + 1);
-		actualDC.TextOut(textRect.left, item.show_rect.top - si.nPos, strText);
+		actualDC.DrawText(strText, textRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+
+		if (item.content.Left(colonIndex) == _T("path") && item.is_pressed) {
+
+			CPoint point;
+			GetCursorPos(&point);
+			ScreenToClient(&point);
+
+			CRect deleteRect(item.show_rect);
+			deleteRect.top += 2;
+			deleteRect.right -= 2;
+			deleteRect.bottom -= 2;			
+			deleteRect.left = deleteRect.right - deleteRect.Height();
+			deleteRect.OffsetRect(0, -si.nPos);
+			
+			CRect copyDeleteRect(deleteRect);
+			if (item.is_downing && copyDeleteRect.PtInRect(point)) {
+				copyDeleteRect.OffsetRect(1, 1);
+			}
+
+			DrawIconEx(actualDC.GetSafeHdc(), copyDeleteRect.left, copyDeleteRect.top
+				, m_hDeleteImg, copyDeleteRect.Width(), copyDeleteRect.Height()
+				, 0, nullptr, DI_NORMAL);
+
+			CRect editRect(deleteRect);
+			editRect.left -= editRect.Height() + 2;
+			editRect.right -= editRect.Height() + 2;
+
+			CRect copyEditRect(editRect);
+			if (item.is_downing && copyEditRect.PtInRect(point)) {
+				copyEditRect.OffsetRect(1, 1);
+			}
+
+			DrawIconEx(actualDC.GetSafeHdc(), copyEditRect.left, copyEditRect.top
+				, m_hEditImage, copyEditRect.Width(), copyEditRect.Height()
+				, 0, nullptr, DI_NORMAL);
+
+			CRect renameRect(editRect);
+			renameRect.left -= renameRect.Height() + 2;
+			renameRect.right -= renameRect.Height() + 2;
+
+			CRect copyRenameRect(renameRect);
+			if (item.is_downing && copyRenameRect.PtInRect(point)) {
+				copyRenameRect.OffsetRect(1, 1);
+			}
+
+			DrawIconEx(actualDC.GetSafeHdc(), copyRenameRect.left, copyRenameRect.top
+				, m_hRenameImg, copyRenameRect.Width(), copyRenameRect.Height()
+				, 0, nullptr, DI_NORMAL);
+		}
 	}
 
 	actualDC.SelectObject(pOldFont);
@@ -222,26 +277,91 @@ pair<CSearchPad::SearchItem*, int> CSearchPad::HitTest(CPoint pt)
 	return make_pair(nullptr, -1);
 }
 
+void CSearchPad::DoClientScroolOrMouseMove()
+{
+	CPoint point;
+	GetCursorPos(&point);
+	ScreenToClient(&point);
+
+	if (m_last_hovered_item.first != nullptr) {
+		m_last_hovered_item.first->is_hovered = false;
+	}
+
+	m_last_hovered_item = HitTest(point);
+	if (m_last_hovered_item.first != nullptr) {
+		m_last_hovered_item.first->is_hovered = true;
+	}
+
+	Invalidate(TRUE);
+}
+
+void CSearchPad::OnMouseMove(UINT nFlags, CPoint point)
+{
+	CDialogEx::OnMouseMove(nFlags, point);
+
+	// DoClientScroolOrMouseMove();
+}
+
 void CSearchPad::OnLButtonUp(UINT nFlags, CPoint point)
 {
+	CDialogEx::OnLButtonUp(nFlags, point);
+
+	if (m_last_pressed_item.first != nullptr) {
+		m_last_pressed_item.first->is_downing = false;
+
+		SCROLLINFO si;
+		si.cbSize = sizeof(SCROLLINFO);
+		si.fMask = SIF_POS;
+		GetScrollInfo(SB_VERT, &si);
+
+		CRect deleteRect(m_last_pressed_item.first->show_rect);
+
+		deleteRect.top += 2;
+		deleteRect.right -= 2;
+		deleteRect.bottom -= 2;
+		deleteRect.left = deleteRect.right - deleteRect.Height();
+		deleteRect.OffsetRect(0, -si.nPos);
+
+		if (deleteRect.PtInRect(point)) {
+			// DO DELETE
+		}
+
+		CRect editRect(deleteRect);
+		editRect.left -= editRect.Height() + 2;
+		editRect.right -= editRect.Height() + 2;
+
+		if (editRect.PtInRect(point)) {
+			// DO EDIT
+		}
+
+		CRect renameRect(editRect);
+		renameRect.left -= renameRect.Height() + 2;
+		renameRect.right -= renameRect.Height() + 2;
+
+		if (renameRect.PtInRect(point)) {
+			// DO RENAME
+		}
+	}
+
 	// 将焦点立即传送给父窗口
 	GetParent()->SetFocus();
 
-	CDialogEx::OnLButtonUp(nFlags, point);
+	Invalidate(TRUE);
 }
 
 void CSearchPad::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	if (m_last_dwon_item.first != nullptr) {
-		m_last_dwon_item.first->is_pressed = false;
-	}
-
-	m_last_dwon_item = HitTest(point);
-	if (m_last_dwon_item.first != nullptr) {
-		m_last_dwon_item.first->is_pressed = true;
-	}
-
 	CDialogEx::OnLButtonDown(nFlags, point);
+
+	if (m_last_pressed_item.first != nullptr) {
+		m_last_pressed_item.first->is_pressed = false;
+	}
+
+	m_last_pressed_item = HitTest(point);
+	if (m_last_pressed_item.first != nullptr) {
+		m_last_pressed_item.first->is_pressed = true;
+		m_last_pressed_item.first->is_downing = true;
+	}
 
 	Invalidate(TRUE);
 }
@@ -249,6 +369,22 @@ void CSearchPad::OnLButtonDown(UINT nFlags, CPoint point)
 void CSearchPad::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	CDialogEx::OnLButtonDblClk(nFlags, point);
+
+	if (m_last_pressed_item.first != nullptr) {
+		CString strContent = m_last_pressed_item.first->content;
+
+		int colonIndex = strContent.Find(':');
+		CString strPathOrNew = strContent.Left(colonIndex);
+
+		if (strPathOrNew == _T("path")) {
+			CString strPath = strContent.Mid(colonIndex + 1);
+			ShellExecute(NULL, _T("open"), strPath, NULL, strPath, SW_SHOWMAXIMIZED);
+		} else if (strPathOrNew == _T("new")) {
+
+		} else {
+			// DO NOTHING
+		}
+	}
 }
 
 BOOL CSearchPad::PreTranslateMessage(MSG* pMsg)
@@ -267,19 +403,19 @@ void CSearchPad::SelectNextItem()
 {
 	ASSERT(m_arr_result.size() > 0);
 
-	if (m_last_dwon_item.first == nullptr) {
-		m_last_dwon_item = make_pair(&m_arr_result[0], 0);
+	if (m_last_pressed_item.first == nullptr) {
+		m_last_pressed_item = make_pair(&m_arr_result[0], 0);
 	} else {
-		int targetIndex(m_last_dwon_item.second + 1);
+		int targetIndex(m_last_pressed_item.second + 1);
 		if (targetIndex < (int) m_arr_result.size()) {
-			m_last_dwon_item = make_pair(&m_arr_result[targetIndex], targetIndex);
+			m_last_pressed_item = make_pair(&m_arr_result[targetIndex], targetIndex);
 		}
 	}
 
-	ASSERT(m_last_dwon_item.first != nullptr);
+	ASSERT(m_last_pressed_item.first != nullptr);
 
-	if (m_last_dwon_item.first != nullptr) {
-		m_last_dwon_item.first->is_pressed = true;
+	if (m_last_pressed_item.first != nullptr) {
+		m_last_pressed_item.first->is_pressed = true;
 		Invalidate(TRUE);
 	}
 }
@@ -288,15 +424,15 @@ void CSearchPad::SelectPrevItem()
 {
 	ASSERT(m_arr_result.size() > 0);
 
-	if (m_last_dwon_item.first != nullptr) {
-		int targetIndex(m_last_dwon_item.second - 1);
+	if (m_last_pressed_item.first != nullptr) {
+		int targetIndex(m_last_pressed_item.second - 1);
 		if (targetIndex >= 0) {
-			m_last_dwon_item = make_pair(&m_arr_result[targetIndex], targetIndex);
+			m_last_pressed_item = make_pair(&m_arr_result[targetIndex], targetIndex);
 		}
 	}
 
-	if (m_last_dwon_item.first != nullptr) {
-		m_last_dwon_item.first->is_pressed = true;
+	if (m_last_pressed_item.first != nullptr) {
+		m_last_pressed_item.first->is_pressed = true;
 		Invalidate(TRUE);
 	}
 }
@@ -311,8 +447,9 @@ BOOL CSearchPad::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	if (si.nPos != -1) {
 		SetScrollPos(SB_VERT, si.nPos - zDelta / 10, TRUE);
 		ScrollClient(SB_VERT, si.nPos - zDelta / 10);
-		Invalidate();
 	}
+
+	// DoClientScroolOrMouseMove();
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }
