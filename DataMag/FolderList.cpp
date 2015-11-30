@@ -12,6 +12,11 @@ CFolderListCtrl::CFolderListCtrl(CShellManager* pShellManager)
 	, m_hTagImage(nullptr)
 	, m_event(nullptr)
 {
+	LOGFONT logFont = { 0 };
+	afxGlobalData.fontRegular.GetLogFont(&logFont);
+
+	logFont.lfHeight = -15;
+	m_text_font = CFont::FromHandle(CreateFontIndirect(&logFont));
 }
 
 CFolderListCtrl::~CFolderListCtrl()
@@ -152,12 +157,21 @@ void CFolderListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	rcText.left = rcIcon.right + 4;
 
 	pDC->SetBkMode(TRANSPARENT);
+	CFont* pOldFont = pDC->SelectObject(m_text_font);
 	pDC->DrawText(strName, rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+	pDC->SelectObject(pOldFont);
 }
 
-void CFolderListCtrl::MeasureItem(LPMEASUREITEMSTRUCT /*lpMeasureItemStruct*/)
+void CFolderListCtrl::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 {
-	// Do default.
+	static int itemHeight = 0;
+	if (itemHeight == 0) {
+		CDC* pDC = GetDC();
+		CFont* pOldFont = pDC->SelectObject(m_text_font);
+		itemHeight = pDC->GetTextExtent(_T("Í¼Êé")).cy + 8;
+		ReleaseDC(pDC);
+	}
+	lpMeasureItemStruct->itemHeight = itemHeight;
 }
 
 BOOL CFolderListCtrl::DoDefault(int iItem)
@@ -268,7 +282,7 @@ BOOL CFolderListCtrl::OnEraseBkgnd(CDC* pDC)
 CString CFolderListCtrl::GetItemPath(int iItem)
 {
 	if (iItem >= 0 && iItem < GetCount()) {
-		return (LPCTSTR)GetItemData(iItem);
+		return wcsdup((LPCTSTR)GetItemData(iItem));
 	} else {
 		return _T("");
 	}

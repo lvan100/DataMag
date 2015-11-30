@@ -23,6 +23,10 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 
 	m_recent_list.SetListBoxEvent(&m_recent_list_event);
 	m_recommand_list.SetListBoxEvent(&m_recommand_list_event);
+
+	RecentListChangeListener listener;
+	listener = bind(&CMainSearch::OnRecentListChange, this);
+	theApp.AddRecentListChangeListener(this, listener);
 }
 
 CMainSearch::~CMainSearch()
@@ -76,6 +80,20 @@ void CMainSearch::RecommandListEvent::OnDoubleClick()
 	theApp.SetRecentFile(strPath);
 }
 
+void CMainSearch::OnRecentListChange()
+{
+	m_recent_list.SetRedraw(FALSE); {
+
+		m_recent_list.ResetContent();
+
+		auto& list = theApp.GetRecentFileList();
+		for (size_t i = 0; i < list.size(); i++) {
+			m_recent_list.AddString(list.at(i));
+		}
+	}
+	m_recent_list.SetRedraw(TRUE);
+}
+
 BOOL CMainSearch::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -110,8 +128,8 @@ BOOL CMainSearch::OnInitDialog()
 		, MAKEINTRESOURCE(IDI_RENAME)
 		, IMAGE_ICON, 0, 0, 0);
 
-	HICON hEditIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_EDIT_TAG)
+	HICON hInfoIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_INFO)
 		, IMAGE_ICON, 0, 0, 0); // TODO 改名字
 
 	HICON hDeleteIcon = (HICON)LoadImage(AfxGetInstanceHandle()
@@ -120,7 +138,7 @@ BOOL CMainSearch::OnInitDialog()
 
 	m_search_pad->SetTagImage(hTagIcon);
 	m_search_pad->SetBookImage(hBookIcon);
-	m_search_pad->SetEditImage(hEditIcon);
+	m_search_pad->SetInfoImage(hInfoIcon);
 	m_search_pad->SetCodeImage(hProjectIcon);
 	m_search_pad->SetDeleteImage(hDeleteIcon);
 	m_search_pad->SetRenameImage(hRenameIcon);
@@ -159,7 +177,8 @@ BOOL CMainSearch::OnInitDialog()
 	DoRecommand();
 
 	// 设置默认焦点控件
-	m_search_edit.SetFocus();
+	m_search_edit.SetFocus(); /* 自动搜索 */
+	m_search_edit.EnableSearchButton(FALSE);
 
 	return FALSE;
 }
@@ -374,7 +393,8 @@ void CMainSearch::OnEnChangeMainSearch()
 		auto FilterPath = [&](LPITEMIDLIST itemID) {
 			TCHAR szPath[MAX_PATH] = { 0 };
 			if (SHGetPathFromIDList(itemID, szPath)) {
-				if (_tcsstr(szPath, strSearchText) != nullptr) {
+				CString strPath = CString(szPath).MakeLower();
+				if (strPath.Find(strSearchText.MakeLower()) >= 0) {
 					arrResult.push_back(szPath);
 				}
 			}

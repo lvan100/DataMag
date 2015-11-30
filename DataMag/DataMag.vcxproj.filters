@@ -316,4 +316,7 @@
       <Filter>Application</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\info.ico" />
+  </ItemGroup>
 </Project>

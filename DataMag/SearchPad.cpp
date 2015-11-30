@@ -229,20 +229,20 @@ void CSearchPad::OnPaint()
 				, m_hDeleteImg, copyDeleteRect.Width(), copyDeleteRect.Height()
 				, 0, nullptr, DI_NORMAL);
 
-			CRect editRect(deleteRect);
-			editRect.left -= editRect.Height() + 2;
-			editRect.right -= editRect.Height() + 2;
+			CRect infoRect(deleteRect);
+			infoRect.left -= infoRect.Height() + 2;
+			infoRect.right -= infoRect.Height() + 2;
 
-			CRect copyEditRect(editRect);
-			if (item.is_downing && copyEditRect.PtInRect(point)) {
-				copyEditRect.OffsetRect(1, 1);
+			CRect copyInfoRect(infoRect);
+			if (item.is_downing && copyInfoRect.PtInRect(point)) {
+				copyInfoRect.OffsetRect(1, 1);
 			}
 
-			DrawIconEx(actualDC.GetSafeHdc(), copyEditRect.left, copyEditRect.top
-				, m_hEditImage, copyEditRect.Width(), copyEditRect.Height()
+			DrawIconEx(actualDC.GetSafeHdc(), copyInfoRect.left, copyInfoRect.top
+				, m_hInfoImage, copyInfoRect.Width(), copyInfoRect.Height()
 				, 0, nullptr, DI_NORMAL);
 
-			CRect renameRect(editRect);
+			CRect renameRect(infoRect);
 			renameRect.left -= renameRect.Height() + 2;
 			renameRect.right -= renameRect.Height() + 2;
 
@@ -295,6 +295,44 @@ void CSearchPad::DoClientScroolOrMouseMove()
 	Invalidate(TRUE);
 }
 
+CSearchPad::HitAction CSearchPad::HitTestAction(CPoint point)
+{
+	SCROLLINFO si;
+	si.cbSize = sizeof(SCROLLINFO);
+	si.fMask = SIF_POS;
+	GetScrollInfo(SB_VERT, &si);
+
+	CRect deleteRect(m_last_pressed_item.first->show_rect);
+
+	deleteRect.top += 2;
+	deleteRect.right -= 2;
+	deleteRect.bottom -= 2;
+	deleteRect.left = deleteRect.right - deleteRect.Height();
+	deleteRect.OffsetRect(0, -si.nPos);
+
+	if (deleteRect.PtInRect(point)) {
+		return HitAction::Delete;
+	}
+
+	CRect infoRect(deleteRect);
+	infoRect.left -= infoRect.Height() + 2;
+	infoRect.right -= infoRect.Height() + 2;
+
+	if (infoRect.PtInRect(point)) {
+		return HitAction::Info;
+	}
+
+	CRect renameRect(infoRect);
+	renameRect.left -= renameRect.Height() + 2;
+	renameRect.right -= renameRect.Height() + 2;
+
+	if (renameRect.PtInRect(point)) {
+		return HitAction::Rename;
+	}
+
+	return HitAction::Click;
+}
+
 void CSearchPad::OnMouseMove(UINT nFlags, CPoint point)
 {
 	CDialogEx::OnMouseMove(nFlags, point);
@@ -309,37 +347,16 @@ void CSearchPad::OnLButtonUp(UINT nFlags, CPoint point)
 	if (m_last_pressed_item.first != nullptr) {
 		m_last_pressed_item.first->is_downing = false;
 
-		SCROLLINFO si;
-		si.cbSize = sizeof(SCROLLINFO);
-		si.fMask = SIF_POS;
-		GetScrollInfo(SB_VERT, &si);
-
-		CRect deleteRect(m_last_pressed_item.first->show_rect);
-
-		deleteRect.top += 2;
-		deleteRect.right -= 2;
-		deleteRect.bottom -= 2;
-		deleteRect.left = deleteRect.right - deleteRect.Height();
-		deleteRect.OffsetRect(0, -si.nPos);
-
-		if (deleteRect.PtInRect(point)) {
-			// DO DELETE
-		}
-
-		CRect editRect(deleteRect);
-		editRect.left -= editRect.Height() + 2;
-		editRect.right -= editRect.Height() + 2;
-
-		if (editRect.PtInRect(point)) {
-			// DO EDIT
-		}
-
-		CRect renameRect(editRect);
-		renameRect.left -= renameRect.Height() + 2;
-		renameRect.right -= renameRect.Height() + 2;
-
-		if (renameRect.PtInRect(point)) {
-			// DO RENAME
+		switch (HitTestAction(point))
+		{
+		case HitAction::Delete:
+			break;
+		case HitAction::Rename:
+			break;
+		case HitAction::Info:
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -373,17 +390,22 @@ void CSearchPad::OnLButtonDblClk(UINT nFlags, CPoint point)
 	if (m_last_pressed_item.first != nullptr) {
 		CString strContent = m_last_pressed_item.first->content;
 
-		int colonIndex = strContent.Find(':');
-		CString strPathOrNew = strContent.Left(colonIndex);
+		if (HitTestAction(point) == HitAction::Click) {
 
-		if (strPathOrNew == _T("path")) {
-			CString strPath = strContent.Mid(colonIndex + 1);
-			ShellExecute(NULL, _T("open"), strPath, NULL, strPath, SW_SHOWMAXIMIZED);
-		} else if (strPathOrNew == _T("new")) {
+			int colonIndex = strContent.Find(':');
+			CString strPathOrNew = strContent.Left(colonIndex);
 
-		} else {
-			// DO NOTHING
-		}
+			if (strPathOrNew == _T("path")) {
+				CString strPath = strContent.Mid(colonIndex + 1);
+				ShellExecute(NULL, _T("open"), strPath, NULL, strPath, SW_SHOWMAXIMIZED);
+			}
+			else if (strPathOrNew == _T("new")) {
+
+			}
+			else {
+				// DO NOTHING
+			}
+		}		
 	}
 }
 
@@ -441,12 +463,15 @@ BOOL CSearchPad::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	SCROLLINFO si;
 	si.cbSize = sizeof(SCROLLINFO);
-	si.fMask = SIF_POS;
+	si.fMask = SIF_POS | SIF_RANGE;
 	GetScrollInfo(SB_VERT, &si);
 
 	if (si.nPos != -1) {
-		SetScrollPos(SB_VERT, si.nPos - zDelta / 10, TRUE);
-		ScrollClient(SB_VERT, si.nPos - zDelta / 10);
+		si.nPos -= zDelta / 10;
+		si.nPos = min(max(si.nPos, si.nMin), si.nMax);
+		SetScrollPos(SB_VERT, si.nPos, TRUE);
+		ScrollClient(SB_VERT, si.nPos);
+		Invalidate(TRUE);
 	}
 
 	// DoClientScroolOrMouseMove();

@@ -15,6 +15,11 @@ public:
 	CMainSearch(CWnd* pParent = NULL);
 	virtual ~CMainSearch();
 	
+	/**
+	 * 响应最近访问列表变化
+	 */
+	void OnRecentListChange();
+
 protected:
 	/**
 	* 最近访问列表控件事件对象

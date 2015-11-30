@@ -22,6 +22,9 @@ BOOL CHiliteBorder::OnEraseBkgnd(CDC* pDC)
 	CRect rcClient;
 	GetClientRect(rcClient);
 
+	// 为了边框刚好合适
+	rcClient.bottom -= 1;
+
 	pDC->SetBkMode(TRANSPARENT);
 
 	if (m_bHilited) {

@@ -158,10 +158,10 @@ public:
 	}
 
 	/**
-	 * 设置编辑的图标
+	 * 设置详情的图标
 	 */
-	void SetEditImage(HICON hIcon) {
-		m_hEditImage = hIcon;
+	void SetInfoImage(HICON hIcon) {
+		m_hInfoImage = hIcon;
 	}
 
 	/**
@@ -176,7 +176,7 @@ protected:
 	HICON m_hCodeImage; /* 源码 */
 	HICON m_hBookImage; /* 图书 */
 	HICON m_hRenameImg; /* 改名 */
-	HICON m_hEditImage; /* 编辑 */
+	HICON m_hInfoImage; /* 详情 */
 	HICON m_hDeleteImg; /* 删除 */
 
 protected:
@@ -216,6 +216,18 @@ protected:
 	  * 处理窗口滑动或鼠标移动
 	 */
 	void DoClientScroolOrMouseMove();
+
+	/**
+	 * 点击动作的类型
+	 */
+	enum HitAction {
+		Delete, Info, Rename, Click,
+	};
+
+	/**
+	 * 测试点击动作
+	 */
+	HitAction HitTestAction(CPoint point);
 
 	/**
 	 * 滚动客户区

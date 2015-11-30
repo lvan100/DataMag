@@ -83,6 +83,12 @@ protected:
 	CHiliteBorder* m_pHiliteBorder;
 
 protected:
+	/**
+	* 内容使用的字体
+	*/
+	CFont* m_text_font;
+
+protected:
 	virtual void PreSubclassWindow();
 	virtual BOOL DoDefault(int iItem);
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
