@@ -120,6 +120,12 @@ protected:
 	CFolderListCtrl m_recommand_list;
 
 protected:
+	/**
+	 * ¸ù¾ÝÆÁÄ»DPIÊÊÅä
+	 */
+	void AdjustAnyDpi();
+		 
+protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);

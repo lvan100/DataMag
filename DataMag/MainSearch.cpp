@@ -138,10 +138,7 @@ BOOL CMainSearch::OnInitDialog()
 	SetIcon(theApp.GetAppIcon(), FALSE);
 
 	m_search_pad->Create(IDD_SEARCHPAD, this);
-	m_search_pad->MoveWindow(GetSearchPadRect());
-
 	m_detail_page->Create(IDD_DETAILPAGE, this);
-	m_detail_page->MoveWindow(GetSearchPadRect());
 
 	HICON hTagIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_TAG)
@@ -189,27 +186,101 @@ BOOL CMainSearch::OnInitDialog()
 	m_detail_page->SetDeleteImage(hDeleteIcon);
 	m_detail_page->SetRenameImage(hRenameIcon);
 
-	int searchFilter = theApp.GetProfileInt(_T("Settings"), _T("SearchFilter"), 0);
-	m_search_filter.SetCurSel(searchFilter);
-
 	m_recent_label.SetFont(theResourceSet.GetFontBySize(13));
 	m_search_filter.SetFont(theResourceSet.GetFontBySize(12));
 	m_recommand_label.SetFont(theResourceSet.GetFontBySize(13));
-	
+
+	int searchFilter = theApp.GetProfileInt(_T("Settings"), _T("SearchFilter"), 0);
+	m_search_filter.SetCurSel(searchFilter);
+
 	// 填充最近访问列表数据
 	auto& list = theApp.GetRecentFileList();
 	for (size_t i = 0; i < list.size(); i++) {
 		m_recent_list.AddString(list.at(i));
+		m_recommand_list.AddString(list.at(i));
 	}
 
 	// 完成随机推荐过程
-	DoRandomRecommand();
+	// DoRandomRecommand();
+
+	// 适配屏幕DPI
+	AdjustAnyDpi();
+	
+	// 窗口居中显示
+	CenterWindow();
 
 	// 设置默认焦点控件
 	m_search_edit.SetFocus(); /* 自动搜索 */
 	m_search_edit.EnableSearchButton(FALSE);
 
 	return FALSE; /* 自定义焦点 */
+}
+
+/**
+ * 获取绘制文字所需的区域大小
+ */
+STATIC CSize GetTextExtentSize(CString strText, int fontSize)
+{
+	CSize size;
+	HDC hDC = GetDC(GetDesktopWindow());
+	CFont* pFont = theResourceSet.GetFontBySize(fontSize);
+	HFONT hOldFont = (HFONT)SelectObject(hDC, pFont->GetSafeHandle());
+	GetTextExtentPoint32(hDC, strText, (int)strText.GetLength(), &size);
+	ReleaseDC(GetDesktopWindow(), hDC);
+	return size;
+}
+
+void CMainSearch::AdjustAnyDpi()
+{
+	CRect rcClient;
+	GetClientRect(rcClient);
+
+	CRect rcSearchFilter;
+	m_search_filter.GetWindowRect(rcSearchFilter);
+	ScreenToClient(rcSearchFilter);
+
+	CSize sizeText = GetTextExtentSize(_T("标签"), 12);
+	CSize sizeLabel = GetTextExtentSize(_T("标签"), 13);
+
+	CRect rcSearchEdit;
+	rcSearchEdit.top = rcSearchFilter.top;
+	rcSearchEdit.bottom = rcSearchFilter.bottom;
+	rcSearchEdit.left = rcSearchFilter.right + 2;
+	rcSearchEdit.right = rcClient.right - rcSearchFilter.left;
+	m_search_edit.MoveWindow(rcSearchEdit);
+
+	CRect rcRecentLabel;
+	rcRecentLabel.left = rcSearchFilter.left;
+	rcRecentLabel.right = rcSearchEdit.right;
+	rcRecentLabel.top = rcSearchFilter.bottom + 12;
+	rcRecentLabel.bottom = rcRecentLabel.top + sizeLabel.cy;
+	m_recent_label.MoveWindow(rcRecentLabel);
+
+	CRect rcRecentList;
+	rcRecentList.left = rcRecentLabel.left + 1;
+	rcRecentList.right = rcRecentLabel.right - 1;
+	rcRecentList.top = rcRecentLabel.bottom + 4 + 1;
+	rcRecentList.bottom = rcRecentList.top + CDataMagApp::MaxRecentFileCount * (sizeText.cy + 8);
+	m_recent_list.MoveWindow(rcRecentList);
+
+	CRect rcRecommandLabel;
+	rcRecommandLabel.left = rcRecentList.left;
+	rcRecommandLabel.right = rcRecentList.right;
+	rcRecommandLabel.top = rcRecentList.bottom + 12;
+	rcRecommandLabel.bottom = rcRecommandLabel.top + sizeLabel.cy;
+	m_recommand_label.MoveWindow(rcRecommandLabel);
+
+	CRect rcRecommandList;
+	rcRecommandList.left = rcRecommandLabel.left + 1;
+	rcRecommandList.right = rcRecommandLabel.right - 1;
+	rcRecommandList.top = rcRecommandLabel.bottom + 4 + 1;
+	rcRecommandList.bottom = rcRecommandList.top + CDataMagApp::MaxRecentFileCount * (sizeText.cy + 8);
+	m_recommand_list.MoveWindow(rcRecommandList);
+
+	CRect rcWindow;
+	GetWindowRect(rcWindow);
+	rcWindow.bottom += (rcRecommandList.bottom + rcSearchFilter.top - rcClient.Height());
+	MoveWindow(rcWindow);
 }
 
 void CMainSearch::OnSetFocus(CWnd* pOldWnd)

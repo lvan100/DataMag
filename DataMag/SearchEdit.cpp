@@ -22,6 +22,7 @@ BEGIN_MESSAGE_MAP(CSearchEdit, CEdit)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_SETCURSOR()
 	ON_WM_MOUSEMOVE()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 /**
@@ -68,28 +69,38 @@ BOOL CSearchEdit::HitSearchButton()
 	return GetSearchBtnRect().PtInRect(prCurPos);
 }
 
-void CSearchEdit::Init()
+void CSearchEdit::PositionNPRect()
 {
-	CPrettyEdit::Init();
-
-	CRect rc;
-	GetRect(rc);
-
 	CRect rcClient;
 	GetClientRect(rcClient);
 
-	rc.right -= rcClient.Height();
+	CDC* pDC = GetDC();
 
-	SetRectNP(&rc);
+	TEXTMETRIC tm;
+	pDC->GetTextMetrics(&tm);
+
+	int nFontHeight = tm.tmHeight + tm.tmExternalLeading;
+	int offY = (rcClient.Height() - nFontHeight) / 2 + 1;
+
+	CRect rcNP;
+	rcNP.left = rcClient.left + 5;
+	rcNP.top = rcClient.top + offY;
+	rcNP.bottom = rcNP.top + nFontHeight;
+	rcNP.right = rcClient.right - (5 + rcClient.Height());
+	SetRectNP(&rcNP);
+
+	ReleaseDC(pDC);
+}
+
+void CSearchEdit::Init()
+{
+	PositionNPRect();
 }
 
 BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
 {
 	CRect rcClient;
 	GetClientRect(rcClient);
-
-	rcClient.left -= 1;
-	rcClient.bottom -= 1;
 
 	CBrush whiteBrush(RGB(255,255,255));
 	pDC->FillRect(rcClient, &whiteBrush);
@@ -234,4 +245,11 @@ void CSearchEdit::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 	}
+}
+
+void CSearchEdit::OnSize(UINT nType, int cx, int cy)
+{
+	CPrettyEdit::OnSize(nType, cx, cy);
+
+	PositionNPRect();
 }

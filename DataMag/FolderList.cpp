@@ -20,6 +20,7 @@ CFolderListCtrl::~CFolderListCtrl()
 }
 
 BEGIN_MESSAGE_MAP(CFolderListCtrl, CListBox)
+	ON_WM_SIZE()
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
 	ON_WM_SETFOCUS()
@@ -274,5 +275,19 @@ CString CFolderListCtrl::GetItemPath(int iItem)
 		return (LPCTSTR)GetItemData(iItem);
 	} else {
 		return _T("");
+	}
+}
+
+void CFolderListCtrl::OnSize(UINT nType, int cx, int cy)
+{
+	CListBox::OnSize(nType, cx, cy);
+
+	CRect rcBorder;
+	GetWindowRect(rcBorder);
+	GetParent()->ScreenToClient(rcBorder);
+
+	if (m_pHiliteBorder != nullptr) {
+		rcBorder.InflateRect(1, 1, 1, 1);
+		m_pHiliteBorder->MoveWindow(rcBorder);
 	}
 }
