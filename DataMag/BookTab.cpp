@@ -95,27 +95,7 @@ void CBookTab::OnSelectChanged()
 
 		EnableInfoEidt(FALSE); // 禁用编辑功能
 
-		CString strPath = m_book_list.GetItemPath(nItem);
-		if (PathIsDirectory(strPath)) {
-
-			CString strFile = strPath + _T("\\描述.txt");
-			CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
-
-			UINT nSize = UINT(file.GetLength()) + 1;
-			char* szText = strText.GetBuffer();
-
-			if ((UINT)strText.GetLength() < nSize)
-			{
-				szText = strText.GetBufferSetLength(nSize);
-			}
-
-			memset(szText, 0, nSize);
-			file.Read(szText, nSize);
-
-			file.Close();
-
-			SetWindowTextA(m_item_text.GetSafeHwnd(), szText);
-		}
+		
 	} else {
 		SetWindowTextA(m_item_text.GetSafeHwnd(), nullptr);
 	}
@@ -174,29 +154,7 @@ void CBookTab::OnBnClickedBookAdd()
 	dlg.m_title = _T("新建图书");
 	if (dlg.DoModal() == IDOK) {
 
-		CString strFolder = theApp.GetBookDir();
-		strFolder += _T("\\") + dlg.m_name;
-
-		if (CreateDirectory(strFolder, nullptr)) {
-			CString strFile = strFolder + _T("\\描述.txt");
-			CloseHandle(CreateFile(strFile, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
-
-			m_book_list.Refresh();
-
-			m_book_list.SetFocus();
-			m_book_list.SelectString(0, dlg.m_name);
-
-			// 立即打开文件夹以方便后续操作
-			OpenFolerInShell(strFolder);
-
-			// 添加到最近访问列表
-			theApp.SetRecentFile(strFolder);
-
-		} else {
-			CString strContent = _T("创建图书目录\"\"失败！");
-			strContent.Insert(7, strFolder);
-			MessageBox(strContent, _T("错误"), MB_ICONERROR);
-		}
+		
 	}
 }
 

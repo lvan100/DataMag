@@ -4,7 +4,7 @@
 
 IMPLEMENT_DYNAMIC(CSearchPad, CDialogEx)
 
-const pair<CSearchPad::SearchItem*, int> CSearchPad::NullItem(nullptr, 0);
+const pair<CSearchPad::SearchItem*, int> CSearchPad::NullItem(nullptr, -1);
 
 CSearchPad::CSearchPad(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_SEARCHPAD, pParent)
@@ -233,7 +233,7 @@ void CSearchPad::OnPaint()
 				, 0, nullptr, DI_NORMAL);
 
 			CRect infoRect(deleteRect);
-			infoRect.OffsetRect(deleteRect.Height() + 2, 0);
+			infoRect.OffsetRect(-(deleteRect.Height() + 2), 0);
 
 			CRect copyInfoRect(infoRect);
 			if (item.is_downing && copyInfoRect.PtInRect(point)) {
@@ -245,7 +245,7 @@ void CSearchPad::OnPaint()
 				, 0, nullptr, DI_NORMAL);
 
 			CRect renameRect(infoRect);
-			renameRect.OffsetRect(infoRect.Height() + 2, 0);
+			renameRect.OffsetRect(-(infoRect.Height() + 2), 0);
 
 			CRect copyRenameRect(renameRect);
 			if (item.is_downing && copyRenameRect.PtInRect(point)) {
@@ -287,20 +287,46 @@ CSearchPad::HitAction CSearchPad::HitTestAction(CPoint point)
 	}
 
 	CRect infoRect(deleteRect);
-	infoRect.OffsetRect(deleteRect.Height() + 2, 0);
+	infoRect.OffsetRect(-(deleteRect.Height() + 2), 0);
 
 	if (infoRect.PtInRect(point)) {
 		return HitAction::Info;
 	}
 
 	CRect renameRect(infoRect);
-	renameRect.OffsetRect(infoRect.Height() + 2, 0);
+	renameRect.OffsetRect(-(infoRect.Height() + 2), 0);
 
 	if (renameRect.PtInRect(point)) {
 		return HitAction::Rename;
 	}
 
 	return HitAction::Click;
+}
+
+/**
+ * 递归删除目录下所有文件
+ */
+STATIC void DeleteDirectory(CString strDir)
+{
+	CFileFind fileFind;
+
+	BOOL IsFinded = fileFind.FindFile(strDir + _T("\\*.*"));
+	IsFinded = fileFind.FindNextFile();	// .
+	IsFinded = fileFind.FindNextFile();	// ..
+
+	while (IsFinded) {
+		IsFinded = fileFind.FindNextFile();
+		CString strFile = fileFind.GetFilePath();
+		if (PathIsDirectory(strFile)) {
+			DeleteDirectory(strFile);
+		} else {
+			DeleteFile(strFile);
+		}
+	}
+
+	fileFind.Close();
+
+	RemoveDirectory(strDir);
 }
 
 void CSearchPad::OnLButtonUp(UINT nFlags, CPoint point)
@@ -310,10 +336,17 @@ void CSearchPad::OnLButtonUp(UINT nFlags, CPoint point)
 	if (m_last_pressed_item.first != nullptr) {
 		m_last_pressed_item.first->is_downing = false;
 
+		CString strCatalog = m_last_pressed_item.first->catalog;
+		CString strContent = m_last_pressed_item.first->content;
+
+		int colonIndex = strContent.Find(':');
+		int lastSlashIndex = strContent.ReverseFind('\\');
+		CString strPath = strContent.Mid(colonIndex + 1);
+
 		switch (HitTestAction(point))
 		{
 		case HitAction::Delete: {
-			// DO DELETE
+			DeleteDirectory(strPath);
 		}
 			break;
 		case HitAction::Rename: {
@@ -321,7 +354,9 @@ void CSearchPad::OnLButtonUp(UINT nFlags, CPoint point)
 		}
 			break;
 		case HitAction::Info: {
-			// DO INFO
+			if (m_show_detail_event) {
+				m_show_detail_event(strCatalog, strPath);
+			}
 		}
 			break;
 		default:
@@ -352,6 +387,97 @@ void CSearchPad::OnLButtonDown(UINT nFlags, CPoint point)
 	Invalidate(TRUE);
 }
 
+/**
+ * 创建标签
+ */
+STATIC CString CreateNewTag(CString strTag)
+{
+	CString strFolder = theApp.GetTagDir();
+	strFolder += _T("\\") + strTag;
+
+	if (CreateDirectory(strFolder, nullptr)) {
+		CreateDirectory(strFolder + _T("\\关联"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\标签"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\项目"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\图书"), nullptr);
+
+	} else {
+		CString strContent;
+		strContent.Format(_T("创建标签\"%s\"失败！"), strFolder);
+		MessageBox(NULL, strContent, _T("创建失败"), MB_ICONERROR);
+	}
+
+	return strFolder;
+}
+
+/**
+ * 创建源码
+ */
+STATIC CString  CreateNewCode(CString strCode)
+{
+	CString strFolder = theApp.GetCodeDir();
+	strFolder += _T("\\") + strCode;
+
+	if (CreateDirectory(strFolder, nullptr)) {
+		CString strFile = strFolder + _T("\\描述.txt");
+		CloseHandle(CreateFile(strFile, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
+
+		CreateDirectory(strFolder + _T("\\源码"), nullptr);
+
+		CreateDirectory(strFolder + _T("\\资料"), nullptr);
+		CreateDirectory(strFolder + _T("\\资料\\官网"), nullptr);
+		CreateDirectory(strFolder + _T("\\资料\\资料"), nullptr);
+	
+		CreateDirectory(strFolder + _T("\\关联"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\标签"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\项目"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\图书"), nullptr);
+		
+		ShellExecute(NULL, _T("open"), strFolder, NULL, strFolder, SW_SHOWMAXIMIZED);
+		
+		// 添加到最近访问列表
+		theApp.SetRecentFile(strFolder);
+
+	} else {
+		CString strContent;
+		strContent.Format(_T("创建源码\"%s\"失败！"), strFolder);
+		MessageBox(NULL, strContent, _T("创建失败"), MB_ICONERROR);
+	}
+
+	return strFolder;
+}
+
+/**
+ * 创建图书
+ */
+STATIC CString CreateNewBook(CString strBook)
+{
+	CString strFolder = theApp.GetBookDir();
+	strFolder += _T("\\") + strBook;
+
+	if (CreateDirectory(strFolder, nullptr)) {
+		CString strFile = strFolder + _T("\\描述.txt");
+		CloseHandle(CreateFile(strFile, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
+
+		CreateDirectory(strFolder + _T("\\关联"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\标签"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\项目"), nullptr);
+		CreateDirectory(strFolder + _T("\\关联\\图书"), nullptr);
+
+		ShellExecute(NULL, _T("open"), strFolder, NULL, strFolder, SW_SHOWMAXIMIZED);
+
+		// 添加到最近访问列表
+		theApp.SetRecentFile(strFolder);
+
+	} else {
+		CString strContent;
+		strContent.Format(_T("创建图书\"%s\"失败！"), strFolder);
+		MessageBox(NULL, strContent, _T("创建失败"), MB_ICONERROR);
+	}
+
+	return strFolder;
+}
+
 void CSearchPad::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	CDialogEx::OnLButtonDblClk(nFlags, point);
@@ -367,8 +493,24 @@ void CSearchPad::OnLButtonDblClk(UINT nFlags, CPoint point)
 			if (strPathOrNew == _T("path")) {
 				CString strPath = strContent.Mid(colonIndex + 1);
 				ShellExecute(NULL, _T("open"), strPath, NULL, strPath, SW_SHOWMAXIMIZED);
-			} else if (strPathOrNew == _T("new")) {
 
+			} else if (strPathOrNew == _T("new")) {
+				CString strActualPath;
+				CString strCatalog = m_last_pressed_item.first->catalog;
+
+				if (strCatalog == _T("标签")) {
+					strActualPath = CreateNewTag(m_search_text);
+				} else if (strCatalog == _T("源码")) {
+					strActualPath = CreateNewCode(m_search_text);
+				} else if (strCatalog == _T("图书")) {
+					strActualPath = CreateNewBook(m_search_text);
+				} else {
+					// DO NOTHING!
+				}
+
+				if (m_show_detail_event) {
+					m_show_detail_event(strCatalog, strActualPath);
+				}
 			} else {
 				// DO NOTHING
 			}
@@ -410,6 +552,9 @@ void CSearchPad::SelectNextItem()
 	}
 
 	if (resultItem.second != m_last_pressed_item.second) {
+		if (m_last_pressed_item.first != nullptr) {
+			m_last_pressed_item.first->is_focused = false;
+		}
 		m_last_pressed_item = resultItem;
 		Invalidate(TRUE);
 	}
@@ -433,6 +578,9 @@ void CSearchPad::SelectPrevItem()
 	}
 
 	if (resultItem.second != m_last_pressed_item.second) {
+		if (m_last_pressed_item.first != nullptr) {
+			m_last_pressed_item.first->is_focused = false;
+		}
 		m_last_pressed_item = resultItem;
 		Invalidate(TRUE);
 	}

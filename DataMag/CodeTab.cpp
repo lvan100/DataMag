@@ -174,47 +174,7 @@ void CCodeTab::OnBnClickedProjectAdd()
 	dlg.m_title = _T("新建项目");
 	if (dlg.DoModal() == IDOK) {
 
-		CString strFolder = theApp.GetCodeDir();
-		strFolder += _T("\\") + dlg.m_name;
-
-		if (CreateDirectory(strFolder, nullptr)) {
-
-			CString strDataFolder = strFolder + _T("\\资料");
-			if (CreateDirectory(strDataFolder, nullptr)){
-				CreateDirectory(strDataFolder + _T("\\资料"), nullptr);
-				CreateDirectory(strDataFolder + _T("\\官网"), nullptr);
-			} else{
-				CString strContent = _T("创建资料目录\"\"失败！");
-				strContent.Insert(7, strDataFolder);
-				MessageBox(strContent, _T("错误"), MB_ICONERROR);
-			}
-
-			CString strCodeFolder = strFolder + _T("\\源码");
-			if (!CreateDirectory(strCodeFolder, nullptr)){
-				CString strContent = _T("创建源码目录\"\"失败！");
-				strContent.Insert(7, strCodeFolder);
-				MessageBox(strContent, _T("错误"), MB_ICONERROR);
-			}
-
-			CString strFile = strFolder + _T("\\描述.txt");
-			CloseHandle(CreateFile(strFile, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
-
-			m_project_list.Refresh();
-
-			m_project_list.SetFocus();
-			m_project_list.SelectString(0, dlg.m_name);
-
-			// 立即打开文件夹以方便后续操作
-			OpenFolerInShell(strFolder);
-
-			// 添加到最近访问列表
-			theApp.SetRecentFile(strFolder);
-
-		} else {
-			CString strContent = _T("创建项目目录\"\"失败！");
-			strContent.Insert(7, strFolder);
-			MessageBox(strContent, _T("错误"), MB_ICONERROR);
-		}
+		
 	}
 }
 
@@ -223,12 +183,7 @@ void CCodeTab::OnBnClickedProjectDelete()
 	int nItem = m_project_list.GetCurSel();
 	if (nItem >= 0)
 	{
-		CString strPath = m_project_list.GetItemPath(nItem);
-		if (PathIsDirectory(strPath)) {
-			DeleteDirectory(strPath);
-		} else {
-			DeleteFile(strPath);
-		}
+		
 
 		m_project_list.Refresh();
 	}

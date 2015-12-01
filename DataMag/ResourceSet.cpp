@@ -24,7 +24,7 @@ float CResourceSet::GetScreenScale()
 
 CFont* CResourceSet::GetFontBySize(int size)
 {
-	int actualSize = int(size / GetScreenScale());
+	int actualSize = int(size * GetScreenScale());
 	auto iter = m_font_set.find(actualSize);
 	if (iter != m_font_set.end()) {
 		return (*iter).second;

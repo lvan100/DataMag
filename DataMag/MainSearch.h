@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SearchPad.h"
+#include "DetailPage.h"
 #include "FolderList.h"
 #include "SearchEdit.h"
 
@@ -19,6 +20,11 @@ public:
 	 * 响应最近访问列表变化
 	 */
 	void OnRecentListChange();
+
+	/**
+	 * 响应创建新项目
+	 */
+	void OnShowDetailPage(CString strCatalog, CString strPath);
 
 protected:
 	/**
@@ -69,9 +75,14 @@ protected:
 	CRect GetSearchPadRect();
 
 	/**
-	 * 显示搜索结果面板
-	 */
+	* 显示搜索结果面板
+	*/
 	void ShowSearchPad(bool bShow);
+
+	/**
+	 * 显示项目详情面板
+	 */
+	void ShowDetailPage(bool bShow);
 
 protected:
 	/**
@@ -90,6 +101,11 @@ protected:
 	 * 搜索结果面板
 	 */
 	CSearchPad* m_search_pad;
+
+	/**
+	 * 项目详情页面
+	 */
+	CDetailPage* m_detail_page;
 
 	/**
 	 * 最近访问列表控件

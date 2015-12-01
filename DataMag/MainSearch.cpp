@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "MainSearch.h"
-#include "DDXControl.h"
 #include "ResourceSet.h"
 
 #include <set>
@@ -18,6 +17,8 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	, m_recent_list(&theShellManager)
 {
 	m_search_pad = new CSearchPad();
+	m_detail_page = new CDetailPage();
+
 	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
 
 	m_recent_list.SetListBoxEvent(&m_recent_list_event);
@@ -26,22 +27,29 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	RecentListChangeListener listener;
 	listener = bind(&CMainSearch::OnRecentListChange, this);
 	theApp.AddRecentListChangeListener(this, listener);
+
+	ShowDetailEvent showDetail;
+	showDetail = bind(&CMainSearch::OnShowDetailPage, this
+		, std::placeholders::_1
+		, std::placeholders::_2);
+	m_search_pad->SetShowDetailEvent(showDetail);
 }
 
 CMainSearch::~CMainSearch()
 {
 	delete m_search_pad;
+	delete m_detail_page;
 }
 
 void CMainSearch::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	MFC_DDX_Control(pDX, IDC_MAIN_SEARCH, m_search_edit);
-	MFC_DDX_Control(pDX, IDC_RECENT_LIST, m_recent_list);
-	MFC_DDX_Control(pDX, IDC_RECENT_LABEL, m_recent_label);
-	MFC_DDX_Control(pDX, IDC_SEARCH_COMBO, m_search_filter);
-	MFC_DDX_Control(pDX, IDC_RECOMMEND_LIST, m_recommand_list);
-	MFC_DDX_Control(pDX, IDC_RECOMMEND_LABEL, m_recommand_label);
+	DDX_Control(pDX, IDC_MAIN_SEARCH, m_search_edit);
+	DDX_Control(pDX, IDC_RECENT_LIST, m_recent_list);
+	DDX_Control(pDX, IDC_RECENT_LABEL, m_recent_label);
+	DDX_Control(pDX, IDC_SEARCH_COMBO, m_search_filter);
+	DDX_Control(pDX, IDC_RECOMMEND_LIST, m_recommand_list);
+	DDX_Control(pDX, IDC_RECOMMEND_LABEL, m_recommand_label);
 }
 
 BEGIN_MESSAGE_MAP(CMainSearch, CDialogEx)
@@ -74,7 +82,7 @@ void CMainSearch::RecentListEvent::OnDoubleClick()
 
 	if (PathFileExists(strPath)) {
 		theApp.SetRecentFile(strPath);
-		pThis->m_recent_list.DoDoubleClick(nItem);
+		ShellExecute(NULL, _T("open"), strPath, NULL, strPath, SW_SHOWMAXIMIZED);
 	} else {
 		if (pThis->MessageBox(_T("找不到选择项，是否从最近访问列表中删除？"), _T("提示"), MB_OKCANCEL) == IDOK) {
 			theApp.RemoveRecentFile(strPath);
@@ -102,9 +110,9 @@ void CMainSearch::RecommandListEvent::OnDoubleClick()
 	auto pThis = ((CMainSearch*)((BYTE*)this - offsetof(CMainSearch, m_recommand_list_event)));
 
 	int nItem = pThis->m_recommand_list.GetCurSel();
-	pThis->m_recommand_list.DoDoubleClick(nItem);
-
 	CString strPath = pThis->m_recommand_list.GetItemPath(nItem);
+
+	ShellExecute(NULL, _T("open"), strPath, NULL, strPath, SW_SHOWMAXIMIZED);
 	theApp.SetRecentFile(strPath);
 }
 
@@ -131,6 +139,9 @@ BOOL CMainSearch::OnInitDialog()
 
 	m_search_pad->Create(IDD_SEARCHPAD, this);
 	m_search_pad->MoveWindow(GetSearchPadRect());
+
+	m_detail_page->Create(IDD_DETAILPAGE, this);
+	m_detail_page->MoveWindow(GetSearchPadRect());
 
 	HICON hTagIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_TAG)
@@ -170,6 +181,13 @@ BOOL CMainSearch::OnInitDialog()
 	m_search_pad->SetCodeImage(hCodeIcon);
 	m_search_pad->SetDeleteImage(hDeleteIcon);
 	m_search_pad->SetRenameImage(hRenameIcon);
+
+	m_detail_page->SetTagImage(hTagIcon);
+	m_detail_page->SetBookImage(hBookIcon);
+	m_detail_page->SetInfoImage(hInfoIcon);
+	m_detail_page->SetCodeImage(hCodeIcon);
+	m_detail_page->SetDeleteImage(hDeleteIcon);
+	m_detail_page->SetRenameImage(hRenameIcon);
 
 	int searchFilter = theApp.GetProfileInt(_T("Settings"), _T("SearchFilter"), 0);
 	m_search_filter.SetCurSel(searchFilter);
@@ -225,6 +243,18 @@ void CMainSearch::ShowSearchPad(bool bShow)
 	m_search_pad->ShowWindow(bShow ? SW_SHOW : SW_HIDE);
 	m_search_pad->MoveWindow(GetSearchPadRect(), FALSE);
 	m_search_pad->Invalidate(bShow ? TRUE : FALSE);
+
+	// 将焦点始终设置在搜索框上
+	if (GetFocus() != &m_search_edit) {
+		m_search_edit.SetFocus();
+	}
+}
+
+void CMainSearch::ShowDetailPage(bool bShow)
+{
+	m_detail_page->ShowWindow(bShow ? SW_SHOW : SW_HIDE);
+	m_detail_page->MoveWindow(GetSearchPadRect(), FALSE);
+	m_detail_page->Invalidate(bShow ? TRUE : FALSE);
 
 	// 将焦点始终设置在搜索框上
 	if (GetFocus() != &m_search_edit) {
@@ -307,7 +337,7 @@ void CMainSearch::DoRandomRecommand()
 
 	do {
 		codeBookSet.insert(rand() % nCount);
-		if (codeBookSet.size() < (size_t)nCount) { break; }
+		if (codeBookSet.size() >= (size_t)nCount) { break; }
 	} while (codeBookSet.size() < CDataMagApp::MaxRecentFileCount);
 
 	vector<int> codeSet, bookSet;
@@ -371,6 +401,11 @@ BOOL CMainSearch::PreTranslateMessage(MSG* pMsg)
 			if (m_search_pad->IsWindowVisible()) {
 				m_search_edit.SetWindowText(_T(""));
 				ShowSearchPad(false);
+				return TRUE;
+			}
+			if (m_detail_page->IsWindowVisible()) {
+				m_search_edit.SetWindowText(_T(""));
+				ShowDetailPage(false);
 				return TRUE;
 			}
 		}
@@ -448,4 +483,17 @@ void CMainSearch::OnEnChangeMainSearch()
 void CMainSearch::OnCbnSelchangeSearchCombo()
 {
 	OnEnChangeMainSearch();
+
+	// 将本次选择的过滤器保存起来，下次启动的时候使用本次配置。
+	theApp.WriteProfileInt(_T("Settings"), _T("SearchFilter"), m_search_filter.GetCurSel());
+}
+
+void CMainSearch::OnShowDetailPage(CString strCatalog, CString strPath)
+{
+	ShowSearchPad(false);
+
+	m_detail_page->SetCatalog(strCatalog);
+	m_detail_page->SetPath(strPath);
+	m_detail_page->Prepare();
+	ShowDetailPage(true);
 }

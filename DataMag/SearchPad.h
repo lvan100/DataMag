@@ -2,7 +2,13 @@
 
 #include <map>
 #include <vector>
+#include <functional>
 using namespace std;
+
+/**
+ * 创建新项目的事件
+ */
+typedef function<void(CString, CString)> ShowDetailEvent;
 
 /**
  * 搜素结果面板
@@ -14,6 +20,13 @@ class CSearchPad : public CDialogEx
 public:
 	CSearchPad(CWnd* pParent = NULL);
 	virtual ~CSearchPad();
+
+	/**
+	 * 设置显示项目详情的事件接口
+	 */
+	void SetShowDetailEvent(ShowDetailEvent event) {
+		m_show_detail_event = event;
+	}
 
 	/**
 	 * 设置搜索类型
@@ -31,14 +44,19 @@ public:
 
 protected:
 	/**
-	* 搜索内容
-	*/
+	 * 搜索内容
+	 */
 	CString m_search_text;
 
 	/**
-	* 搜索类型
-	*/
+	 * 搜索类型
+	 */
 	CString m_search_filter;
+
+	/**
+	 * 当显示项目详情的时候候调用
+	 */
+	ShowDetailEvent m_show_detail_event;
 
 public:
 	/**

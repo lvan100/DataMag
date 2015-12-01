@@ -265,19 +265,7 @@ void CFolderListCtrl::OnKillFocus(CWnd* pNewWnd)
 
 BOOL CFolderListCtrl::OnEraseBkgnd(CDC* pDC)
 {
-	if (GetFocus() == this) {
-		CRect rcClient;
-		GetClientRect(rcClient);
-
-		rcClient.top += 5;
-		rcClient.left += 5;
-		rcClient.right -= 5;
-		rcClient.bottom -= 5;		
-
-		pDC->DrawFocusRect(rcClient);
-	}
-
-	return TRUE;
+	return CListBox::OnEraseBkgnd(pDC);
 }
 
 CString CFolderListCtrl::GetItemPath(int iItem)

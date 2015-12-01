@@ -178,20 +178,7 @@ void CTagTab::OnBnClickedTagAdd()
 	dlg.m_title = _T("新建标签");
 	if (dlg.DoModal() == IDOK) {
 
-		CString strFolder = theApp.GetTagDir();
-		strFolder += _T("\\") + dlg.m_name;
-
-		if (CreateDirectory(strFolder, nullptr)) {
-			m_tag_list.Refresh();
-			m_tag_info.DisplayFolder(strFolder);
-
-			m_tag_list.SetFocus();
-			m_tag_list.SelectString(0, dlg.m_name);
-		} else {
-			CString strContent = _T("创建标签\"\"失败！");
-			strContent.Insert(5, strFolder);
-			MessageBox(strContent, _T("错误"), MB_ICONERROR);
-		}
+		
 	}
 }
 

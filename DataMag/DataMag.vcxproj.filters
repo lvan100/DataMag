@@ -94,6 +94,9 @@
     <Filter Include="WellWidget\ResourceSet">
       <UniqueIdentifier>{341c1177-1cca-4dbd-b132-5b57ec229396}</UniqueIdentifier>
     </Filter>
+    <Filter Include="WellWidget\IconTitle">
+      <UniqueIdentifier>{93277032-3342-4fb0-82db-75f0e007da31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -236,6 +239,12 @@
     <ClInclude Include="ResourceSet.h">
       <Filter>WellWidget\ResourceSet</Filter>
     </ClInclude>
+    <ClInclude Include="DetailPage.h">
+      <Filter>MainSearch</Filter>
+    </ClInclude>
+    <ClInclude Include="IconTitle.h">
+      <Filter>WellWidget\IconTitle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -318,6 +327,12 @@
     </ClCompile>
     <ClCompile Include="ResourceSet.cpp">
       <Filter>WellWidget\ResourceSet</Filter>
+    </ClCompile>
+    <ClCompile Include="DetailPage.cpp">
+      <Filter>MainSearch</Filter>
+    </ClCompile>
+    <ClCompile Include="IconTitle.cpp">
+      <Filter>WellWidget\IconTitle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

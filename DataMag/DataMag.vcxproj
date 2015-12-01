@@ -118,11 +118,13 @@
     <ClInclude Include="BookTab.h" />
     <ClInclude Include="DataMag.h" />
     <ClInclude Include="DDXControl.h" />
+    <ClInclude Include="DetailPage.h" />
     <ClInclude Include="FileListBox.h" />
     <ClInclude Include="FileOp.h" />
     <ClInclude Include="FileEnum.h" />
     <ClInclude Include="HilitButton.h" />
     <ClInclude Include="HiliteBorder.h" />
+    <ClInclude Include="IconTitle.h" />
     <ClInclude Include="ItemInfoEdit.h" />
     <ClInclude Include="MainSearch.h" />
     <ClInclude Include="MoreInput.h" />
@@ -150,11 +152,13 @@
     <ClCompile Include="BookTab.cpp" />
     <ClCompile Include="DataMag.cpp" />
     <ClCompile Include="DDXControl.cpp" />
+    <ClCompile Include="DetailPage.cpp" />
     <ClCompile Include="FileListBox.cpp" />
     <ClCompile Include="FileOp.cpp" />
     <ClCompile Include="FileEnum.cpp" />
     <ClCompile Include="HilitButton.cpp" />
     <ClCompile Include="HiliteBorder.cpp" />
+    <ClCompile Include="IconTitle.cpp" />
     <ClCompile Include="ItemInfoEdit.cpp" />
     <ClCompile Include="MainSearch.cpp" />
     <ClCompile Include="ResourceSet.cpp" />
