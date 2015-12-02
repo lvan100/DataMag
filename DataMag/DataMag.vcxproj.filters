@@ -10,9 +10,6 @@
     <Filter Include="其他\Widget\FileListBox">
       <UniqueIdentifier>{a0195ea2-385f-4302-8a07-7b1fc8f3957d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="其他\Widget\PrettyButton">
-      <UniqueIdentifier>{63a62df5-f25a-4f23-81eb-09ce11040e6a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="其他\Widget\DDXControl">
       <UniqueIdentifier>{cd6c29ad-3cca-4f08-9124-6c12bc6d7425}</UniqueIdentifier>
     </Filter>
@@ -97,6 +94,9 @@
     <Filter Include="WellWidget\IconTitle">
       <UniqueIdentifier>{93277032-3342-4fb0-82db-75f0e007da31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="WellWidget\PrettyButton">
+      <UniqueIdentifier>{63a62df5-f25a-4f23-81eb-09ce11040e6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -174,10 +174,10 @@
       <Filter>其他\Kernel\NameDlg</Filter>
     </ClInclude>
     <ClInclude Include="PrettyButton.h">
-      <Filter>其他\Widget\PrettyButton</Filter>
+      <Filter>WellWidget\PrettyButton</Filter>
     </ClInclude>
     <ClInclude Include="HilitButton.h">
-      <Filter>其他\Widget\PrettyButton</Filter>
+      <Filter>WellWidget\PrettyButton</Filter>
     </ClInclude>
     <ClInclude Include="DDXControl.h">
       <Filter>其他\Widget\DDXControl</Filter>
@@ -269,10 +269,10 @@
       <Filter>其他\Kernel\NameDlg</Filter>
     </ClCompile>
     <ClCompile Include="PrettyButton.cpp">
-      <Filter>其他\Widget\PrettyButton</Filter>
+      <Filter>WellWidget\PrettyButton</Filter>
     </ClCompile>
     <ClCompile Include="HilitButton.cpp">
-      <Filter>其他\Widget\PrettyButton</Filter>
+      <Filter>WellWidget\PrettyButton</Filter>
     </ClCompile>
     <ClCompile Include="DDXControl.cpp">
       <Filter>其他\Widget\DDXControl</Filter>

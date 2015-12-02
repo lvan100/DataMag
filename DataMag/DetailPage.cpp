@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "FileOp.h"
 #include "DataMag.h"
 #include "DetailPage.h"
 #include "ResourceSet.h"
@@ -7,6 +8,7 @@ IMPLEMENT_DYNAMIC(CDetailPage, CDialogEx)
 
 CDetailPage::CDetailPage(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DETAILPAGE, pParent)
+	, m_link_list(&theShellManager)
 {
 }
 
@@ -49,6 +51,18 @@ BOOL CDetailPage::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	m_detail_title.SetFont(theResourceSet.GetFontBySize(13));
+	m_detial_info.SetFont(theResourceSet.GetFontBySize(11));
+
+	HICON hAddIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_ADD_BOOK)
+		, IMAGE_ICON, 0, 0, 0);
+
+	HICON hRemoveIcon = (HICON)LoadImage(AfxGetInstanceHandle()
+		, MAKEINTRESOURCE(IDI_REMOVE_LINK)
+		, IMAGE_ICON, 0, 0, 0);
+
+	m_add_link.SetImage(hAddIcon);
+	m_remove_link.SetImage(hRemoveIcon);
 
 	return TRUE;
 }
@@ -63,6 +77,64 @@ BOOL CDetailPage::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+/**
+* 枚举文件夹内容，并返回内容数量
+*/
+STATIC int SimpleEnumFolder(LPCTSTR lpszPath	// 文件夹路径
+	, CShellManager* pShellManager				// Shell管理器
+	, function<void(LPITEMIDLIST)> filter)		// 过滤器函数
+{
+	ENSURE(lpszPath != nullptr);
+	ASSERT_VALID(pShellManager);
+
+	AFX_SHELLITEMINFO info;
+	HRESULT hr = pShellManager->ItemFromPath(lpszPath, info.pidlRel);
+	if (FAILED(hr)) {
+		return 0;
+	}
+
+	int nFolderCount = 0;
+
+	LPSHELLFOLDER pDesktopFolder;
+	hr = SHGetDesktopFolder(&pDesktopFolder);
+
+	if (SUCCEEDED(hr)) {
+
+		IShellFolder* psfCurFolder = nullptr;
+		hr = pDesktopFolder->BindToObject(info.pidlRel, nullptr, IID_IShellFolder, (LPVOID*)&psfCurFolder);
+
+		LPENUMIDLIST pEnum = nullptr;
+		HRESULT hRes = psfCurFolder->EnumObjects(nullptr, (SHCONTF)(SHCONTF_NONFOLDERS), &pEnum);
+		if (SUCCEEDED(hRes) && pEnum != nullptr) {
+
+			DWORD dwFetched = 1;
+			LPITEMIDLIST pidlTemp;
+			while (pEnum->Next(1, &pidlTemp, &dwFetched) == S_OK && dwFetched) {
+
+				if (filter) { /* VS2015 的新特性，增加了 operator bool() 函数 */
+					LPITEMIDLIST itemID = pShellManager->ConcatenateItem(info.pidlRel, pidlTemp);
+					filter(itemID); /* 通过回调由客户端自行决定 */
+					pShellManager->FreeItem(itemID);
+				}
+
+				pShellManager->FreeItem(pidlTemp);
+
+				nFolderCount++;
+				dwFetched = 0;
+			}
+
+			pEnum->Release();
+		}
+
+		psfCurFolder->Release();
+		pDesktopFolder->Release();
+	}
+
+	pShellManager->FreeItem(info.pidlRel);
+	return nFolderCount;
 }
 
 void CDetailPage::Prepare()
@@ -89,6 +161,24 @@ void CDetailPage::Prepare()
 
 	SetWindowTextA(m_detial_info.GetSafeHwnd(), szText);
 
+	SimpleEnumFolder(m_path + _T("\\关联\\标签"), &theShellManager, [&](LPITEMIDLIST itemID) {
+		TCHAR szPath[MAX_PATH] = { 0 };
+		if (SHGetPathFromIDList(itemID, szPath)) {
+			m_link_list.AddString(szPath);
+		}
+	});
 
+	SimpleEnumFolder(m_path + _T("\\关联\\源码"), &theShellManager, [&](LPITEMIDLIST itemID) {
+		TCHAR szPath[MAX_PATH] = { 0 };
+		if (SHGetPathFromIDList(itemID, szPath)) {
+			m_link_list.AddString(szPath);
+		}
+	});
 
+	SimpleEnumFolder(m_path + _T("\\关联\\图书"), &theShellManager, [&](LPITEMIDLIST itemID) {
+		TCHAR szPath[MAX_PATH] = { 0 };
+		if (SHGetPathFromIDList(itemID, szPath)) {
+			m_link_list.AddString(szPath);
+		}
+	});
 }

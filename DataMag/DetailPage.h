@@ -1,6 +1,8 @@
 #pragma once
 
 #include "IconTitle.h"
+#include "FolderList.h"
+#include "PrettyButton.h"
 
 /**
  * œÍ«È“≥√Ê
@@ -49,6 +51,7 @@ public:
 	 */
 	void SetTagImage(HICON hIcon) {
 		m_hTagImage = hIcon;
+		m_link_list.SetTagImage(m_hTagImage);
 	}
 
 	/**
@@ -56,6 +59,7 @@ public:
 	 */
 	void SetCodeImage(HICON hIcon) {
 		m_hCodeImage = hIcon;
+		m_link_list.SetCodeImage(m_hCodeImage);
 	}
 
 	/**
@@ -63,6 +67,7 @@ public:
 	 */
 	void SetBookImage(HICON hIcon) {
 		m_hBookImage = hIcon;
+		m_link_list.SetBookImage(m_hBookImage);
 	}
 
 	/**
@@ -105,12 +110,12 @@ protected:
 	 */
 	CStringA m_text;
 
-	CListBox m_link_list;
-	CMFCButton m_add_link;
 	CComboBox m_link_filter;
-	CMFCButton m_remove_link;
+	CHilitButton m_add_link;
 	CIconTitle m_detail_title;
+	CHilitButton m_remove_link;
 	CRichEditCtrl m_detial_info;
+	CFolderListCtrl m_link_list;
 
 protected:
 	virtual BOOL OnInitDialog();

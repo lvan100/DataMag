@@ -36,5 +36,8 @@ void CIconTitle::OnPaint()
 	CString str;
 	GetWindowText(str);
 	dc.SetBkMode(TRANSPARENT);
+
+	CFont* pOldFont = dc.SelectObject(GetFont());
 	dc.DrawText(str, rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+	dc.SelectObject(pOldFont);
 }
