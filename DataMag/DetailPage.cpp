@@ -10,6 +10,7 @@ CDetailPage::CDetailPage(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DETAILPAGE, pParent)
 	, m_link_list(&theShellManager)
 {
+	m_link_list.SetListBoxEvent(&m_link_list_event);
 }
 
 CDetailPage::~CDetailPage()
@@ -28,6 +29,9 @@ void CDetailPage::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CDetailPage, CDialogEx)
+	ON_CBN_SELCHANGE(IDC_LINK_FILTER, &CDetailPage::OnCbnSelchangeLinkFilter)
+	ON_BN_CLICKED(IDC_ADD_LINK, &CDetailPage::OnBnClickedAddLink)
+	ON_BN_CLICKED(IDC_REMOVE_LINK, &CDetailPage::OnBnClickedRemoveLink)
 END_MESSAGE_MAP()
 
 HICON CDetailPage::GetCatalogImage(CString catalog)
@@ -50,8 +54,8 @@ BOOL CDetailPage::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	m_detail_title.SetFont(theResourceSet.GetFontBySize(13));
 	m_detial_info.SetFont(theResourceSet.GetFontBySize(11));
+	m_detail_title.SetFont(theResourceSet.GetFontBySize(13));
 
 	HICON hAddIcon = (HICON)LoadImage(AfxGetInstanceHandle()
 		, MAKEINTRESOURCE(IDI_ADD_BOOK)
@@ -63,6 +67,8 @@ BOOL CDetailPage::OnInitDialog()
 
 	m_add_link.SetImage(hAddIcon);
 	m_remove_link.SetImage(hRemoveIcon);
+
+	m_link_filter.SetCurSel(0);
 
 	return TRUE;
 }
@@ -137,12 +143,29 @@ STATIC int SimpleEnumFolder(LPCTSTR lpszPath	// 文件夹路径
 	return nFolderCount;
 }
 
-void CDetailPage::Prepare()
+void CDetailPage::OnCbnSelchangeLinkFilter()
 {
-	CString strTitle = m_path.Mid(m_path.ReverseFind('\\') + 1);
+	Refresh(m_catalog, m_path);
+}
+
+void CDetailPage::Refresh(CString strCatalog, CString strPath)
+{
+	m_path = strPath; 
+	m_catalog = strCatalog;
+
+	m_link_value.clear();
+	m_link_list.ResetContent();
+
+	m_link_list.SetTagImage(m_hTagImage);
+	m_link_list.SetCodeImage(m_hCodeImage);
+	m_link_list.SetBookImage(m_hBookImage);
+
+	int nFind = m_path.ReverseFind('\\');
+	auto& strTitle = m_path.Mid(nFind + 1);
 	m_detail_title.SetWindowText(strTitle);
 
 	m_detail_title.SetIcon(GetCatalogImage(m_catalog));
+	m_detail_title.Invalidate();
 
 	CString strFile = m_path + _T("\\描述.txt");
 	CStdioFile file(strFile, CFile::modeReadWrite | CFile::typeText);
@@ -161,24 +184,67 @@ void CDetailPage::Prepare()
 
 	SetWindowTextA(m_detial_info.GetSafeHwnd(), szText);
 
-	SimpleEnumFolder(m_path + _T("\\关联\\标签"), &theShellManager, [&](LPITEMIDLIST itemID) {
+	auto AddLink = [&](LPITEMIDLIST itemID) {
 		TCHAR szPath[MAX_PATH] = { 0 };
 		if (SHGetPathFromIDList(itemID, szPath)) {
-			m_link_list.AddString(szPath);
+			CString str(szPath);
+			m_link_list.AddString(str);
+			m_link_value.push_back(str);
 		}
-	});
+	};
 
-	SimpleEnumFolder(m_path + _T("\\关联\\源码"), &theShellManager, [&](LPITEMIDLIST itemID) {
-		TCHAR szPath[MAX_PATH] = { 0 };
-		if (SHGetPathFromIDList(itemID, szPath)) {
-			m_link_list.AddString(szPath);
-		}
-	});
+	CString strFilter;
+	m_link_filter.GetWindowText(strFilter);
 
-	SimpleEnumFolder(m_path + _T("\\关联\\图书"), &theShellManager, [&](LPITEMIDLIST itemID) {
-		TCHAR szPath[MAX_PATH] = { 0 };
-		if (SHGetPathFromIDList(itemID, szPath)) {
-			m_link_list.AddString(szPath);
+	if (strFilter == _T("标签") || strFilter == _T("全部")) {
+		SimpleEnumFolder(m_path + _T("\\关联\\标签"), &theShellManager, AddLink);
+	}
+
+	if (strFilter == _T("源码") || strFilter == _T("全部")) {
+		SimpleEnumFolder(m_path + _T("\\关联\\源码"), &theShellManager, AddLink);
+	}
+
+	if (strFilter == _T("图书") || strFilter == _T("全部")) {
+		SimpleEnumFolder(m_path + _T("\\关联\\图书"), &theShellManager, AddLink);
+	}
+}
+
+void CDetailPage::LinkListEvent::OnDoubleClick()
+{
+	auto pThis = ((CDetailPage*)((BYTE*)this - offsetof(CDetailPage, m_link_list_event)));
+
+	int nItem = pThis->m_link_list.GetCurSel();
+	CString strPath = pThis->m_link_list.GetItemPath(nItem);
+
+	CString strTargetPath;
+	if (GetLinkFilePath(strTargetPath, strPath) && PathFileExists(strTargetPath)) {
+		if (strTargetPath.Find(theApp.GetTagDir().GetString()) >= 0) {
+			pThis->Refresh(_T("标签"), strTargetPath);
+		} else if (strTargetPath.Find(theApp.GetCodeDir().GetString()) >= 0) {
+			pThis->Refresh(_T("源码"), strTargetPath);
+		} else if (strTargetPath.Find(theApp.GetBookDir().GetString()) >= 0) {
+			pThis->Refresh(_T("图书"), strTargetPath);
+		} else {
+			// DO NOTHING
 		}
-	});
+	} else {
+		if (pThis->MessageBox(_T("关联已失效，是否删除该关联？"), _T("关联失效"), MB_OKCANCEL) == IDOK) {
+			DeleteFile(strPath);
+			pThis->Refresh(pThis->m_catalog, pThis->m_path);
+		}
+	}
+}
+
+void CDetailPage::OnBnClickedAddLink()
+{
+
+}
+
+void CDetailPage::OnBnClickedRemoveLink()
+{
+	int nItem = m_link_list.GetCurSel();
+	CString strPath = m_link_list.GetItemPath(nItem);
+
+	DeleteFile(strPath);
+	Refresh(m_catalog, m_path);
 }

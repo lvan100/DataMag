@@ -4,6 +4,9 @@
 #include "FolderList.h"
 #include "PrettyButton.h"
 
+#include <vector>
+using namespace std;
+
 /**
  * 详情页面
  */
@@ -16,34 +19,20 @@ public:
 	virtual ~CDetailPage();
 
 	/**
-	 * 设置类别
+	 * 刷新显示
 	 */
-	void SetCatalog(CString str) {
-		m_catalog = str;
-	}
-
-	/**
-	 * 设置路径
-	 */
-	void SetPath(CString path) {
-		m_path = path;
-	}
-
-	/**
-	 * 准备工作
-	 */
-	void Prepare();
+	void Refresh(CString strCatalog, CString strPath);
 
 protected:
-	/**
-	 * 类别
-	 */
-	CString m_catalog;
-
 	/**
 	 * 路径
 	 */
 	CString m_path;
+
+	/**
+	 * 类别
+	 */
+	CString m_catalog;
 
 public:
 	/**
@@ -51,7 +40,6 @@ public:
 	 */
 	void SetTagImage(HICON hIcon) {
 		m_hTagImage = hIcon;
-		m_link_list.SetTagImage(m_hTagImage);
 	}
 
 	/**
@@ -59,7 +47,6 @@ public:
 	 */
 	void SetCodeImage(HICON hIcon) {
 		m_hCodeImage = hIcon;
-		m_link_list.SetCodeImage(m_hCodeImage);
 	}
 
 	/**
@@ -67,7 +54,6 @@ public:
 	 */
 	void SetBookImage(HICON hIcon) {
 		m_hBookImage = hIcon;
-		m_link_list.SetBookImage(m_hBookImage);
 	}
 
 	/**
@@ -110,6 +96,11 @@ protected:
 	 */
 	CStringA m_text;
 
+	/**
+	 * 链接列表
+	 */
+	vector<CString> m_link_value;
+
 	CComboBox m_link_filter;
 	CHilitButton m_add_link;
 	CIconTitle m_detail_title;
@@ -118,10 +109,28 @@ protected:
 	CFolderListCtrl m_link_list;
 
 protected:
+	/**
+	 * 关联列表控件事件对象
+	 */
+	class LinkListEvent : public ListBoxEvent
+	{
+	public:
+		/**
+		 * 列表项双击事件
+		 */
+		virtual void OnDoubleClick();
+
+	} m_link_list_event;
+
+protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
 	DECLARE_MESSAGE_MAP()
+	afx_msg void OnCbnSelchangeLinkFilter();
+public:
+	afx_msg void OnBnClickedAddLink();
+	afx_msg void OnBnClickedRemoveLink();
 };

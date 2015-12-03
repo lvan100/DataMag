@@ -122,6 +122,10 @@ void CFolderListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	int nBackslash = strPath.ReverseFind('\\');
 	CString strName = strPath.Mid(nBackslash + 1);
 
+	if (strName.Right(4) == _T(".lnk")) {
+		strName = strName.Left(strName.GetLength() - 4);
+	}
+
 	CString strSub = strPath.Left(nBackslash);
 	nBackslash = strSub.ReverseFind('\\');
 	CString strType = strSub.Mid(nBackslash + 1);

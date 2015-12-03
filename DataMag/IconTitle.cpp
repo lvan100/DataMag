@@ -26,6 +26,8 @@ void CIconTitle::OnPaint()
 	rcIcon.DeflateRect(2, 2, 2, 2);
 	rcIcon.right = rcIcon.left + rcIcon.Height();
 
+	dc.FillRect(rcClient, &afxGlobalData.brBtnFace);
+
 	DrawIconEx(dc.GetSafeHdc(), rcIcon.left, rcIcon.top
 		, m_hIcon, rcIcon.Width(), rcIcon.Height()
 		, 0, nullptr, DI_NORMAL);

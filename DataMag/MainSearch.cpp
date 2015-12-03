@@ -563,8 +563,6 @@ void CMainSearch::OnShowDetailPage(CString strCatalog, CString strPath)
 {
 	ShowSearchPad(false);
 
-	m_detail_page->SetCatalog(strCatalog);
-	m_detail_page->SetPath(strPath);
-	m_detail_page->Prepare();
+	m_detail_page->Refresh(strCatalog, strPath);
 	ShowDetailPage(true);
 }
