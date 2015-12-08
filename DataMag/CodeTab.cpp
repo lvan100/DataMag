@@ -7,6 +7,7 @@
 #include "Search.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
+#include "ImageResource.h"
 
 IMPLEMENT_DYNAMIC(CCodeTab, CDialogEx)
 
@@ -29,7 +30,7 @@ CCodeTab::CCodeTab(CWnd* pParent)
 	editListener = bind(&CCodeTab::OnItemEditChange, this);
 	m_item_text.SetChangeListener(editListener);
 
-	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
+	m_search_edit.SetSearchIcon(theImageResource.m_hSearchIcon);
 }
 
 CCodeTab::~CCodeTab()

@@ -2,6 +2,7 @@
 #include "DataMag.h"
 #include "Search.h"
 #include "DDXControl.h"
+#include "ImageResource.h"
 
 #include <set>
 #include <map>
@@ -20,7 +21,7 @@ CSearch::CSearch(CWnd* pParent)
 	, m_code_tab(nullptr)
 	, m_tag_tab(nullptr)
 {
-	HICON hSearchIcon = theApp.GetSearchIcon();
+	HICON hSearchIcon = theImageResource.m_hAppIcon;
 	m_tag_search.SetSearchIcon(hSearchIcon);
 	m_book_search.SetSearchIcon(hSearchIcon);
 	m_code_search.SetSearchIcon(hSearchIcon);

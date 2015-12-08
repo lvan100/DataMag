@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "SearchPad.h"
+#include "ResourceSet.h"
 
 IMPLEMENT_DYNAMIC(CSearchPad, CDialogEx)
 
@@ -36,14 +37,8 @@ BOOL CSearchPad::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	LOGFONT logFont = { 0 };
-	afxGlobalData.fontRegular.GetLogFont(&logFont);
-
-	logFont.lfHeight = -15;
-	m_text_font = CFont::FromHandle(CreateFontIndirect(&logFont));
-
-	logFont.lfHeight = -17;
-	m_title_font = CFont::FromHandle(CreateFontIndirect(&logFont));
+	m_text_font = theResourceSet.GetFontBySize(12);
+	m_title_font = theResourceSet.GetFontBySize(13);
 
 	return TRUE;
 }

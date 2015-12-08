@@ -97,6 +97,15 @@
     <Filter Include="WellWidget\PrettyButton">
       <UniqueIdentifier>{63a62df5-f25a-4f23-81eb-09ce11040e6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SelfModule">
+      <UniqueIdentifier>{7212ffd6-0617-4dd4-bc37-7fd161453feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="其他\Markup">
+      <UniqueIdentifier>{e49251c2-cd0b-4f82-9a9f-c244be55cf0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIResource">
+      <UniqueIdentifier>{1285a3f2-224e-4c9f-b5c7-027670aa4df6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\setting.ico">
@@ -245,6 +254,18 @@
     <ClInclude Include="IconTitle.h">
       <Filter>WellWidget\IconTitle</Filter>
     </ClInclude>
+    <ClInclude Include="ImageResource.h">
+      <Filter>UIResource</Filter>
+    </ClInclude>
+    <ClInclude Include="SelfModule.h">
+      <Filter>SelfModule</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeSelect.h">
+      <Filter>SelfModule</Filter>
+    </ClInclude>
+    <ClInclude Include="Markup.h">
+      <Filter>其他\Markup</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -333,6 +354,15 @@
     </ClCompile>
     <ClCompile Include="IconTitle.cpp">
       <Filter>WellWidget\IconTitle</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageResource.cpp">
+      <Filter>UIResource</Filter>
+    </ClCompile>
+    <ClCompile Include="SelfModule.cpp">
+      <Filter>SelfModule</Filter>
+    </ClCompile>
+    <ClCompile Include="Markup.cpp">
+      <Filter>其他\Markup</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

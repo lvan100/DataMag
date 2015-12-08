@@ -2,6 +2,7 @@
 #include "DataMag.h"
 #include "MainSearch.h"
 #include "ResourceSet.h"
+#include "ImageResource.h"
 
 #include <set>
 #include <map>
@@ -19,7 +20,8 @@ CMainSearch::CMainSearch(CWnd* pParent /*=NULL*/)
 	m_search_pad = new CSearchPad();
 	m_detail_page = new CDetailPage();
 
-	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
+	HICON hSearchIcon = theImageResource.m_hSearchIcon;
+	m_search_edit.SetSearchIcon(hSearchIcon);
 
 	m_recent_list.SetListBoxEvent(&m_recent_list_event);
 	m_recommand_list.SetListBoxEvent(&m_recommand_list_event);
@@ -134,57 +136,33 @@ BOOL CMainSearch::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	SetIcon(theApp.GetAppIcon(), TRUE);
-	SetIcon(theApp.GetAppIcon(), FALSE);
+	SetIcon(theImageResource.m_hAppIcon, TRUE);
+	SetIcon(theImageResource.m_hAppIcon, FALSE);
 
 	m_search_pad->Create(IDD_SEARCHPAD, this);
 	m_detail_page->Create(IDD_DETAILPAGE, this);
 
-	HICON hTagIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_TAG)
-		, IMAGE_ICON, 0, 0, 0);
+	m_recent_list.SetTagImage(theImageResource.m_hTagIcon);
+	m_recent_list.SetBookImage(theImageResource.m_hBookIcon);
+	m_recent_list.SetCodeImage(theImageResource.m_hCodeIcon);
 
-	HICON hCodeIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_CODE)
-		, IMAGE_ICON, 0, 0, 0);
+	m_recommand_list.SetTagImage(theImageResource.m_hTagIcon);
+	m_recommand_list.SetBookImage(theImageResource.m_hBookIcon);
+	m_recommand_list.SetCodeImage(theImageResource.m_hCodeIcon);
 
-	HICON hBookIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_BOOK)
-		, IMAGE_ICON, 0, 0, 0);
+	m_search_pad->SetTagImage(theImageResource.m_hTagIcon);
+	m_search_pad->SetBookImage(theImageResource.m_hBookIcon);
+	m_search_pad->SetInfoImage(theImageResource.m_hInfoIcon);
+	m_search_pad->SetCodeImage(theImageResource.m_hCodeIcon);
+	m_search_pad->SetDeleteImage(theImageResource.m_hDeleteIcon);
+	m_search_pad->SetRenameImage(theImageResource.m_hRenameIcon);
 
-	m_recent_list.SetTagImage(hTagIcon);
-	m_recent_list.SetBookImage(hBookIcon);
-	m_recent_list.SetCodeImage(hCodeIcon);
-
-	m_recommand_list.SetTagImage(hTagIcon);
-	m_recommand_list.SetBookImage(hBookIcon);
-	m_recommand_list.SetCodeImage(hCodeIcon);
-
-	HICON hRenameIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_RENAME)
-		, IMAGE_ICON, 0, 0, 0);
-
-	HICON hInfoIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_INFO)
-		, IMAGE_ICON, 0, 0, 0);
-
-	HICON hDeleteIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_DELETE)
-		, IMAGE_ICON, 0, 0, 0);
-
-	m_search_pad->SetTagImage(hTagIcon);
-	m_search_pad->SetBookImage(hBookIcon);
-	m_search_pad->SetInfoImage(hInfoIcon);
-	m_search_pad->SetCodeImage(hCodeIcon);
-	m_search_pad->SetDeleteImage(hDeleteIcon);
-	m_search_pad->SetRenameImage(hRenameIcon);
-
-	m_detail_page->SetTagImage(hTagIcon);
-	m_detail_page->SetBookImage(hBookIcon);
-	m_detail_page->SetInfoImage(hInfoIcon);
-	m_detail_page->SetCodeImage(hCodeIcon);
-	m_detail_page->SetDeleteImage(hDeleteIcon);
-	m_detail_page->SetRenameImage(hRenameIcon);
+	m_detail_page->SetTagImage(theImageResource.m_hTagIcon);
+	m_detail_page->SetBookImage(theImageResource.m_hBookIcon);
+	m_detail_page->SetInfoImage(theImageResource.m_hInfoIcon);
+	m_detail_page->SetCodeImage(theImageResource.m_hCodeIcon);
+	m_detail_page->SetDeleteImage(theImageResource.m_hDeleteIcon);
+	m_detail_page->SetRenameImage(theImageResource.m_hRenameIcon);
 
 	m_recent_label.SetFont(theResourceSet.GetFontBySize(13));
 	m_search_filter.SetFont(theResourceSet.GetFontBySize(12));

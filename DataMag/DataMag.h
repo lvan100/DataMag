@@ -30,28 +30,6 @@ public:
 	virtual int  ExitInstance();
 
 public:
-	/*
-	* 获取应用程序图标
-	*/
-	HICON GetAppIcon();
-
-	/**
-	 * 获取搜索框图标
-	 */
-	HICON GetSearchIcon();
-
-protected:
-	/**
-	 * 应用程序图标
-	 */
-	HICON m_hAppIcon;
-
-	/**
-	 * 搜索框图标
-	 */
-	HICON m_hSearchIcon;
-
-public:
 	/**
 	 * 获取源码目录
 	 */

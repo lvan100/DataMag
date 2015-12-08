@@ -3,6 +3,7 @@
 #include "DataMag.h"
 #include "DetailPage.h"
 #include "ResourceSet.h"
+#include "ImageResource.h"
 
 IMPLEMENT_DYNAMIC(CDetailPage, CDialogEx)
 
@@ -56,17 +57,9 @@ BOOL CDetailPage::OnInitDialog()
 
 	m_detial_info.SetFont(theResourceSet.GetFontBySize(11));
 	m_detail_title.SetFont(theResourceSet.GetFontBySize(13));
-
-	HICON hAddIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_ADD_BOOK)
-		, IMAGE_ICON, 0, 0, 0);
-
-	HICON hRemoveIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-		, MAKEINTRESOURCE(IDI_REMOVE_LINK)
-		, IMAGE_ICON, 0, 0, 0);
-
-	m_add_link.SetImage(hAddIcon);
-	m_remove_link.SetImage(hRemoveIcon);
+	
+	m_add_link.SetImage(theImageResource.m_hAddRelatedIcon);
+	m_remove_link.SetImage(theImageResource.m_hRemoveRelatedIcon);
 
 	m_link_filter.SetCurSel(0);
 

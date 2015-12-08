@@ -10,6 +10,7 @@
 #include "Search.h"
 #include "SettingDlg.h"
 #include "DDXControl.h"
+#include "ImageResource.h"
 
 IMPLEMENT_DYNAMIC(CTagTab, CDialogEx)
 
@@ -29,7 +30,7 @@ CTagTab::CTagTab(CWnd* pParent)
 	listener = bind(&CTagTab::OnTagDirChange, this, std::placeholders::_1);
 	theApp.AddTagDirChangeListener(this, listener);
 
-	HICON hSearchIcon = theApp.GetSearchIcon();
+	HICON hSearchIcon = theImageResource.m_hSearchIcon;
 	m_info_search_edit.SetSearchIcon(hSearchIcon);
 	m_tag_search_edit.SetSearchIcon(hSearchIcon);
 }

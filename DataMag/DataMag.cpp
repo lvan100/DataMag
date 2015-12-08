@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DataMag.h"
 #include "MainSearch.h"
+#include "SelfModule.h"
 
 /**
  * 全局的应用程序对象
@@ -24,30 +25,8 @@ STATIC CString GetCurrentDirectoryFile(CString strFileName)
 }
 
 CDataMagApp::CDataMagApp()
-	: m_hAppIcon(nullptr)
-	, m_hSearchIcon(nullptr)
 {
 	m_pszProfileName = _tcsdup(GetCurrentDirectoryFile(_T("\\DataMag.ini")));
-}
-
-HICON CDataMagApp::GetAppIcon()
-{
-	if (m_hAppIcon == nullptr) {
-		m_hAppIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-			, MAKEINTRESOURCE(IDR_MAINFRAME)
-			, IMAGE_ICON, 0, 0, 0);
-	}
-	return m_hAppIcon;
-}
-
-HICON CDataMagApp::GetSearchIcon()
-{
-	if (m_hSearchIcon == nullptr) {
-		m_hSearchIcon = (HICON)LoadImage(AfxGetInstanceHandle()
-			, MAKEINTRESOURCE(IDI_SEARCH)
-			, IMAGE_ICON, 0, 0, 0);
-	}
-	return m_hSearchIcon;
 }
 
 BOOL CDataMagApp::InitInstance()
@@ -75,6 +54,8 @@ BOOL CDataMagApp::InitInstance()
 
 	// VS2015 通过函数初始化 afxGlobalData 变量.
 	/* AFX_GLOBAL_DATA* p = */ GetGlobalData();
+
+	SelfModuleList::GetInstance()->Inits();
 
 	CMainSearch().DoModal();
 

@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "DataMag.h"
-#include "SettingDlg.h"
 #include "CodeDlg.h"
+#include "SettingDlg.h"
+#include "ImageResource.h"
 
 IMPLEMENT_DYNAMIC(CCodeDlg, CDialogEx)
 
@@ -10,7 +11,7 @@ CCodeDlg::CCodeDlg(CWnd* pParent /*=nullptr*/)
 	, m_project_list(&theShellManager)
 {
 	m_project_list.SetListBoxEvent(this);
-	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
+	m_search_edit.SetSearchIcon(theImageResource.m_hSearchIcon);
 }
 
 CCodeDlg::~CCodeDlg()

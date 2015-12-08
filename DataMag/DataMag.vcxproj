@@ -125,12 +125,15 @@
     <ClInclude Include="HilitButton.h" />
     <ClInclude Include="HiliteBorder.h" />
     <ClInclude Include="IconTitle.h" />
+    <ClInclude Include="ImageResource.h" />
     <ClInclude Include="ItemInfoEdit.h" />
     <ClInclude Include="MainSearch.h" />
+    <ClInclude Include="Markup.h" />
     <ClInclude Include="MoreInput.h" />
     <ClInclude Include="PrettyEdit.h" />
     <ClInclude Include="ResourceSet.h" />
     <ClInclude Include="SearchPad.h" />
+    <ClInclude Include="SelfModule.h" />
     <ClInclude Include="TagPathLink.h" />
     <ClInclude Include="TagTab.h" />
     <ClInclude Include="ListBoxEvent.h" />
@@ -146,6 +149,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="TypeSelect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BookDlg.cpp" />
@@ -159,14 +163,21 @@
     <ClCompile Include="HilitButton.cpp" />
     <ClCompile Include="HiliteBorder.cpp" />
     <ClCompile Include="IconTitle.cpp" />
+    <ClCompile Include="ImageResource.cpp" />
     <ClCompile Include="ItemInfoEdit.cpp" />
     <ClCompile Include="MainSearch.cpp" />
+    <ClCompile Include="Markup.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ResourceSet.cpp" />
     <ClCompile Include="Search.cpp" />
     <ClCompile Include="MoreInput.cpp" />
     <ClCompile Include="NameDlg.cpp" />
     <ClCompile Include="PrettyEdit.cpp" />
     <ClCompile Include="SearchPad.cpp" />
+    <ClCompile Include="SelfModule.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="TagPathLink.cpp" />
     <ClCompile Include="TagTab.cpp" />
     <ClCompile Include="PrettyButton.cpp" />

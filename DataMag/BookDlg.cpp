@@ -2,6 +2,7 @@
 #include "DataMag.h"
 #include "BookDlg.h"
 #include "SettingDlg.h"
+#include "ImageResource.h"
 
 IMPLEMENT_DYNAMIC(CBookDlg, CDialogEx)
 
@@ -10,7 +11,7 @@ CBookDlg::CBookDlg(CWnd* pParent /*=nullptr*/)
 	, m_book_list(&theShellManager)
 {
 	m_book_list.SetListBoxEvent(this);	
-	m_search_edit.SetSearchIcon(theApp.GetSearchIcon());
+	m_search_edit.SetSearchIcon(theImageResource.m_hSearchIcon);
 }
 
 CBookDlg::~CBookDlg()
