@@ -194,7 +194,7 @@ BOOL CSearchEdit::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	if (m_bEnableSearchBtn) {
 		if (HitSearchButton()) {
-			SetCursor(LoadCursor(nullptr, MAKEINTRESOURCE(IDC_ARROW)));
+			SetCursor(::LoadCursor(nullptr, IDC_ARROW));
 			return TRUE;
 		}
 	}

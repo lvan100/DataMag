@@ -50,6 +50,12 @@ BOOL CSearchPad::OnEraseBkgnd(CDC* pDC)
 
 void CSearchPad::Prepare()
 {
+	SCROLLINFO si;
+	si.cbSize = sizeof(SCROLLINFO);
+	si.fMask = SIF_PAGE | SIF_POS | SIF_RANGE;
+	si.nPos = si.nMin = si.nMax = si.nPage = 0;
+	SetScrollInfo(SB_VERT, &si, TRUE);
+
 	if (m_arr_result.size() == 0) {
 
 		auto NewResultItem = [&](CString strCatalog) {
@@ -86,7 +92,7 @@ void CSearchPad::Prepare()
 	CString lastCatalog = _T("");
 
 	// 记录当前控件的偏移位置
-	int offsetX = 4, offsetY = -2;
+	int offsetX = 4, offsetY = 2;
 
 	CFont* pOldFont = dc.SelectObject(m_text_font);
 
@@ -112,10 +118,6 @@ void CSearchPad::Prepare()
 
 	dc.SelectObject(pOldFont);
 
-	SCROLLINFO si;
-	si.cbSize = sizeof(SCROLLINFO);
-	si.fMask = SIF_PAGE | SIF_POS | SIF_RANGE;
-	si.nPos = si.nMin = 0;
 	si.nMax = offsetY + 4;
 	si.nPage = rcClient.Height();
 	SetScrollInfo(SB_VERT, &si, TRUE);

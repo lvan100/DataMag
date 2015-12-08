@@ -22,7 +22,7 @@ float CResourceSet::GetScreenScale()
 	return dpi / 96.0f;
 }
 
-CFont* CResourceSet::GetFontBySize(int size)
+CFont* CResourceSet::GetFontBySize(float size)
 {
 	int actualSize = int(size * GetScreenScale());
 	auto iter = m_font_set.find(actualSize);
@@ -33,6 +33,9 @@ CFont* CResourceSet::GetFontBySize(int size)
 		afxGlobalData.fontRegular.GetLogFont(&logFont);
 
 		logFont.lfHeight = -(actualSize);
+
+		// TODO 设置字体选择
+		_tcscpy_s(logFont.lfFaceName, L"新宋体");
 		HFONT hFont = CreateFontIndirect(&logFont);
 
 		CFont* pResultFont =  CFont::FromHandle(hFont);

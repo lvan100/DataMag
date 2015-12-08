@@ -283,7 +283,7 @@ CRect CMainSearch::GetSearchPadRect()
 
 	return CRect(rcSearchFilter.left
 		, rcSearchFilter.bottom + 2
-		, rcRecommandList.right + 1
+		, rcRecommandList.right + 2
 		, rcRecommandList.bottom);
 }
 

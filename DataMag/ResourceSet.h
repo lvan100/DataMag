@@ -20,7 +20,7 @@ public:
 	/**
 	 * 根据字体大小获取预设字体
 	 */
-	CFont* GetFontBySize(int size);
+	CFont* GetFontBySize(float size);
 
 protected:
 	/**
