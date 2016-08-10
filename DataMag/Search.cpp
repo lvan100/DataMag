@@ -66,8 +66,8 @@ void CSearch::RecentListEvent::OnDoubleClick()
 	CString strPath = pThis->m_recent_list.GetItemPath(nItem);
 
 	if (PathFileExists(strPath)){
-		theApp.SetRecentFile(strPath);
 		pThis->m_recent_list.DoDefaultDClick(nItem);
+		theApp.SetRecentFile(strPath); // 顺序依赖
 	} else {
 		if (pThis->MessageBox(_T("找不到选择项，是否从最近访问列表中删除？"), _T("提示"), MB_OKCANCEL) == IDOK) {
 			theApp.RemoveRecentFile(strPath);
