@@ -114,6 +114,14 @@ public:
 	 */
 	void DeleteTabWnd(CWnd* pWnd);
 
+public:
+	void OnBnClickedAddTag();
+	void OnBnClickedAddBook();
+	void OnBnClickedAddProject();
+	void OnDoubleclickedAddTag();
+	void OnDoubleclickedAddBook();
+	void OnDoubleclickedAddCode();
+
 protected:
 	/**
 	 * Ò³Ãæ¶Ô»°¿ò
@@ -163,9 +171,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 protected:
-	afx_msg void OnBnClickedAddTag();
 	afx_msg void OnMove(int x, int y);
-	afx_msg void OnBnClickedAddBook();
-	afx_msg void OnBnClickedAddProject();
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 };

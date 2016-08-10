@@ -10,7 +10,7 @@ WindowsFileNode::WindowsFileNode(CShellManager* pShellManager, wstring path)
 
 WindowsFileNode::~WindowsFileNode(void)
 {}
-
+/*
 bool WindowsFileNode::Enum(FileEnumConfig config, function<bool(shared_ptr<FileNode>)> filter)
 {
 	LPITEMIDLIST pidlCurPath = nullptr;
@@ -89,3 +89,4 @@ bool WindowsFileNode::Enum(FileEnumConfig config, function<bool(shared_ptr<FileN
 
 	return hRes;
 }
+*/

@@ -16,17 +16,31 @@ END_MESSAGE_MAP()
 
 static int GetConstTextMargin() { return 4; }
 
+/**
+ * 获取文本字符串的行数
+ */
+static int getLineCount(CString strText, char splitter = '\n') {
+	int pos = -1;
+	int count = 1;
+	while ((pos = strText.Find(splitter, pos + 1)) >= 0) {
+		count++;
+	}
+	return count;
+}
+
 void CPrettyButton::OnDrawText(CDC* pDC, const CRect& rect, const CString& strText, UINT uiDTFlags, UINT /*uiState*/)
 {
 	ASSERT_VALID(pDC);
 
+	int lineCount = getLineCount(strText);
+
 	CRect rectTextUp(rect), rectTextDown(rect);
 
 	rectTextUp.left += GetConstTextMargin();
-	rectTextUp.bottom -= rect.Height() / 2 - GetConstTextMargin();
+	rectTextUp.bottom = rectTextUp.top + rect.Height() / lineCount + GetConstTextMargin() * 2;
 
+	rectTextDown.top = rectTextUp.bottom;
 	rectTextDown.left += GetConstTextMargin();
-	rectTextDown.top += rect.Height() / 2 + GetConstTextMargin();
 	
 	CString strTitle, strContent;
 
@@ -62,7 +76,7 @@ void CPrettyButton::OnDrawText(CDC* pDC, const CRect& rect, const CString& strTe
 	pDC->DrawTextEx(strTitle, rectTextUp, DT_LEFT | DT_BOTTOM | DT_SINGLELINE, nullptr);
 
 	pOldFont = pDC->SelectObject(&conFont);
-	pDC->DrawTextEx(strContent, rectTextDown, DT_LEFT | DT_TOP | DT_SINGLELINE, nullptr);
+	pDC->DrawTextEx(strContent, rectTextDown, DT_LEFT | DT_TOP, nullptr);
 
 	pDC->SelectObject(&pOldFont);
 }

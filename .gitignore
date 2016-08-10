@@ -1,0 +1,6 @@
+/DataMag/Release
+/DataMag/Debug
+/DataMag/*.aps
+/Release
+/Debug
+/*.suo

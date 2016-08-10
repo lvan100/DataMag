@@ -54,9 +54,6 @@ void CSearch::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CSearch, CDialogEx)
-	ON_BN_CLICKED(IDC_ADD_CODE, &CSearch::OnBnClickedAddProject)
-	ON_BN_CLICKED(IDC_ADD_BOOK, &CSearch::OnBnClickedAddBook)
-	ON_BN_CLICKED(IDC_ADD_TAG, &CSearch::OnBnClickedAddTag)
 	ON_WM_ACTIVATE()
 	ON_WM_MOVE()
 END_MESSAGE_MAP()
@@ -142,6 +139,18 @@ BOOL CSearch::OnInitDialog()
 	for (size_t i = 0; i < list.size(); i++) {
 		m_recent_list.AddString(list.at(i));
 	}
+
+	m_add_tag.enableDoubleClick(TRUE);
+	m_add_tag.setOnClicked(bind(&CSearch::OnBnClickedAddTag, this));
+	m_add_tag.setOnDoubleClicked(bind(&CSearch::OnDoubleclickedAddTag, this));
+
+	m_add_book.enableDoubleClick(TRUE);
+	m_add_book.setOnClicked(bind(&CSearch::OnBnClickedAddBook, this));
+	m_add_book.setOnDoubleClicked(bind(&CSearch::OnDoubleclickedAddBook, this));
+
+	m_add_project.enableDoubleClick(TRUE);
+	m_add_project.setOnClicked(bind(&CSearch::OnBnClickedAddProject, this));
+	m_add_project.setOnDoubleClicked(bind(&CSearch::OnDoubleclickedAddCode, this));
 
 	[&](){
 		// ½øÐÐÍÆ¼ö
@@ -266,19 +275,16 @@ BOOL CSearch::PreTranslateMessage(MSG* pMsg)
 void CSearch::OnBnClickedAddTag()
 {
 	CreateAndShowTagTab();
-	m_tag_tab->DoCommandAdd();
 }
 
 void CSearch::OnBnClickedAddProject()
 {
 	CreateAndShowCodeTab();
-	m_code_tab->DoCommandAdd();
 }
 
 void CSearch::OnBnClickedAddBook()
 {
 	CreateAndShowBookTab();
-	m_book_tab->DoCommandAdd();
 }
 
 void CSearch::MoveToHideWindow(BOOL bHide)
@@ -488,4 +494,22 @@ void CSearch::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 			}
 		}
 	}
+}
+
+void CSearch::OnDoubleclickedAddBook()
+{
+	CreateAndShowBookTab();
+	m_book_tab->DoCommandAdd();
+}
+
+void CSearch::OnDoubleclickedAddCode()
+{
+	CreateAndShowCodeTab();
+	m_code_tab->DoCommandAdd();
+}
+
+void CSearch::OnDoubleclickedAddTag()
+{
+	CreateAndShowTagTab();
+	m_tag_tab->DoCommandAdd();
 }

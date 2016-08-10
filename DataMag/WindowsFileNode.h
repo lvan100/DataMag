@@ -18,7 +18,7 @@ public:
 	/**
 	 * 枚举子节点列表
 	 */
-	virtual bool Enum(FileEnumConfig config, function<bool(shared_ptr<FileNode>)> filter);
+	// virtual bool Enum(FileEnumConfig config, function<bool(shared_ptr<FileNode>)> filter);
 
 protected:
 	/**
