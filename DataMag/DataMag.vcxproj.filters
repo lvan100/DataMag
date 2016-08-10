@@ -52,9 +52,6 @@
     <Filter Include="Widget\Common">
       <UniqueIdentifier>{0cdb1e75-f2ac-46b3-a37b-3dfd13742c9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widget\FileOp">
-      <UniqueIdentifier>{1279bef9-55a6-4545-a098-3f11b460cf29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widget\PrettyEdit">
       <UniqueIdentifier>{be465ef9-f847-4d7f-82f9-56a73efefe52}</UniqueIdentifier>
     </Filter>
@@ -78,6 +75,18 @@
     </Filter>
     <Filter Include="Widget\TagPathLink">
       <UniqueIdentifier>{6ee25b33-35ea-48a1-a4e4-2f364a377e03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{06b391be-df7a-435f-a5d6-9beabf42d020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\FileOp">
+      <UniqueIdentifier>{1279bef9-55a6-4545-a098-3f11b460cf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Book">
+      <UniqueIdentifier>{00dbd1a8-8153-4ed7-bcd0-5de0f9dcaf28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileSystem">
+      <UniqueIdentifier>{4a51249b-0516-43f0-95c1-e264673744dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +162,7 @@
       <Filter>Widget\SearchEdit</Filter>
     </ClInclude>
     <ClInclude Include="FileOp.h">
-      <Filter>Widget\FileOp</Filter>
+      <Filter>Model\FileOp</Filter>
     </ClInclude>
     <ClInclude Include="FileListBox.h">
       <Filter>Widget\FileListBox</Filter>
@@ -212,6 +221,15 @@
     <ClInclude Include="TagPathLink.h">
       <Filter>Widget\TagPathLink</Filter>
     </ClInclude>
+    <ClInclude Include="BookModel.h">
+      <Filter>Model\Book</Filter>
+    </ClInclude>
+    <ClInclude Include="FileNode.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsFileNode.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -230,7 +248,7 @@
       <Filter>Widget\SearchEdit</Filter>
     </ClCompile>
     <ClCompile Include="FileOp.cpp">
-      <Filter>Widget\FileOp</Filter>
+      <Filter>Model\FileOp</Filter>
     </ClCompile>
     <ClCompile Include="FileListBox.cpp">
       <Filter>Widget\FileListBox</Filter>
@@ -285,6 +303,12 @@
     </ClCompile>
     <ClCompile Include="TagPathLink.cpp">
       <Filter>Widget\TagPathLink</Filter>
+    </ClCompile>
+    <ClCompile Include="BookModel.cpp">
+      <Filter>Model\Book</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsFileNode.cpp">
+      <Filter>FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

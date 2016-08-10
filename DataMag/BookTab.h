@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BookModel.h"
 #include "MoreInput.h"
 #include "PrettyEdit.h"
 #include "SearchEdit.h"
@@ -106,6 +107,11 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 protected:
+	/**
+	 * 图书管理模型
+	 */
+	BookModel m_book_model;
+
 	/**
 	 * 按钮控件
 	 */

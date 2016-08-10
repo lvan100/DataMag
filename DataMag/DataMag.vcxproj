@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BookDlg.h" />
+    <ClInclude Include="BookModel.h" />
     <ClInclude Include="BookTab.h" />
     <ClInclude Include="DataMag.h" />
     <ClInclude Include="DDXControl.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="ItemInfoEdit.h" />
     <ClInclude Include="MoreInput.h" />
     <ClInclude Include="PrettyEdit.h" />
+    <ClInclude Include="FileNode.h" />
     <ClInclude Include="TagPathLink.h" />
     <ClInclude Include="TagTab.h" />
     <ClInclude Include="ListBoxEvent.h" />
@@ -139,9 +141,11 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="WindowsFileNode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BookDlg.cpp" />
+    <ClCompile Include="BookModel.cpp" />
     <ClCompile Include="BookTab.cpp" />
     <ClCompile Include="DataMag.cpp" />
     <ClCompile Include="DDXControl.cpp" />
@@ -168,6 +172,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="WindowsFileNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DataMag.rc" />

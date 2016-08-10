@@ -12,6 +12,7 @@ IMPLEMENT_DYNAMIC(CBookTab, CDialogEx)
 
 CBookTab::CBookTab(CWnd* pParent)
 	: CDialogEx(CBookTab::IDD, pParent)
+	, m_book_model(theApp.GetBookDir())
 	, m_book_list(&theShellManager)
 	, m_pLastFocusWnd(nullptr)
 {
@@ -172,29 +173,26 @@ void CBookTab::OnBnClickedBookAdd()
 {
 	CNameDlg dlg(this);
 	dlg.m_title = _T("新建图书");
-	if (dlg.DoModal() == IDOK) {
-
-		CString strFolder = theApp.GetBookDir();
-		strFolder += _T("\\") + dlg.m_name;
-
-		if (CreateDirectory(strFolder, nullptr)) {
-			CString strFile = strFolder + _T("\\描述.txt");
-			CloseHandle(CreateFile(strFile, 0, 0, nullptr, CREATE_ALWAYS, 0, nullptr));
+	if (dlg.DoModal() == IDOK)
+	{
+		if (m_book_model.AddBook(dlg.m_name))
+		{
+			CString strBook = m_book_model.GetBook(dlg.m_name);
+			// 立即打开文件夹以方便后续操作
+			OpenFolerInShell(strBook);
 
 			m_book_list.Refresh();
 
+			// 添加到最近访问列表
+			theApp.SetRecentFile(strBook);
+
 			m_book_list.SetFocus();
 			m_book_list.SelectString(0, dlg.m_name);
-
-			// 立即打开文件夹以方便后续操作
-			OpenFolerInShell(strFolder);
-
-			// 添加到最近访问列表
-			theApp.SetRecentFile(strFolder);
-
-		} else {
+		}
+		else
+		{
 			CString strContent = _T("创建图书目录\"\"失败！");
-			strContent.Insert(7, strFolder);
+			strContent.Insert(7, dlg.m_name);
 			MessageBox(strContent, _T("错误"), MB_ICONERROR);
 		}
 	}
@@ -203,15 +201,13 @@ void CBookTab::OnBnClickedBookAdd()
 void CBookTab::OnBnClickedBookDelete()
 {
 	int nItem = m_book_list.GetCurSel();
-	if (nItem >= 0)
-	{
-		CString strPath = m_book_list.GetItemPath(nItem);
-		if (PathIsDirectory(strPath)) {
-			DeleteDirectory(strPath);
-		} else {
-			DeleteFile(strPath);
-		}
+	if (nItem >= 0) {
 
+		CString strBookName;
+		m_book_list.GetText(nItem, strBookName);
+		m_book_model.DeleteBook(strBookName);
+
+		// TODO 可以优化刷新
 		m_book_list.Refresh();
 	}
 }
